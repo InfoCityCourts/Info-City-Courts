@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="theme-color" content="#0b0b0f"/>
+  <title>Infocity Court — My Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--font-primary:'Poppins',sans-serif;--font-display:'Playfair Display',serif;--accent:#ff6b35;--accent-light:#ff8c5a;--accent-dark:#e8590c;--gold:#ffc300;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--radius-sm:10px;--radius-md:16px;--radius-lg:24px;--radius-xl:32px;--nav-height:72px;--transition:.3s cubic-bezier(.4,0,.2,1)}
+    [data-theme="dark"]{--bg-primary:#0b0b0f;--bg-secondary:#13131a;--bg-card:#1a1a24;--bg-card-hover:#22222e;--bg-input:rgba(255,255,255,.05);--bg-nav:rgba(11,11,15,.85);--text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--border:rgba(255,255,255,.08);--border-hover:rgba(255,255,255,.15);--card-shadow:0 4px 20px rgba(0,0,0,.3)}
+    [data-theme="light"]{--bg-primary:#f8f8fc;--bg-secondary:#ffffff;--bg-card:#ffffff;--bg-card-hover:#f0f0f5;--bg-input:rgba(0,0,0,.04);--bg-nav:rgba(255,255,255,.88);--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,.65);--text-tertiary:rgba(26,26,46,.4);--border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);--card-shadow:0 4px 20px rgba(0,0,0,.06)}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+    body{font-family:var(--font-primary);background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s}
+    a{text-decoration:none;color:inherit}img{display:block;max-width:100%}button{font-family:var(--font-primary);cursor:pointer;border:none;background:none}input{font-family:var(--font-primary)}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,107,53,.3);border-radius:3px}
+    #pageLoader{position:fixed;inset:0;z-index:99999;background:var(--bg-primary);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s}
+    #pageLoader.hidden{opacity:0;pointer-events:none}
+    .loader-brand{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .loader-ring{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:var(--bg-nav);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;padding:0 clamp(16px,4vw,48px);transition:background .4s,box-shadow .3s}
+    .navbar.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.15)}
+    .nav-left{display:flex;align-items:center;gap:16px;flex:1}
+    .nav-brand{display:flex;align-items:center;gap:8px}
+    .nav-brand .material-icons{font-size:30px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-brand span{font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-right{display:flex;align-items:center;gap:6px}
+    .nav-btn{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;color:var(--text-secondary);transition:var(--transition)}
+    .nav-btn:hover{background:var(--bg-input);color:var(--text-primary)}
+    .nav-btn .material-icons{font-size:22px}
+    .nav-btn .badge{position:absolute;top:4px;right:6px;min-width:18px;height:18px;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;top:auto;right:auto;margin-left:-4px}
+    .theme-toggle{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--transition)}
+    .theme-toggle:hover{background:var(--bg-input)}
+    .theme-toggle .material-icons{font-size:22px;color:var(--text-secondary)}
+
+    .main{margin-top:var(--nav-height);padding:clamp(24px,4vw,48px) clamp(16px,4vw,60px);padding-bottom:100px;max-width:900px;margin-left:auto;margin-right:auto}
+    .page-header{margin-bottom:28px}
+    .page-header .ph-tag{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin-bottom:6px}
+    .page-header h1{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;line-height:1.2}
+    .page-header .ph-sub{font-size:.9rem;color:var(--text-tertiary);margin-top:6px}
+
+    /* Filter Tabs */
+    .filter-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:28px;-ms-overflow-style:none;scrollbar-width:none}
+    .filter-tabs::-webkit-scrollbar{display:none}
+    .filter-tab{padding:10px 20px;border-radius:50px;font-size:.82rem;font-weight:600;white-space:nowrap;background:var(--bg-card);border:1.5px solid var(--border);color:var(--text-secondary);transition:var(--transition);flex-shrink:0}
+    .filter-tab:hover{border-color:var(--accent);color:var(--accent)}
+    .filter-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border-color:transparent;box-shadow:0 4px 18px rgba(255,107,53,.3)}
+
+    /* Order Card */
+    .orders-list{display:flex;flex-direction:column;gap:18px}
+    .order-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition)}
+    .order-card:hover{border-color:var(--border-hover);box-shadow:var(--card-shadow)}
+    .oc-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;flex-wrap:wrap;gap:12px}
+    .oc-header-left{display:flex;flex-direction:column;gap:4px}
+    .oc-order-num{font-size:.78rem;color:var(--text-tertiary);font-weight:500}
+    .oc-seller{font-size:1rem;font-weight:700}
+    .oc-date{font-size:.75rem;color:var(--text-tertiary)}
+
+    /* Status Chip */
+    .status-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:50px;font-size:.75rem;font-weight:700;text-transform:capitalize}
+    .status-chip .material-icons{font-size:16px}
+    .status-chip.pending{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.3);color:#fbbf24}
+    .status-chip.confirmed{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:var(--blue)}
+    .status-chip.preparing{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:var(--purple)}
+    .status-chip.ready{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+    .status-chip.out_for_delivery{background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:var(--accent)}
+    .status-chip.delivered{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+    .status-chip.cancelled{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+    .status-chip.refunded{background:rgba(107,114,128,.12);border:1px solid rgba(107,114,128,.3);color:#6b7280}
+
+    /* Order Items */
+    .oc-items{padding:0 24px 16px;display:flex;flex-direction:column;gap:10px}
+    .oc-item{display:flex;align-items:center;gap:14px;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm)}
+    .oc-item-img{width:50px;height:50px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--bg-secondary)}
+    .oc-item-img img{width:100%;height:100%;object-fit:cover}
+    .oc-item-info{flex:1}
+    .oc-item-name{font-size:.88rem;font-weight:600}
+    .oc-item-qty{font-size:.75rem;color:var(--text-tertiary)}
+    .oc-item-price{font-size:.9rem;font-weight:700;color:var(--accent)}
+
+    /* Progress Tracker */
+    .oc-tracker{padding:0 24px 20px}
+    .tracker-bar{display:flex;align-items:center;gap:0;position:relative}
+    .tracker-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;z-index:1}
+    .tracker-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--border);background:var(--bg-card);transition:var(--transition)}
+    .tracker-dot .material-icons{font-size:16px;color:var(--text-tertiary)}
+    .tracker-dot.done{background:var(--green);border-color:var(--green)}
+    .tracker-dot.done .material-icons{color:#fff}
+    .tracker-dot.current{background:var(--accent);border-color:var(--accent);animation:pulse 1.5s infinite}
+    .tracker-dot.current .material-icons{color:#fff}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,.4)}50%{box-shadow:0 0 0 8px rgba(255,107,53,0)}}
+    .tracker-label{font-size:.62rem;color:var(--text-tertiary);margin-top:6px;text-align:center;font-weight:500}
+    .tracker-line{position:absolute;top:13px;left:14%;right:14%;height:2px;background:var(--border);z-index:0}
+    .tracker-line-fill{height:100%;background:var(--green);transition:width .5s ease;border-radius:1px}
+
+    /* Order Footer */
+    .oc-footer{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px}
+    .oc-total{font-size:1.1rem;font-weight:800}
+    .oc-total span{color:var(--accent)}
+    .oc-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .oc-action-btn{padding:8px 18px;border-radius:50px;font-size:.78rem;font-weight:600;transition:var(--transition);display:flex;align-items:center;gap:5px}
+    .oc-action-btn .material-icons{font-size:16px}
+    .oc-btn-reorder{background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);color:var(--accent)}
+    .oc-btn-reorder:hover{background:rgba(255,107,53,.18)}
+    .oc-btn-cancel{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+    .oc-btn-cancel:hover{background:rgba(239,68,68,.15)}
+    .oc-btn-rate{background:rgba(255,195,0,.1);border:1px solid rgba(255,195,0,.25);color:var(--gold)}
+    .oc-btn-rate:hover{background:rgba(255,195,0,.18)}
+    .oc-btn-detail{background:var(--bg-input);border:1px solid var(--border);color:var(--text-secondary)}
+    .oc-btn-detail:hover{border-color:var(--border-hover)}
+
+    /* Rating Modal */
+    .rate-overlay{position:fixed;inset:0;z-index:90000;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center}
+    .rate-overlay.active{display:flex;animation:fadeIn .3s}
+    @keyframes fadeIn{to{opacity:1}}
+    .rate-box{background:var(--bg-card);border-radius:var(--radius-xl);padding:36px;text-align:center;max-width:420px;width:90%;box-shadow:0 40px 100px rgba(0,0,0,.4);animation:scaleUp .4s cubic-bezier(.16,1,.3,1)}
+    @keyframes scaleUp{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+    .rate-box h3{font-size:1.2rem;font-weight:700;margin-bottom:6px}
+    .rate-box p{font-size:.85rem;color:var(--text-secondary);margin-bottom:20px}
+    .star-rating{display:flex;justify-content:center;gap:8px;margin-bottom:18px}
+    .star-rating .material-icons{font-size:36px;color:var(--border);cursor:pointer;transition:var(--transition)}
+    .star-rating .material-icons.filled{color:var(--gold)}
+    .star-rating .material-icons:hover{transform:scale(1.2)}
+    .rate-box textarea{width:100%;padding:12px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.85rem;color:var(--text-primary);outline:none;resize:vertical;min-height:80px;margin-bottom:18px;transition:var(--transition)}
+    .rate-box textarea:focus{border-color:var(--accent)}
+    .rate-box .rate-btns{display:flex;gap:10px;justify-content:center}
+    .rate-box .btn-submit-rate{padding:12px 28px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;font-weight:700;font-size:.88rem;border-radius:var(--radius-md);transition:var(--transition);box-shadow:0 4px 18px rgba(255,107,53,.3)}
+    .rate-box .btn-submit-rate:hover{transform:translateY(-2px)}
+    .rate-box .btn-cancel-rate{padding:12px 28px;background:var(--bg-input);border:1px solid var(--border);color:var(--text-secondary);font-weight:600;font-size:.88rem;border-radius:var(--radius-md);transition:var(--transition)}
+    .rate-box .btn-cancel-rate:hover{border-color:var(--border-hover)}
+
+    .empty-state{text-align:center;padding:80px 20px}
+    .empty-state .material-icons{font-size:80px;color:var(--text-tertiary);margin-bottom:20px;opacity:.5}
+    .empty-state h2{font-size:1.4rem;font-weight:700;margin-bottom:8px}
+    .empty-state p{font-size:.92rem;color:var(--text-tertiary);margin-bottom:28px;line-height:1.6}
+    .empty-state .btn-browse{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;font-weight:700;font-size:.92rem;border-radius:var(--radius-md);box-shadow:0 6px 25px rgba(255,107,53,.3);transition:var(--transition)}
+    .empty-state .btn-browse:hover{transform:translateY(-2px)}
+
+    .toast-container{position:fixed;top:84px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+    .toast{display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:var(--radius-md);font-size:.84rem;font-weight:500;backdrop-filter:blur(16px);animation:slideIn .4s cubic-bezier(.16,1,.3,1);box-shadow:0 12px 40px rgba(0,0,0,.3);max-width:380px}
+    .toast.success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+    .toast.error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+    .toast.info{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#3b82f6}
+    .toast .material-icons{font-size:22px}
+    @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+    @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
+
+    .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--bg-nav);backdrop-filter:blur(20px) saturate(1.4);border-top:1px solid var(--border);z-index:1000;padding:0 8px;align-items:center;justify-content:space-around}
+    .mob-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:var(--radius-sm);transition:var(--transition)}
+    .mob-nav-item .material-icons{font-size:24px;color:var(--text-tertiary);transition:var(--transition)}
+    .mob-nav-item span:last-child{font-size:.65rem;font-weight:600;color:var(--text-tertiary);transition:var(--transition)}
+    .mob-nav-item.active .material-icons{color:var(--accent)}
+    .mob-nav-item.active span:last-child{color:var(--accent)}
+
+    .footer{background:var(--bg-secondary);border-top:1px solid var(--border);padding:clamp(40px,6vw,60px) clamp(16px,4vw,60px) 30px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .footer-inner .fb-name{display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:800}
+    .footer-inner .fb-name .material-icons{font-size:24px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .footer-inner .fb-name span{background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .footer-inner p{font-size:.78rem;color:var(--text-tertiary)}
+
+    .loading-skeleton{padding:30px;text-align:center;color:var(--text-tertiary);font-size:.9rem}
+
+    @media(max-width:768px){
+      .mobile-bottom-nav{display:flex}
+      .main{padding-bottom:100px}
+      .nav-btn .btn-label{display:none}
+      .oc-header{padding:16px 18px}
+      .oc-items{padding:0 18px 14px}
+      .oc-tracker{padding:0 18px 16px}
+      .oc-footer{padding:14px 18px}
+      .tracker-label{font-size:.56rem}
+    }
+    @media(max-width:480px){
+      .nav-brand span{display:none}
+      .oc-item{flex-direction:row}
+    }
+  </style>
+</head>
+<body>
+
+<div id="pageLoader"><div class="loader-ring"></div><div class="loader-brand">Infocity Court</div></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Rating Modal -->
+<div class="rate-overlay" id="rateOverlay" onclick="if(event.target===this)closeRating()">
+  <div class="rate-box">
+    <h3>Rate Your Order</h3>
+    <p id="rateOrderInfo">How was your experience?</p>
+    <div class="star-rating" id="starRating">
+      <span class="material-icons" data-star="1" onclick="setStar(1)">star</span>
+      <span class="material-icons" data-star="2" onclick="setStar(2)">star</span>
+      <span class="material-icons" data-star="3" onclick="setStar(3)">star</span>
+      <span class="material-icons" data-star="4" onclick="setStar(4)">star</span>
+      <span class="material-icons" data-star="5" onclick="setStar(5)">star</span>
+    </div>
+    <textarea id="reviewText" placeholder="Write a review (optional)…"></textarea>
+    <div class="rate-btns">
+      <button class="btn-cancel-rate" onclick="closeRating()">Cancel</button>
+      <button class="btn-submit-rate" onclick="submitRating()"><span class="material-icons" style="font-size:18px;vertical-align:middle">send</span> Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="nav-left"><a href="/customer/index.html" class="nav-brand"><span class="material-icons">restaurant</span><span>Infocity Court</span></a></div>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()"><span class="material-icons" id="themeIcon">dark_mode</span></button>
+    <a href="/customer/index.html" class="nav-btn"><span class="material-icons">home</span><span class="btn-label">Home</span></a>
+    <a href="/customer/cart.html" class="nav-btn"><span class="material-icons">shopping_cart</span><span class="btn-label">Cart</span></a>
+    <a href="/customer/account.html" class="nav-btn"><span class="material-icons">person</span><span class="btn-label">Account</span></a>
+  </div>
+</nav>
+
+<!-- Main -->
+<main class="main">
+  <div class="page-header">
+    <div class="ph-tag">📦 Order History</div>
+    <h1>My Orders</h1>
+    <div class="ph-sub" id="orderCount">Loading your orders…</div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" data-filter="all" onclick="filterOrders('all',this)">All Orders</button>
+    <button class="filter-tab" data-filter="pending" onclick="filterOrders('pending',this)">⏳ Pending</button>
+    <button class="filter-tab" data-filter="confirmed" onclick="filterOrders('confirmed',this)">✅ Confirmed</button>
+    <button class="filter-tab" data-filter="preparing" onclick="filterOrders('preparing',this)">👨‍🍳 Preparing</button>
+    <button class="filter-tab" data-filter="out_for_delivery" onclick="filterOrders('out_for_delivery',this)">🛵 On the Way</button>
+    <button class="filter-tab" data-filter="delivered" onclick="filterOrders('delivered',this)">✅ Delivered</button>
+    <button class="filter-tab" data-filter="cancelled" onclick="filterOrders('cancelled',this)">❌ Cancelled</button>
+  </div>
+
+  <div class="orders-list" id="ordersList"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <span class="material-icons">receipt_long</span>
+    <h2>No orders found</h2>
+    <p>You haven't placed any orders yet. Browse our menu and discover amazing dishes!</p>
+    <a href="/customer/index.html" class="btn-browse"><span class="material-icons" style="font-size:20px">explore</span> Browse Menu</a>
+  </div>
+  <div class="loading-skeleton" id="loadingSkeleton">
+    <div class="loader-ring" style="margin:0 auto 12px"></div>
+    Loading orders…
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="fb-name"><span class="material-icons">restaurant</span><span>Infocity Court</span></div>
+    <p>© 2026 Infocity Court. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="mobile-bottom-nav">
+  <a href="/customer/index.html" class="mob-nav-item"><span class="material-icons">home</span><span>Home</span></a>
+  <a href="/customer/cart.html" class="mob-nav-item"><span class="material-icons">shopping_cart</span><span>Cart</span></a>
+  <a href="/customer/orders.html" class="mob-nav-item active"><span class="material-icons">receipt_long</span><span>Orders</span></a>
+  <a href="/customer/account.html" class="mob-nav-item"><span class="material-icons">person</span><span>Account</span></a>
+</div>
+
+<script>
+const SUPABASE_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SUPABASE_KEY='YOUR_SUPABASE_ANON_KEY_HERE';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let currentUser=null;
+let allOrders=[];
+let allOrderItems={};
+let currentFilter='all';
+let ratingOrderId=null;
+let selectedStars=0;
+
+const STATUS_ICONS={pending:'schedule',confirmed:'thumb_up',preparing:'restaurant',ready:'check_circle',out_for_delivery:'delivery_dining',delivered:'done_all',cancelled:'cancel',refunded:'undo'};
+const STATUS_STEPS=['pending','confirmed','preparing','ready','out_for_delivery','delivered'];
+
+// Auth
+(async function(){
+  const uid=localStorage.getItem('infocity_uid');
+  if(!uid){window.location.href='/authentication.html';return}
+  try{
+    const{data}=await sb.from('Users').select('*').eq('id',uid).maybeSingle();
+    if(!data){localStorage.clear();window.location.href='/authentication.html';return}
+    currentUser=data;
+    await loadOrders();
+  }catch(e){console.error(e);toast('Connection error','error')}
+  document.getElementById('pageLoader').classList.add('hidden');
+})();
+
+async function loadOrders(){
+  try{
+    const{data:orders,error}=await sb
+      .from('orders')
+      .select('*')
+      .eq('user_id',currentUser.id)
+      .order('created_at',{ascending:false});
+
+    if(error)throw error;
+    allOrders=orders||[];
+
+    // Load all items for these orders
+    if(allOrders.length){
+      const orderIds=allOrders.map(o=>o.id);
+      const{data:items}=await sb
+        .from('order_items')
+        .select('*')
+        .in('order_id',orderIds);
+
+      allOrderItems={};
+      (items||[]).forEach(item=>{
+        if(!allOrderItems[item.order_id])allOrderItems[item.order_id]=[];
+        allOrderItems[item.order_id].push(item);
+      });
+    }
+
+    document.getElementById('loadingSkeleton').style.display='none';
+    renderOrders(allOrders);
+  }catch(e){
+    console.error(e);
+    document.getElementById('loadingSkeleton').innerHTML='Failed to load orders.';
+    toast('Failed to load orders','error');
+  }
+}
+
+function filterOrders(filter,btn){
+  currentFilter=filter;
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const filtered=filter==='all'?allOrders:allOrders.filter(o=>o.status===filter);
+  renderOrders(filtered);
+}
+
+function renderOrders(orders){
+  const container=document.getElementById('ordersList');
+  const empty=document.getElementById('emptyState');
+
+  document.getElementById('orderCount').textContent=`${orders.length} order${orders.length!==1?'s':''}`;
+
+  if(!orders.length){
+    container.innerHTML='';
+    empty.style.display='block';
+    return;
+  }
+  empty.style.display='none';
+
+  container.innerHTML=orders.map(order=>{
+    const items=allOrderItems[order.id]||[];
+    const statusIcon=STATUS_ICONS[order.status]||'info';
+    const date=new Date(order.created_at);
+    const dateStr=date.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+    const timeStr=date.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    const isCancelled=order.status==='cancelled';
+    const isDelivered=order.status==='delivered';
+    const canCancel=['pending','confirmed'].includes(order.status);
+    const canRate=isDelivered&&!order.rating;
+
+    // Progress
+    const currentStepIdx=STATUS_STEPS.indexOf(order.status);
+    const progressPercent=isCancelled?0:Math.max(0,currentStepIdx/(STATUS_STEPS.length-1)*100);
+
+    return `
+      <div class="order-card">
+        <div class="oc-header">
+          <div class="oc-header-left">
+            <div class="oc-order-num">${order.order_number||'#'+order.id.slice(0,8)}</div>
+            <div class="oc-seller">${escHTML(order.seller_name)}</div>
+            <div class="oc-date">${dateStr} at ${timeStr}</div>
+          </div>
+          <div class="status-chip ${order.status}">
+            <span class="material-icons">${statusIcon}</span>
+            ${order.status.replace(/_/g,' ')}
+          </div>
+        </div>
+
+        <div class="oc-items">
+          ${items.map(it=>`
+            <div class="oc-item">
+              <div class="oc-item-img"><img src="${it.food_image||'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60'}" alt="" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60'"/></div>
+              <div class="oc-item-info">
+                <div class="oc-item-name">${escHTML(it.food_name)}</div>
+                <div class="oc-item-qty">Qty: ${it.quantity} × ₹${it.unit_price}</div>
+              </div>
+              <div class="oc-item-price">₹${(it.unit_price*it.quantity).toFixed(2)}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        ${!isCancelled?`
+        <div class="oc-tracker">
+          <div class="tracker-bar" style="position:relative">
+            <div class="tracker-line"><div class="tracker-line-fill" style="width:${progressPercent}%"></div></div>
+            ${STATUS_STEPS.map((step,i)=>{
+              let cls='';
+              if(i<currentStepIdx)cls='done';
+              else if(i===currentStepIdx)cls='current';
+              return `
+                <div class="tracker-step">
+                  <div class="tracker-dot ${cls}">
+                    <span class="material-icons">${STATUS_ICONS[step]}</span>
+                  </div>
+                  <div class="tracker-label">${step.replace(/_/g,' ')}</div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>`:''}
+
+        <div class="oc-footer">
+          <div class="oc-total">Total: <span>₹${parseFloat(order.total||0).toFixed(2)}</span></div>
+          <div class="oc-actions">
+            ${order.rating?`<div class="oc-action-btn oc-btn-rate" style="pointer-events:none;opacity:.7"><span class="material-icons">star</span>${parseFloat(order.rating).toFixed(1)} Rated</div>`:''}
+            ${canRate?`<button class="oc-action-btn oc-btn-rate" onclick="openRating('${order.id}')"><span class="material-icons">star_outline</span>Rate</button>`:''}
+            ${canCancel?`<button class="oc-action-btn oc-btn-cancel" onclick="cancelOrder('${order.id}')"><span class="material-icons">close</span>Cancel</button>`:''}
+            <button class="oc-action-btn oc-btn-reorder" onclick="reorder('${order.id}')"><span class="material-icons">replay</span>Reorder</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escHTML(s){if(!s)return '';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+// Cancel Order
+async function cancelOrder(id){
+  if(!confirm('Are you sure you want to cancel this order?'))return;
+  try{
+    const{error}=await sb.from('orders').update({
+      status:'cancelled',
+      cancelled_by:'customer',
+      cancellation_reason:'Cancelled by customer',
+      cancelled_at:new Date().toISOString()
+    }).eq('id',id);
+    if(error)throw error;
+    const idx=allOrders.findIndex(o=>o.id===id);
+    if(idx>-1)allOrders[idx].status='cancelled';
+    filterOrders(currentFilter,document.querySelector('.filter-tab.active'));
+    toast('Order cancelled successfully','success');
+  }catch(e){toast('Failed to cancel: '+e.message,'error')}
+}
+
+// Reorder
+function reorder(id){
+  const items=allOrderItems[id]||[];
+  if(!items.length){toast('No items to reorder','error');return}
+  let cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]');
+  items.forEach(item=>{
+    const existing=cart.find(c=>c.id===item.food_id);
+    if(existing){existing.qty+=item.quantity}
+    else{
+      cart.push({
+        id:item.food_id,
+        food_name:item.food_name,
+        seller_name:item.seller_name||'',
+        price:parseFloat(item.unit_price),
+        image:item.food_image||'',
+        qty:item.quantity
+      });
+    }
+  });
+  localStorage.setItem('infocity_cart',JSON.stringify(cart));
+  toast('Items added to cart! Redirecting…','success');
+  setTimeout(()=>{window.location.href='/customer/cart.html'},1200);
+}
+
+// Rating
+function openRating(id){
+  ratingOrderId=id;selectedStars=0;
+  document.querySelectorAll('#starRating .material-icons').forEach(s=>s.classList.remove('filled'));
+  document.getElementById('reviewText').value='';
+  const order=allOrders.find(o=>o.id===id);
+  document.getElementById('rateOrderInfo').textContent=order?`Rate your order from ${order.seller_name}`:'How was your experience?';
+  document.getElementById('rateOverlay').classList.add('active');
+}
+function closeRating(){document.getElementById('rateOverlay').classList.remove('active');ratingOrderId=null}
+function setStar(n){
+  selectedStars=n;
+  document.querySelectorAll('#starRating .material-icons').forEach(s=>{
+    s.classList.toggle('filled',parseInt(s.dataset.star)<=n);
+  });
+}
+async function submitRating(){
+  if(!selectedStars){toast('Please select a rating','error');return}
+  try{
+    const{error}=await sb.from('orders').update({
+      rating:selectedStars,
+      review:document.getElementById('reviewText').value.trim()||null,
+      rated_at:new Date().toISOString()
+    }).eq('id',ratingOrderId);
+    if(error)throw error;
+
+    // Also rate each food item
+    const items=allOrderItems[ratingOrderId]||[];
+    for(const item of items){
+      if(item.food_id){
+        try{await sb.rpc('add_food_rating',{p_food_id:item.food_id,p_rating:selectedStars})}catch(e){}
+      }
+    }
+
+    const idx=allOrders.findIndex(o=>o.id===ratingOrderId);
+    if(idx>-1)allOrders[idx].rating=selectedStars;
+    closeRating();
+    filterOrders(currentFilter,document.querySelector('.filter-tab.active'));
+    toast('Thank you for your review! ⭐','success');
+  }catch(e){toast('Failed to submit rating','error')}
+}
+
+// Theme
+function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('infocity_theme',n);document.getElementById('themeIcon').textContent=n==='dark'?'dark_mode':'light_mode'}
+(function(){const s=localStorage.getItem('infocity_theme');if(s){document.documentElement.setAttribute('data-theme',s);document.getElementById('themeIcon').textContent=s==='dark'?'dark_mode':'light_mode'}})();
+
+function toast(msg,type='info'){const icons={success:'check_circle',error:'error',info:'info'};const box=document.createElement('div');box.className='toast '+type;box.innerHTML=`<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;document.getElementById('toastContainer').appendChild(box);setTimeout(()=>{box.style.animation='slideOut .35s forwards';setTimeout(()=>box.remove(),350)},3500)}
+
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20)});
+</script>
+</body>
+</html>

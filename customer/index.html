@@ -1,133 +1,1745 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info City Courts - Order Delicious Food Online</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="theme-color" content="#0b0b0f"/>
+  <title>Infocity Court — Explore Food</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round" rel="stylesheet"/>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       CSS VARIABLES & THEME SYSTEM
+       ═══════════════════════════════════════════════ */
+    :root {
+      --font-primary: 'Poppins', sans-serif;
+      --font-secondary: 'Inter', sans-serif;
+      --font-display: 'Playfair Display', serif;
+      --accent: #ff6b35;
+      --accent-light: #ff8c5a;
+      --accent-dark: #e8590c;
+      --gold: #ffc300;
+      --green: #22c55e;
+      --red: #ef4444;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.08);
+      --shadow-md: 0 8px 30px rgba(0,0,0,.12);
+      --shadow-lg: 0 20px 60px rgba(0,0,0,.18);
+      --nav-height: 72px;
+      --transition: .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0b0b0f;
+      --bg-secondary: #13131a;
+      --bg-card: #1a1a24;
+      --bg-card-hover: #22222e;
+      --bg-elevated: #1e1e2a;
+      --bg-input: rgba(255,255,255,.05);
+      --bg-nav: rgba(11,11,15,.85);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255,255,255,.7);
+      --text-tertiary: rgba(255,255,255,.4);
+      --border: rgba(255,255,255,.08);
+      --border-hover: rgba(255,255,255,.15);
+      --overlay: rgba(0,0,0,.6);
+      --card-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+    [data-theme="light"] {
+      --bg-primary: #f8f8fc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f0f0f5;
+      --bg-elevated: #ffffff;
+      --bg-input: rgba(0,0,0,.04);
+      --bg-nav: rgba(255,255,255,.88);
+      --text-primary: #1a1a2e;
+      --text-secondary: rgba(26,26,46,.65);
+      --text-tertiary: rgba(26,26,46,.4);
+      --border: rgba(0,0,0,.08);
+      --border-hover: rgba(0,0,0,.15);
+      --overlay: rgba(0,0,0,.4);
+      --card-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════════ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{font-size:16px;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+    body{
+      font-family:var(--font-primary);
+      background:var(--bg-primary);
+      color:var(--text-primary);
+      min-height:100vh;
+      overflow-x:hidden;
+      transition:background .4s,color .4s;
+    }
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    button{font-family:var(--font-primary);cursor:pointer;border:none;background:none}
+    input,select,textarea{font-family:var(--font-primary)}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(255,107,53,.3);border-radius:3px}
+
+    /* ═══════════════════════════════════════════════
+       PAGE LOADER
+       ═══════════════════════════════════════════════ */
+    #pageLoader{
+      position:fixed;inset:0;z-index:99999;
+      background:var(--bg-primary);
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:20px;
+      transition:opacity .5s;
+    }
+    #pageLoader.hidden{opacity:0;pointer-events:none}
+    .loader-brand{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .loader-ring{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ═══════════════════════════════════════════════
+       LOGIN POPUP MODAL
+       ═══════════════════════════════════════════════ */
+    .login-modal-overlay{
+      position:fixed;inset:0;z-index:90000;
+      background:rgba(0,0,0,.7);
+      backdrop-filter:blur(12px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;animation:fadeIn .4s forwards;
+    }
+    @keyframes fadeIn{to{opacity:1}}
+    .login-modal{
+      background:var(--bg-card);
+      border-radius:var(--radius-xl);
+      padding:48px 40px;
+      text-align:center;
+      max-width:420px;width:90%;
+      box-shadow:0 40px 100px rgba(0,0,0,.4);
+      animation:scaleUp .5s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes scaleUp{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+    .login-modal .modal-icon{
+      width:80px;height:80px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;
+    }
+    .login-modal .modal-icon .material-icons{font-size:38px;color:#fff}
+    .login-modal h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+    .login-modal p{font-size:.9rem;color:var(--text-secondary);margin-bottom:28px;line-height:1.6}
+    .login-modal .btn-go{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:14px 36px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+      color:#fff;font-weight:700;font-size:.95rem;
+      border-radius:var(--radius-md);
+      box-shadow:0 6px 25px rgba(255,107,53,.35);
+      transition:var(--transition);
+    }
+    .login-modal .btn-go:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(255,107,53,.45)}
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR
+       ═══════════════════════════════════════════════ */
+    .navbar{
+      position:fixed;top:0;left:0;right:0;
+      height:var(--nav-height);
+      background:var(--bg-nav);
+      backdrop-filter:blur(20px) saturate(1.4);
+      border-bottom:1px solid var(--border);
+      z-index:1000;
+      display:flex;align-items:center;
+      padding:0 clamp(16px,4vw,48px);
+      transition:background .4s,box-shadow .3s;
+    }
+    .navbar.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.15)}
+    .nav-left{display:flex;align-items:center;gap:16px;flex:1}
+    .nav-brand{display:flex;align-items:center;gap:8px;cursor:pointer}
+    .nav-brand .material-icons{
+      font-size:30px;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .nav-brand span{font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-location{
+      display:flex;align-items:center;gap:6px;
+      padding:8px 14px;
+      background:var(--bg-input);
+      border:1px solid var(--border);
+      border-radius:var(--radius-sm);
+      cursor:pointer;
+      transition:var(--transition);
+      max-width:220px;
+    }
+    .nav-location:hover{border-color:var(--border-hover);background:var(--bg-card)}
+    .nav-location .material-icons{font-size:18px;color:var(--accent)}
+    .nav-location .loc-text{font-size:.78rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+    .nav-location .loc-label{font-size:.62rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+    /* search bar */
+    .nav-search{
+      flex:1.5;
+      max-width:540px;
+      position:relative;
+      margin:0 20px;
+    }
+    .nav-search input{
+      width:100%;
+      padding:12px 18px 12px 46px;
+      background:var(--bg-input);
+      border:1.5px solid var(--border);
+      border-radius:50px;
+      font-size:.88rem;
+      color:var(--text-primary);
+      outline:none;
+      transition:var(--transition);
+    }
+    .nav-search input::placeholder{color:var(--text-tertiary)}
+    .nav-search input:focus{
+      border-color:var(--accent);
+      background:var(--bg-card);
+      box-shadow:0 0 0 4px rgba(255,107,53,.1);
+    }
+    .nav-search .material-icons.search-icon{
+      position:absolute;left:16px;top:50%;transform:translateY(-50%);
+      font-size:20px;color:var(--text-tertiary);
+      transition:var(--transition);
+    }
+    .nav-search input:focus~.search-icon{color:var(--accent)}
+    .nav-search .search-clear{
+      position:absolute;right:14px;top:50%;transform:translateY(-50%);
+      font-size:18px;color:var(--text-tertiary);
+      cursor:pointer;display:none;
+      transition:var(--transition);
+    }
+    .nav-search .search-clear:hover{color:var(--text-primary)}
+
+    /* search dropdown */
+    .search-dropdown{
+      position:absolute;top:calc(100% + 8px);left:0;right:0;
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:var(--radius-md);
+      box-shadow:var(--shadow-lg);
+      max-height:420px;overflow-y:auto;
+      display:none;z-index:100;
+    }
+    .search-dropdown.active{display:block;animation:fadeDown .25s ease}
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .search-dropdown .search-item{
+      display:flex;align-items:center;gap:14px;
+      padding:14px 18px;
+      transition:var(--transition);cursor:pointer;
+    }
+    .search-dropdown .search-item:hover{background:var(--bg-card-hover)}
+    .search-dropdown .search-item img{width:52px;height:52px;border-radius:var(--radius-sm);object-fit:cover}
+    .search-dropdown .search-item .si-info{flex:1}
+    .search-dropdown .search-item .si-name{font-size:.88rem;font-weight:600}
+    .search-dropdown .search-item .si-seller{font-size:.75rem;color:var(--text-tertiary)}
+    .search-dropdown .search-item .si-price{font-weight:700;color:var(--accent);font-size:.9rem}
+    .search-no-result{padding:30px;text-align:center;color:var(--text-tertiary);font-size:.88rem}
+
+    /* nav right */
+    .nav-right{display:flex;align-items:center;gap:6px}
+    .nav-btn{
+      display:flex;align-items:center;gap:6px;
+      padding:10px 16px;
+      border-radius:var(--radius-sm);
+      font-size:.82rem;font-weight:600;
+      color:var(--text-secondary);
+      transition:var(--transition);
+      position:relative;
+    }
+    .nav-btn:hover{background:var(--bg-input);color:var(--text-primary)}
+    .nav-btn .material-icons{font-size:22px}
+    .nav-btn .badge{
+      position:absolute;top:4px;right:6px;
+      min-width:18px;height:18px;
+      background:var(--red);
+      color:#fff;font-size:.65rem;font-weight:700;
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      line-height:1;
+    }
+    .theme-toggle{
+      width:40px;height:40px;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:50%;
+      transition:var(--transition);
+    }
+    .theme-toggle:hover{background:var(--bg-input)}
+    .theme-toggle .material-icons{font-size:22px;color:var(--text-secondary)}
+
+    /* user avatar chip */
+    .user-chip{
+      display:flex;align-items:center;gap:10px;
+      padding:6px 14px 6px 6px;
+      background:var(--bg-input);
+      border:1px solid var(--border);
+      border-radius:50px;
+      cursor:pointer;
+      transition:var(--transition);
+    }
+    .user-chip:hover{border-color:var(--border-hover);background:var(--bg-card)}
+    .user-avatar{
+      width:36px;height:36px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      display:flex;align-items:center;justify-content:center;
+      font-size:.85rem;font-weight:700;color:#fff;
+      overflow:hidden;
+    }
+    .user-chip .user-name{font-size:.82rem;font-weight:600;max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* ═══════════════════════════════════════════════
+       MOBILE BOTTOM NAV
+       ═══════════════════════════════════════════════ */
+    .mobile-bottom-nav{
+      display:none;
+      position:fixed;bottom:0;left:0;right:0;
+      height:68px;
+      background:var(--bg-nav);
+      backdrop-filter:blur(20px) saturate(1.4);
+      border-top:1px solid var(--border);
+      z-index:1000;
+      padding:0 8px;
+      align-items:center;justify-content:space-around;
+    }
+    .mob-nav-item{
+      display:flex;flex-direction:column;align-items:center;gap:3px;
+      padding:8px 12px;
+      border-radius:var(--radius-sm);
+      transition:var(--transition);
+      position:relative;
+    }
+    .mob-nav-item .material-icons{font-size:24px;color:var(--text-tertiary);transition:var(--transition)}
+    .mob-nav-item span:last-child{font-size:.65rem;font-weight:600;color:var(--text-tertiary);transition:var(--transition)}
+    .mob-nav-item.active .material-icons{color:var(--accent)}
+    .mob-nav-item.active span:last-child{color:var(--accent)}
+    .mob-nav-item .mob-badge{
+      position:absolute;top:2px;right:6px;
+      min-width:16px;height:16px;
+      background:var(--red);color:#fff;
+      font-size:.6rem;font-weight:700;
+      border-radius:50%;display:flex;align-items:center;justify-content:center;
+    }
+
+    /* ═══════════════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════════════ */
+    .main{
+      margin-top:var(--nav-height);
+      padding-bottom:40px;
+      min-height:calc(100vh - var(--nav-height));
+    }
+
+    /* Hero Banner */
+    .hero-banner{
+      position:relative;
+      width:100%;
+      height:clamp(260px,40vw,420px);
+      overflow:hidden;
+      background:var(--bg-secondary);
+    }
+    .hero-banner .hero-slides{position:absolute;inset:0}
+    .hero-banner .hero-slides img{
+      position:absolute;inset:0;
+      width:100%;height:100%;object-fit:cover;
+      opacity:0;transition:opacity 1.2s ease;
+    }
+    .hero-banner .hero-slides img.active{opacity:1}
+    .hero-banner .hero-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(180deg,rgba(11,11,15,.2) 0%,rgba(11,11,15,.75) 70%,var(--bg-primary) 100%);
+      z-index:1;
+    }
+    .hero-banner .hero-text{
+      position:absolute;bottom:40px;left:clamp(20px,5vw,60px);
+      z-index:2;max-width:600px;
+    }
+    .hero-banner .hero-tag{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 14px;
+      background:rgba(255,107,53,.15);
+      border:1px solid rgba(255,107,53,.3);
+      border-radius:50px;
+      font-size:.72rem;font-weight:600;color:var(--accent);
+      margin-bottom:14px;
+    }
+    .hero-banner h1{
+      font-family:var(--font-display);
+      font-size:clamp(1.8rem,4.5vw,3.2rem);
+      font-weight:800;
+      line-height:1.15;
+      margin-bottom:10px;
+    }
+    .hero-banner h1 .gradient{
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .hero-banner .hero-sub{
+      font-size:clamp(.85rem,1.5vw,1.05rem);
+      color:var(--text-secondary);
+      line-height:1.6;
+      max-width:480px;
+    }
+    .hero-banner .hero-stats{
+      display:flex;gap:28px;margin-top:20px;
+    }
+    .hero-banner .hero-stat{display:flex;flex-direction:column}
+    .hero-banner .hero-stat .stat-num{font-size:1.3rem;font-weight:800;color:var(--accent)}
+    .hero-banner .hero-stat .stat-label{font-size:.7rem;color:var(--text-tertiary);font-weight:500}
+
+    /* hero dots */
+    .hero-dots-bar{
+      position:absolute;bottom:20px;right:clamp(20px,5vw,60px);
+      z-index:2;display:flex;gap:6px;
+    }
+    .hero-dots-bar span{
+      width:8px;height:8px;border-radius:50%;
+      background:rgba(255,255,255,.25);transition:.3s;cursor:pointer;
+    }
+    .hero-dots-bar span.active{width:26px;border-radius:4px;background:var(--accent)}
+
+    /* ═══════════════════════════════════════════════
+       SECTION STYLES
+       ═══════════════════════════════════════════════ */
+    .section{
+      padding:clamp(28px,4vw,48px) clamp(16px,4vw,60px);
+    }
+    .section-header{
+      display:flex;align-items:flex-end;justify-content:space-between;
+      margin-bottom:24px;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .section-header .sh-left{}
+    .section-tag{
+      font-size:.7rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:1.2px;
+      color:var(--accent);
+      margin-bottom:4px;
+    }
+    .section-title{
+      font-family:var(--font-display);
+      font-size:clamp(1.3rem,2.5vw,1.8rem);
+      font-weight:700;
+      line-height:1.2;
+    }
+    .section-sub{font-size:.85rem;color:var(--text-tertiary);margin-top:4px}
+    .section-header .see-all{
+      display:flex;align-items:center;gap:4px;
+      font-size:.82rem;font-weight:600;
+      color:var(--accent);
+      transition:var(--transition);
+      white-space:nowrap;
+    }
+    .section-header .see-all:hover{gap:8px}
+    .section-header .see-all .material-icons{font-size:18px;transition:var(--transition)}
+
+    /* Category Chips / Filter */
+    .category-bar{
+      display:flex;gap:10px;
+      padding:0 clamp(16px,4vw,60px);
+      overflow-x:auto;
+      -ms-overflow-style:none;scrollbar-width:none;
+      margin-top:-10px;
+      margin-bottom:10px;
+    }
+    .category-bar::-webkit-scrollbar{display:none}
+    .cat-chip{
+      display:flex;align-items:center;gap:8px;
+      padding:10px 20px;
+      background:var(--bg-card);
+      border:1.5px solid var(--border);
+      border-radius:50px;
+      font-size:.82rem;font-weight:600;
+      color:var(--text-secondary);
+      white-space:nowrap;
+      cursor:pointer;
+      transition:var(--transition);
+      flex-shrink:0;
+    }
+    .cat-chip:hover{border-color:var(--accent);color:var(--accent)}
+    .cat-chip.active{
+      background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+      color:#fff;border-color:transparent;
+      box-shadow:0 4px 18px rgba(255,107,53,.3);
+    }
+    .cat-chip .material-icons{font-size:18px}
+
+    /* ═══════════════════════════════════════════════
+       FOOD CARD GRID
+       ═══════════════════════════════════════════════ */
+    .food-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:22px;
+    }
+    .food-card{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      transition:var(--transition);
+      cursor:pointer;
+      position:relative;
+    }
+    .food-card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--card-shadow);
+      border-color:var(--border-hover);
+    }
+    .food-card .fc-img{
+      position:relative;
+      width:100%;
+      height:200px;
+      overflow:hidden;
+      background:var(--bg-secondary);
+    }
+    .food-card .fc-img img{
+      width:100%;height:100%;object-fit:cover;
+      transition:transform .6s ease;
+    }
+    .food-card:hover .fc-img img{transform:scale(1.08)}
+    .food-card .fc-img .fc-badge{
+      position:absolute;top:14px;left:14px;
+      padding:5px 12px;
+      border-radius:50px;
+      font-size:.68rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:.5px;
+    }
+    .fc-badge.trending{background:rgba(255,107,53,.9);color:#fff}
+    .fc-badge.royal{background:rgba(255,195,0,.9);color:#1a1a2e}
+    .fc-badge.popular{background:rgba(34,197,94,.9);color:#fff}
+    .food-card .fc-img .fc-fav{
+      position:absolute;top:14px;right:14px;
+      width:36px;height:36px;
+      background:rgba(0,0,0,.4);
+      backdrop-filter:blur(8px);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      transition:var(--transition);
+      border:none;cursor:pointer;
+    }
+    .food-card .fc-img .fc-fav .material-icons{font-size:20px;color:#fff;transition:var(--transition)}
+    .food-card .fc-img .fc-fav.liked .material-icons{color:var(--red)}
+    .food-card .fc-img .fc-fav:hover{background:rgba(0,0,0,.6);transform:scale(1.1)}
+    .food-card .fc-img .fc-rating{
+      position:absolute;bottom:14px;left:14px;
+      display:flex;align-items:center;gap:4px;
+      padding:5px 10px;
+      background:rgba(0,0,0,.5);
+      backdrop-filter:blur(8px);
+      border-radius:50px;
+      font-size:.75rem;font-weight:700;color:#fff;
+    }
+    .food-card .fc-img .fc-rating .material-icons{font-size:16px;color:var(--gold)}
+
+    .food-card .fc-body{padding:18px}
+    .food-card .fc-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .food-card .fc-name{font-size:1rem;font-weight:700;line-height:1.3;flex:1}
+    .food-card .fc-price{
+      font-size:1.1rem;font-weight:800;
+      color:var(--accent);
+      white-space:nowrap;
+    }
+    .food-card .fc-seller{
+      display:flex;align-items:center;gap:5px;
+      margin-top:6px;
+      font-size:.78rem;color:var(--text-tertiary);
+    }
+    .food-card .fc-seller .material-icons{font-size:15px}
+    .food-card .fc-desc{
+      font-size:.8rem;
+      color:var(--text-tertiary);
+      line-height:1.5;
+      margin-top:10px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .food-card .fc-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:14px;
+      padding-top:14px;
+      border-top:1px solid var(--border);
+    }
+    .food-card .fc-time{
+      display:flex;align-items:center;gap:4px;
+      font-size:.75rem;color:var(--text-tertiary);
+    }
+    .food-card .fc-time .material-icons{font-size:16px}
+    .food-card .fc-add-btn{
+      display:flex;align-items:center;gap:6px;
+      padding:8px 18px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+      color:#fff;font-size:.78rem;font-weight:700;
+      border-radius:50px;
+      transition:var(--transition);
+      box-shadow:0 3px 12px rgba(255,107,53,.25);
+    }
+    .food-card .fc-add-btn:hover{transform:scale(1.05);box-shadow:0 5px 18px rgba(255,107,53,.35)}
+    .food-card .fc-add-btn .material-icons{font-size:16px}
+
+    /* horizontal scroll section */
+    .food-scroll{
+      display:flex;gap:20px;
+      overflow-x:auto;
+      padding-bottom:8px;
+      -ms-overflow-style:none;scrollbar-width:none;
+    }
+    .food-scroll::-webkit-scrollbar{display:none}
+    .food-scroll .food-card{min-width:300px;max-width:320px;flex-shrink:0}
+
+    /* Promo Banner */
+    .promo-banner{
+      margin:0 clamp(16px,4vw,60px);
+      padding:clamp(28px,4vw,44px) clamp(24px,4vw,48px);
+      background:linear-gradient(135deg,#1a0a2e 0%,#2d1b4e 40%,#1a0a2e 100%);
+      border-radius:var(--radius-xl);
+      display:flex;align-items:center;justify-content:space-between;
+      gap:30px;
+      overflow:hidden;
+      position:relative;
+    }
+    .promo-banner::before{
+      content:'';position:absolute;top:-50%;right:-10%;
+      width:350px;height:350px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(255,107,53,.2) 0%,transparent 70%);
+    }
+    .promo-banner .promo-text{position:relative;z-index:1;flex:1}
+    .promo-banner .promo-tag{
+      display:inline-block;
+      padding:4px 12px;
+      background:rgba(255,195,0,.15);
+      border:1px solid rgba(255,195,0,.3);
+      border-radius:50px;
+      font-size:.68rem;font-weight:700;color:var(--gold);
+      margin-bottom:12px;
+    }
+    .promo-banner h3{
+      font-family:var(--font-display);
+      font-size:clamp(1.3rem,3vw,2rem);font-weight:700;
+      color:#fff;line-height:1.2;margin-bottom:8px;
+    }
+    .promo-banner p{font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.5;max-width:400px}
+    .promo-banner .promo-btn{
+      display:inline-flex;align-items:center;gap:8px;
+      margin-top:18px;
+      padding:12px 28px;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      color:#1a1a2e;font-weight:700;font-size:.88rem;
+      border-radius:50px;
+      transition:var(--transition);
+    }
+    .promo-banner .promo-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,107,53,.3)}
+    .promo-banner .promo-img{
+      position:relative;z-index:1;
+      width:clamp(120px,20vw,240px);
+      height:clamp(120px,20vw,240px);
+      border-radius:50%;
+      overflow:hidden;
+      border:4px solid rgba(255,255,255,.1);
+      flex-shrink:0;
+    }
+    .promo-banner .promo-img img{width:100%;height:100%;object-fit:cover}
+
+    /* Skeleton loader */
+    .skeleton{
+      background:linear-gradient(90deg,var(--bg-card) 25%,var(--bg-card-hover) 50%,var(--bg-card) 75%);
+      background-size:200% 100%;
+      animation:shimmer 1.5s infinite;
+      border-radius:var(--radius-md);
+    }
+    @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+    .skeleton-card{height:360px;border-radius:var(--radius-lg)}
+
+    /* ═══════════════════════════════════════════════
+       QUICK VIEW MODAL
+       ═══════════════════════════════════════════════ */
+    .qv-overlay{
+      position:fixed;inset:0;z-index:5000;
+      background:var(--overlay);
+      backdrop-filter:blur(8px);
+      display:none;align-items:center;justify-content:center;
+    }
+    .qv-overlay.active{display:flex;animation:fadeIn .3s}
+    .qv-modal{
+      background:var(--bg-card);
+      border-radius:var(--radius-xl);
+      max-width:720px;width:92%;
+      max-height:90vh;overflow-y:auto;
+      box-shadow:0 40px 100px rgba(0,0,0,.4);
+      animation:scaleUp .4s cubic-bezier(.16,1,.3,1);
+    }
+    .qv-modal .qv-img{
+      width:100%;height:300px;object-fit:cover;
+      border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+    }
+    .qv-modal .qv-body{padding:28px 32px 32px}
+    .qv-modal .qv-close{
+      position:absolute;top:16px;right:16px;
+      width:40px;height:40px;
+      background:rgba(0,0,0,.5);
+      backdrop-filter:blur(8px);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;
+      transition:var(--transition);
+      z-index:2;
+    }
+    .qv-modal .qv-close .material-icons{color:#fff;font-size:22px}
+    .qv-modal .qv-close:hover{background:rgba(0,0,0,.7)}
+    .qv-modal .qv-name{font-size:1.4rem;font-weight:700;margin-bottom:4px}
+    .qv-modal .qv-seller-row{
+      display:flex;align-items:center;gap:8px;
+      font-size:.85rem;color:var(--text-tertiary);
+      margin-bottom:14px;
+    }
+    .qv-modal .qv-seller-row .material-icons{font-size:18px;color:var(--accent)}
+    .qv-modal .qv-rating-row{
+      display:flex;align-items:center;gap:12px;
+      margin-bottom:16px;
+    }
+    .qv-modal .qv-rating-chip{
+      display:flex;align-items:center;gap:4px;
+      padding:4px 12px;
+      background:rgba(34,197,94,.1);
+      border:1px solid rgba(34,197,94,.3);
+      border-radius:50px;
+      font-size:.82rem;font-weight:700;color:var(--green);
+    }
+    .qv-modal .qv-rating-chip .material-icons{font-size:16px}
+    .qv-modal .qv-desc{
+      font-size:.88rem;color:var(--text-secondary);
+      line-height:1.7;margin-bottom:24px;
+    }
+    .qv-modal .qv-price-row{
+      display:flex;align-items:center;justify-content:space-between;
+      padding-top:18px;
+      border-top:1px solid var(--border);
+    }
+    .qv-modal .qv-price{font-size:1.5rem;font-weight:800;color:var(--accent)}
+    .qv-modal .qv-add-cart{
+      display:flex;align-items:center;gap:8px;
+      padding:14px 32px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+      color:#fff;font-size:.92rem;font-weight:700;
+      border-radius:50px;
+      transition:var(--transition);
+      box-shadow:0 6px 25px rgba(255,107,53,.35);
+    }
+    .qv-modal .qv-add-cart:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(255,107,53,.45)}
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ */
+    .footer{
+      background:var(--bg-secondary);
+      border-top:1px solid var(--border);
+      padding:clamp(40px,6vw,80px) clamp(16px,4vw,60px) 30px;
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns:1.5fr 1fr 1fr 1fr;
+      gap:40px;
+      margin-bottom:48px;
+    }
+    .footer-brand .fb-name{
+      display:flex;align-items:center;gap:8px;
+      font-size:1.2rem;font-weight:800;
+      margin-bottom:14px;
+    }
+    .footer-brand .fb-name .material-icons{
+      font-size:28px;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .footer-brand .fb-name span{
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .footer-brand p{font-size:.85rem;color:var(--text-tertiary);line-height:1.7;max-width:300px}
+    .footer-social{display:flex;gap:10px;margin-top:18px}
+    .footer-social a{
+      width:40px;height:40px;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:50%;
+      background:var(--bg-input);
+      border:1px solid var(--border);
+      transition:var(--transition);
+    }
+    .footer-social a:hover{border-color:var(--accent);background:rgba(255,107,53,.1)}
+    .footer-social a .material-icons{font-size:20px;color:var(--text-secondary)}
+    .footer-col h4{font-size:.88rem;font-weight:700;margin-bottom:18px}
+    .footer-col ul{list-style:none}
+    .footer-col ul li{margin-bottom:12px}
+    .footer-col ul li a{font-size:.84rem;color:var(--text-tertiary);transition:var(--transition)}
+    .footer-col ul li a:hover{color:var(--accent)}
+    .footer-bottom{
+      display:flex;align-items:center;justify-content:space-between;
+      padding-top:28px;
+      border-top:1px solid var(--border);
+      flex-wrap:wrap;gap:12px;
+    }
+    .footer-bottom p{font-size:.78rem;color:var(--text-tertiary)}
+    .footer-bottom .fb-links{display:flex;gap:20px}
+    .footer-bottom .fb-links a{font-size:.78rem;color:var(--text-tertiary);transition:var(--transition)}
+    .footer-bottom .fb-links a:hover{color:var(--accent)}
+
+    /* ═══════════════════════════════════════════════
+       TOAST NOTIFICATIONS
+       ═══════════════════════════════════════════════ */
+    .toast-container{position:fixed;top:84px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+    .toast{
+      display:flex;align-items:center;gap:12px;
+      padding:14px 20px;
+      border-radius:var(--radius-md);
+      font-size:.84rem;font-weight:500;
+      backdrop-filter:blur(16px);
+      animation:slideIn .4s cubic-bezier(.16,1,.3,1);
+      box-shadow:var(--shadow-lg);
+      max-width:380px;
+    }
+    .toast.success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+    .toast.error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+    .toast.info{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#3b82f6}
+    .toast .material-icons{font-size:22px}
+    @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+    @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
+
+    /* ═══════════════════════════════════════════════
+       SCROLL REVEAL ANIMATION
+       ═══════════════════════════════════════════════ */
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════ */
+    @media(max-width:1024px){
+      .food-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+    }
+    @media(max-width:768px){
+      .nav-search{margin:0 10px;max-width:unset}
+      .nav-location{display:none}
+      .nav-btn .btn-label{display:none}
+      .nav-btn{padding:10px 10px}
+      .user-chip .user-name{display:none}
+      .mobile-bottom-nav{display:flex}
+      .main{padding-bottom:80px}
+      .hero-banner .hero-stats{gap:18px}
+      .promo-banner{flex-direction:column;text-align:center}
+      .promo-banner p{max-width:100%}
+      .promo-banner .promo-img{width:140px;height:140px}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .food-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+      .qv-modal .qv-img{height:220px}
+    }
+    @media(max-width:480px){
+      .nav-brand span{display:none}
+      .food-grid{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr}
+      .hero-banner h1{font-size:1.5rem}
+      .food-scroll .food-card{min-width:260px}
+      .promo-banner{margin:0 12px;padding:24px 20px}
+      .qv-modal .qv-body{padding:20px}
+    }
+    @media(max-width:380px){
+      .food-card .fc-img{height:170px}
+    }
+
+    /* mobile location bar */
+    .mobile-loc-bar{
+      display:none;
+      padding:12px clamp(16px,4vw,60px);
+      background:var(--bg-secondary);
+      border-bottom:1px solid var(--border);
+    }
+    .mobile-loc-bar .ml-inner{
+      display:flex;align-items:center;gap:8px;
+    }
+    .mobile-loc-bar .material-icons{font-size:20px;color:var(--accent)}
+    .mobile-loc-bar .ml-text{flex:1}
+    .mobile-loc-bar .ml-label{font-size:.65rem;color:var(--text-tertiary);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .mobile-loc-bar .ml-address{font-size:.82rem;color:var(--text-primary);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media(max-width:768px){
+      .mobile-loc-bar{display:block}
+    }
+
+    /* empty state */
+    .empty-state{
+      text-align:center;
+      padding:60px 20px;
+    }
+    .empty-state .material-icons{font-size:64px;color:var(--text-tertiary);margin-bottom:16px}
+    .empty-state h3{font-size:1.2rem;font-weight:600;margin-bottom:8px}
+    .empty-state p{font-size:.88rem;color:var(--text-tertiary)}
+  </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="container">
-            <div class="logo">
-                <img src="img/logo.png" alt="Uber Eats">
-                <h1>Info City Courts</h1>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="menu.html">Menu</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li><a href="../index.html">Logout</a></li>
-                    <li><a href="#" id="cartLink">Cart <span class="cart-count">0</span></a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Delicious Food Delivered to Your Doorstep</h1>
-                <p>Order from our wide selection of mouth-watering dishes prepared by top chefs</p>
-                <a href="menu.html" class="btn-primary">Order Now</a>
-            </div>
-        </div>
-    </section>
+<!-- ════════ PAGE LOADER ════════ -->
+<div id="pageLoader">
+  <div class="loader-ring"></div>
+  <div class="loader-brand">Infocity Court</div>
+</div>
 
-    <!-- Categories Section -->
-    <section class="categories">
-        <div class="container">
-            <h2>Popular Categories</h2>
-            <div class="category-grid">
-                <div class="category-card">
-                    <img src="img/category/pizza.jpg" alt="Pizza">
-                    <h3>Pizza</h3>
-                </div>
-                <div class="category-card">
-                    <img src="img/category/burger.jpg" alt="Burgers">
-                    <h3>Burgers</h3>
-                </div>
-                <div class="category-card">
-                    <img src="img/category/sandwich.jpg" alt="Sandwiches">
-                    <h3>Sandwiches</h3>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ════════ LOGIN REQUIRED MODAL (hidden by default) ════════ -->
+<div class="login-modal-overlay" id="loginModal" style="display:none">
+  <div class="login-modal">
+    <div class="modal-icon"><span class="material-icons">lock</span></div>
+    <h2>Login Required</h2>
+    <p>You need to sign in or create an account to explore Infocity Court's amazing food collection.</p>
+    <a href="authentication.html" class="btn-go">
+      <span class="material-icons" style="font-size:20px">login</span>
+      Go to Login
+    </a>
+  </div>
+</div>
 
-    <!-- Featured Items Section -->
-    <section class="featured">
-        <div class="container">
-            <h2>Featured Items</h2>
-            <div class="food-grid" id="featuredFoods">
-                <!-- Featured items will be loaded here by JavaScript -->
-            </div>
+<!-- ════════ QUICK VIEW MODAL ════════ -->
+<div class="qv-overlay" id="qvOverlay" onclick="if(event.target===this)closeQuickView()">
+  <div class="qv-modal" style="position:relative">
+    <div class="qv-close" onclick="closeQuickView()"><span class="material-icons">close</span></div>
+    <img class="qv-img" id="qvImg" src="" alt=""/>
+    <div class="qv-body">
+      <div class="qv-name" id="qvName"></div>
+      <div class="qv-seller-row">
+        <span class="material-icons">storefront</span>
+        <span id="qvSeller"></span>
+      </div>
+      <div class="qv-rating-row">
+        <div class="qv-rating-chip">
+          <span class="material-icons">star</span>
+          <span id="qvRating"></span>
         </div>
-    </section>
-
-    <!-- Cart Modal -->
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-content">
-            <div class="cart-header">
-                <h2>Your Cart</h2>
-                <span class="close-btn" id="closeCart">&times;</span>
-            </div>
-            <div class="cart-body">
-                <div id="cartItems">
-                    <!-- Cart items will be loaded here -->
-                    <p class="empty-cart-message">Your cart is empty</p>
-                </div>
-                <div class="payment-options">
-                    <h3>Select Payment Method</h3>
-                    <label><input type="radio" name="paymentMethod" value="Card"> CARD (accepted only on heavy orders above ₹2000)</label>
-                    <label><input type="radio" name="paymentMethod" value="COD"> CASH ON DELIVERY</label>
-                    <label><input type="radio" name="paymentMethod" value="Online"> ONLINE</label>
-                </div>
-                <div class="cart-footer">
-                    <div class="cart-total">
-                        <h3>Total: ₹<span id="cartTotal">0.00</span></h3>
-                    </div>
-                    <button class="btn-primary checkout-btn" id="checkoutBtn">Checkout</button>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="qv-desc" id="qvDesc"></div>
+      <div class="qv-price-row">
+        <div class="qv-price" id="qvPrice"></div>
+        <button class="qv-add-cart" id="qvAddCart" onclick="addToCartFromQV()">
+          <span class="material-icons">shopping_cart</span>
+          Add to Cart
+        </button>
+      </div>
     </div>
+  </div>
+</div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>INFO CITY COURTS</h3>
-                    <p>Delivering delicious food with love since 2025</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="menu.html">Menu</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> 123 Food Street, Yummy City</p>
-                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
-                    <p><i class="fas fa-envelope"></i> info@foodiedelight.com</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 INFO CITY COURTS. All rights reserved.</p>
-            </div>
+<!-- ════════ TOAST CONTAINER ════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ════════ NAVBAR ════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-left">
+    <a href="/customer/index.html" class="nav-brand">
+      <span class="material-icons">restaurant</span>
+      <span>Infocity Court</span>
+    </a>
+    <div class="nav-location" id="navLocation">
+      <span class="material-icons">location_on</span>
+      <div>
+        <div class="loc-label">Deliver to</div>
+        <div class="loc-text" id="locText">Detecting location…</div>
+      </div>
+      <span class="material-icons" style="font-size:16px;color:var(--text-tertiary)">expand_more</span>
+    </div>
+  </div>
+
+  <div class="nav-search" id="navSearchWrap">
+    <input type="text" id="searchInput" placeholder="Search for dishes, restaurants…" autocomplete="off"/>
+    <span class="material-icons search-icon">search</span>
+    <span class="material-icons search-clear" id="searchClear" onclick="clearSearch()">close</span>
+    <div class="search-dropdown" id="searchDropdown"></div>
+  </div>
+
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <span class="material-icons" id="themeIcon">dark_mode</span>
+    </button>
+    <a href="customer/cart.html" class="nav-btn">
+      <span class="material-icons">shopping_cart</span>
+      <span class="btn-label">Cart</span>
+      <span class="badge" id="cartBadge" style="display:none">0</span>
+    </a>
+    <a href="customer/orders.html" class="nav-btn">
+      <span class="material-icons">receipt_long</span>
+      <span class="btn-label">Orders</span>
+    </a>
+    <div class="user-chip" id="userChip" onclick="window.location.href='customer/account.html'">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span class="user-name" id="userName">User</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════ MOBILE LOCATION BAR ════════ -->
+<div class="mobile-loc-bar">
+  <div class="ml-inner">
+    <span class="material-icons">location_on</span>
+    <div class="ml-text">
+      <div class="ml-label">Delivering to</div>
+      <div class="ml-address" id="mobileLocText">Detecting location…</div>
+    </div>
+    <span class="material-icons" style="font-size:20px;color:var(--text-tertiary)">keyboard_arrow_down</span>
+  </div>
+</div>
+
+<!-- ════════ MAIN ════════ -->
+<main class="main" id="mainContent">
+
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="hero-slides" id="heroSlides">
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80" alt="" class="active"/>
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=80" alt=""/>
+      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=80" alt=""/>
+      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1400&q=80" alt=""/>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+      <div class="hero-tag">
+        <span class="material-icons" style="font-size:14px">local_fire_department</span>
+        #1 Food Delivery Platform
+      </div>
+      <h1>Every Flavor,<br/><span class="gradient">Delivered Fresh.</span></h1>
+      <p class="hero-sub">Explore curated dishes from the finest restaurants and food courts — from royal feasts to street-food favourites.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="stat-num">500+</span>
+          <span class="stat-label">Restaurants</span>
         </div>
-    </footer>
+        <div class="hero-stat">
+          <span class="stat-num">10k+</span>
+          <span class="stat-label">Dishes</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-num">4.9★</span>
+          <span class="stat-label">Avg Rating</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-dots-bar" id="heroDots">
+      <span class="active"></span><span></span><span></span><span></span>
+    </div>
+  </div>
 
-    <script src="../script.js"></script>
+  <!-- Category Chips -->
+  <div class="section" style="padding-bottom:0">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="section-tag">Browse</div>
+        <div class="section-title">What are you craving?</div>
+      </div>
+    </div>
+  </div>
+  <div class="category-bar" id="categoryBar">
+    <button class="cat-chip active" data-cat="all"><span class="material-icons">grid_view</span> All</button>
+    <button class="cat-chip" data-cat="biryani"><span class="material-icons">rice_bowl</span> Biryani</button>
+    <button class="cat-chip" data-cat="pizza"><span class="material-icons">local_pizza</span> Pizza</button>
+    <button class="cat-chip" data-cat="burger"><span class="material-icons">lunch_dining</span> Burgers</button>
+    <button class="cat-chip" data-cat="sushi"><span class="material-icons">set_meal</span> Sushi</button>
+    <button class="cat-chip" data-cat="dessert"><span class="material-icons">cake</span> Desserts</button>
+    <button class="cat-chip" data-cat="chinese"><span class="material-icons">ramen_dining</span> Chinese</button>
+    <button class="cat-chip" data-cat="salad"><span class="material-icons">eco</span> Healthy</button>
+    <button class="cat-chip" data-cat="steak"><span class="material-icons">restaurant</span> Steaks</button>
+    <button class="cat-chip" data-cat="coffee"><span class="material-icons">coffee</span> Coffee</button>
+  </div>
+
+  <!-- 🔥 Trending Now -->
+  <section class="section reveal" id="sectionTrending">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="section-tag">🔥 Hot Right Now</div>
+        <div class="section-title">Trending Foods</div>
+        <div class="section-sub">Most ordered in the last 24 hours</div>
+      </div>
+      <a href="#" class="see-all">See all <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="food-scroll" id="trendingScroll">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- Promo Banner -->
+  <div class="promo-banner reveal" style="margin-top:10px;margin-bottom:10px">
+    <div class="promo-text">
+      <div class="promo-tag">✨ LIMITED TIME</div>
+      <h3>Get 40% OFF on your first order</h3>
+      <p>Use code <strong style="color:var(--gold)">INFOCITY40</strong> at checkout. Valid on all restaurants.</p>
+      <a href="#" class="promo-btn">
+        <span class="material-icons" style="font-size:20px">local_offer</span>
+        Order Now
+      </a>
+    </div>
+    <div class="promo-img">
+      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" alt="Promo"/>
+    </div>
+  </div>
+
+  <!-- 👑 Royal Collection -->
+  <section class="section reveal" id="sectionRoyal">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="section-tag">👑 Premium Selection</div>
+        <div class="section-title">Royal Foods</div>
+        <div class="section-sub">Five-star dining experiences delivered to you</div>
+      </div>
+      <a href="#" class="see-all">See all <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="food-scroll" id="royalScroll">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- 📦 Most Ordered (Grid) -->
+  <section class="section reveal" id="sectionPopular">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="section-tag">📦 People's Choice</div>
+        <div class="section-title">Most Ordered</div>
+        <div class="section-sub">All-time favourites loved by thousands</div>
+      </div>
+      <a href="#" class="see-all">See all <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="food-grid" id="popularGrid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- 🍽️ All Foods (Grid) -->
+  <section class="section reveal" id="sectionAll">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="section-tag">🍽️ Full Menu</div>
+        <div class="section-title">Explore All Dishes</div>
+        <div class="section-sub">Everything available near you</div>
+      </div>
+    </div>
+    <div class="food-grid" id="allFoodsGrid">
+      <!-- populated by JS -->
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <span class="material-icons">search_off</span>
+      <h3>No dishes found</h3>
+      <p>Try searching for something else or change your filters.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="fb-name">
+        <span class="material-icons">restaurant</span>
+        <span>Infocity Court</span>
+      </div>
+      <p>Your premium food discovery and delivery platform. From five-star restaurants to bustling food courts — all in one place.</p>
+      <div class="footer-social">
+        <a href="#"><span class="material-icons">language</span></a>
+        <a href="#"><span class="material-icons">smart_display</span></a>
+        <a href="#"><span class="material-icons">tag</span></a>
+        <a href="#"><span class="material-icons">alternate_email</span></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>For You</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Refund Policy</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Partner with Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Get the App</h4>
+      <ul>
+        <li><a href="#">Download for iOS</a></li>
+        <li><a href="#">Download for Android</a></li>
+        <li><a href="#">Web App</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Infocity Court. All rights reserved.</p>
+    <div class="fb-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Cookies</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════ MOBILE BOTTOM NAV ════════ -->
+<div class="mobile-bottom-nav">
+  <a href="/customer/index.html" class="mob-nav-item active">
+    <span class="material-icons">home</span>
+    <span>Home</span>
+  </a>
+  <a href="#" class="mob-nav-item" onclick="document.getElementById('searchInput').focus();return false;">
+    <span class="material-icons">search</span>
+    <span>Search</span>
+  </a>
+  <a href="/customer/cart.html" class="mob-nav-item">
+    <span class="material-icons">shopping_cart</span>
+    <span>Cart</span>
+    <span class="mob-badge" id="mobCartBadge" style="display:none">0</span>
+  </a>
+  <a href="/customer/orders.html" class="mob-nav-item">
+    <span class="material-icons">receipt_long</span>
+    <span>Orders</span>
+  </a>
+  <a href="/customer/account.html" class="mob-nav-item">
+    <span class="material-icons">person</span>
+    <span>Account</span>
+  </a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════ -->
+<script>
+// ─── CONFIG ──────────────────────────────────────────────
+const SUPABASE_URL = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I'; // ← paste your anon key
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── STATE ───────────────────────────────────────────────
+let currentUser = null;
+let allFoods = [];
+let cart = JSON.parse(localStorage.getItem('infocity_cart') || '[]');
+let favourites = JSON.parse(localStorage.getItem('infocity_favs') || '[]');
+let activeCategory = 'all';
+let searchDebounce = null;
+let currentQVFood = null;
+
+// ═════════════════════════════════════════════════════════
+// 1. AUTH CHECK — run immediately
+// ═════════════════════════════════════════════════════════
+(async function initAuth() {
+  const uid = localStorage.getItem('infocity_uid');
+  const utype = localStorage.getItem('infocity_type');
+
+  // Not logged in at all
+  if (!uid) {
+    document.getElementById('pageLoader').classList.add('hidden');
+    document.getElementById('loginModal').style.display = 'flex';
+    setTimeout(() => { window.location.href = '/authentication.html'; }, 3000);
+    return;
+  }
+
+  // Logged in but wrong type → redirect
+  if (utype && utype !== 'customer') {
+    const routes = {
+      restaurant: '/restaurant/index.html',
+      foodcourt: '/register_foodcourt.html'
+    };
+    window.location.href = routes[utype] || '/authentication.html';
+    return;
+  }
+
+  // Validate UUID against Users table
+  try {
+    const { data, error } = await sb
+      .from('Users')
+      .select('id, name, email, type')
+      .eq('id', uid)
+      .maybeSingle();
+
+    if (error || !data) {
+      // Invalid session
+      localStorage.removeItem('infocity_uid');
+      localStorage.removeItem('infocity_type');
+      localStorage.removeItem('infocity_name');
+      document.getElementById('pageLoader').classList.add('hidden');
+      document.getElementById('loginModal').style.display = 'flex';
+      setTimeout(() => { window.location.href = '/authentication.html'; }, 3000);
+      return;
+    }
+
+    // Double-check type
+    if (data.type !== 'customer') {
+      const routes = {
+        restaurant: '/restaurant/index.html',
+        foodcourt: '/register_foodcourt.html'
+      };
+      window.location.href = routes[data.type] || '/authentication.html';
+      return;
+    }
+
+    currentUser = data;
+    setupUser(data);
+    await loadAllFoods();
+  } catch (e) {
+    console.error('Auth check failed:', e);
+    toast('Connection error. Please refresh.', 'error');
+  }
+
+  document.getElementById('pageLoader').classList.add('hidden');
+})();
+
+// ═════════════════════════════════════════════════════════
+// 2. SETUP USER UI
+// ═════════════════════════════════════════════════════════
+function setupUser(user) {
+  const initials = user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  document.getElementById('userAvatar').textContent = initials;
+  document.getElementById('userName').textContent = user.name.split(' ')[0];
+  updateCartBadge();
+}
+
+// ═════════════════════════════════════════════════════════
+// 3. GEOLOCATION BY IP
+// ═════════════════════════════════════════════════════════
+(async function getLocation() {
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    const loc = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`.replace(/(^,\s*|,\s*$)/g, '');
+    document.getElementById('locText').textContent = loc || 'Location unavailable';
+    document.getElementById('mobileLocText').textContent = loc || 'Location unavailable';
+  } catch {
+    document.getElementById('locText').textContent = 'Location unavailable';
+    document.getElementById('mobileLocText').textContent = 'Location unavailable';
+  }
+})();
+
+// ═════════════════════════════════════════════════════════
+// 4. LOAD ALL FOODS FROM SUPABASE
+// ═════════════════════════════════════════════════════════
+async function loadAllFoods() {
+  try {
+    const { data, error } = await sb
+      .from('foods')
+      .select('*')
+      .order('rating', { ascending: false });
+
+    if (error) throw error;
+    allFoods = data || [];
+
+    renderTrending();
+    renderRoyal();
+    renderPopular();
+    renderAllFoods(allFoods);
+  } catch (e) {
+    console.error('Load foods error:', e);
+    toast('Failed to load menu. Please refresh.', 'error');
+  }
+}
+
+// ═════════════════════════════════════════════════════════
+// 5. RENDER FUNCTIONS
+// ═════════════════════════════════════════════════════════
+function getFirstImage(images) {
+  if (!images) return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80';
+  const arr = images.split(',').map(s => s.trim()).filter(Boolean);
+  return arr[0] || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80';
+}
+
+function isFav(food) {
+  return favourites.includes(food.id);
+}
+
+function buildCard(food, badge = '') {
+  const img = getFirstImage(food.images);
+  const liked = isFav(food) ? 'liked' : '';
+  const heartIcon = isFav(food) ? 'favorite' : 'favorite_border';
+  return `
+    <div class="food-card" data-id="${food.id}">
+      <div class="fc-img">
+        <img src="${img}" alt="${food.food_name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80'"/>
+        ${badge ? `<div class="fc-badge ${badge.class}">${badge.text}</div>` : ''}
+        <button class="fc-fav ${liked}" onclick="event.stopPropagation();toggleFav('${food.id}',this)" title="Add to favourites">
+          <span class="material-icons">${heartIcon}</span>
+        </button>
+        <div class="fc-rating">
+          <span class="material-icons">star</span>
+          ${(food.rating || 0).toFixed(1)}
+        </div>
+      </div>
+      <div class="fc-body" onclick="openQuickView('${food.id}')">
+        <div class="fc-row">
+          <div class="fc-name">${escapeHTML(food.food_name)}</div>
+          <div class="fc-price">₹${food.price}</div>
+        </div>
+        <div class="fc-seller">
+          <span class="material-icons">storefront</span>
+          ${escapeHTML(food.seller_name || 'Infocity Court')}
+        </div>
+        <div class="fc-desc">${escapeHTML(food.description || '')}</div>
+        <div class="fc-footer">
+          <div class="fc-time">
+            <span class="material-icons">schedule</span>
+            ${15 + Math.floor(Math.random() * 25)} min
+          </div>
+          <button class="fc-add-btn" onclick="event.stopPropagation();addToCart('${food.id}')">
+            <span class="material-icons">add</span>
+            ADD
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHTML(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ── Trending: top rated (simulate "trending" with rating > 4)
+function renderTrending() {
+  const trending = allFoods.filter(f => (f.rating || 0) >= 4).slice(0, 10);
+  const container = document.getElementById('trendingScroll');
+  if (!trending.length) {
+    document.getElementById('sectionTrending').style.display = 'none';
+    return;
+  }
+  container.innerHTML = trending.map(f => buildCard(f, { text: '🔥 Trending', class: 'trending' })).join('');
+}
+
+// ── Royal: highest priced (premium items)
+function renderRoyal() {
+  const royal = [...allFoods].sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 10);
+  const container = document.getElementById('royalScroll');
+  if (!royal.length) {
+    document.getElementById('sectionRoyal').style.display = 'none';
+    return;
+  }
+  container.innerHTML = royal.map(f => buildCard(f, { text: '👑 Royal', class: 'royal' })).join('');
+}
+
+// ── Popular: random pick to simulate "most ordered"
+function renderPopular() {
+  const popular = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 8);
+  const container = document.getElementById('popularGrid');
+  if (!popular.length) {
+    document.getElementById('sectionPopular').style.display = 'none';
+    return;
+  }
+  container.innerHTML = popular.map(f => buildCard(f, { text: '🏆 Popular', class: 'popular' })).join('');
+}
+
+// ── All Foods (with category filter)
+function renderAllFoods(list) {
+  const grid = document.getElementById('allFoodsGrid');
+  const empty = document.getElementById('emptyState');
+  if (!list.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.innerHTML = list.map(f => buildCard(f)).join('');
+}
+
+// ═════════════════════════════════════════════════════════
+// 6. CATEGORY FILTER
+// ═════════════════════════════════════════════════════════
+document.getElementById('categoryBar').addEventListener('click', function(e) {
+  const chip = e.target.closest('.cat-chip');
+  if (!chip) return;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeCategory = chip.dataset.cat;
+  applyFilters();
+});
+
+function applyFilters() {
+  let filtered = [...allFoods];
+  if (activeCategory !== 'all') {
+    const cat = activeCategory.toLowerCase();
+    filtered = filtered.filter(f => {
+      const name = (f.food_name || '').toLowerCase();
+      const desc = (f.description || '').toLowerCase();
+      const seller = (f.seller_name || '').toLowerCase();
+      return name.includes(cat) || desc.includes(cat) || seller.includes(cat);
+    });
+  }
+  renderAllFoods(filtered);
+}
+
+// ═════════════════════════════════════════════════════════
+// 7. SEARCH (LIVE DATABASE SEARCH)
+// ═════════════════════════════════════════════════════════
+const searchInput = document.getElementById('searchInput');
+const searchDropdown = document.getElementById('searchDropdown');
+const searchClear = document.getElementById('searchClear');
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.trim();
+  searchClear.style.display = q ? 'block' : 'none';
+
+  clearTimeout(searchDebounce);
+  if (!q) {
+    searchDropdown.classList.remove('active');
+    renderAllFoods(allFoods);
+    return;
+  }
+  searchDebounce = setTimeout(() => liveSearch(q), 300);
+});
+
+searchInput.addEventListener('focus', function() {
+  if (this.value.trim()) searchDropdown.classList.add('active');
+});
+
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('navSearchWrap').contains(e.target)) {
+    searchDropdown.classList.remove('active');
+  }
+});
+
+async function liveSearch(query) {
+  try {
+    // Search across food_name, seller_name, description using ilike
+    const { data, error } = await sb
+      .from('foods')
+      .select('*')
+      .or(`food_name.ilike.%${query}%,seller_name.ilike.%${query}%,description.ilike.%${query}%`)
+      .order('rating', { ascending: false })
+      .limit(20);
+
+    if (error) throw error;
+
+    // Show dropdown results
+    if (!data || !data.length) {
+      searchDropdown.innerHTML = '<div class="search-no-result"><span class="material-icons" style="font-size:40px;display:block;margin:0 auto 8px;color:var(--text-tertiary)">search_off</span>No results for "' + escapeHTML(query) + '"</div>';
+    } else {
+      searchDropdown.innerHTML = data.map(f => {
+        const img = getFirstImage(f.images);
+        return `
+          <div class="search-item" onclick="openQuickView('${f.id}');searchDropdown.classList.remove('active');">
+            <img src="${img}" alt="" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60'"/>
+            <div class="si-info">
+              <div class="si-name">${escapeHTML(f.food_name)}</div>
+              <div class="si-seller">${escapeHTML(f.seller_name || '')}</div>
+            </div>
+            <div class="si-price">₹${f.price}</div>
+          </div>`;
+      }).join('');
+    }
+    searchDropdown.classList.add('active');
+
+    // Also filter the main grid
+    renderAllFoods(data || []);
+  } catch (e) {
+    console.error('Search error:', e);
+  }
+}
+
+function clearSearch() {
+  searchInput.value = '';
+  searchClear.style.display = 'none';
+  searchDropdown.classList.remove('active');
+  renderAllFoods(allFoods);
+  applyFilters();
+}
+
+// ═════════════════════════════════════════════════════════
+// 8. QUICK VIEW MODAL
+// ═════════════════════════════════════════════════════════
+function openQuickView(id) {
+  const food = allFoods.find(f => f.id == id);
+  if (!food) return;
+  currentQVFood = food;
+
+  document.getElementById('qvImg').src = getFirstImage(food.images);
+  document.getElementById('qvName').textContent = food.food_name;
+  document.getElementById('qvSeller').textContent = food.seller_name || 'Infocity Court';
+  document.getElementById('qvRating').textContent = (food.rating || 0).toFixed(1) + ' ★';
+  document.getElementById('qvDesc').textContent = food.description || 'A delicious dish prepared with care and the finest ingredients.';
+  document.getElementById('qvPrice').textContent = '₹' + food.price;
+  document.getElementById('qvOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQuickView() {
+  document.getElementById('qvOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+  currentQVFood = null;
+}
+
+function addToCartFromQV() {
+  if (currentQVFood) {
+    addToCart(currentQVFood.id);
+    closeQuickView();
+  }
+}
+
+// ═════════════════════════════════════════════════════════
+// 9. CART MANAGEMENT
+// ═════════════════════════════════════════════════════════
+function addToCart(id) {
+  const food = allFoods.find(f => f.id == id);
+  if (!food) return;
+
+  const existing = cart.find(c => c.id == id);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id: food.id,
+      food_name: food.food_name,
+      seller_name: food.seller_name,
+      price: food.price,
+      image: getFirstImage(food.images),
+      qty: 1
+    });
+  }
+  localStorage.setItem('infocity_cart', JSON.stringify(cart));
+  updateCartBadge();
+  toast(`${food.food_name} added to cart!`, 'success');
+}
+
+function updateCartBadge() {
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  const mobBadge = document.getElementById('mobCartBadge');
+  if (count > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = count;
+    mobBadge.style.display = 'flex';
+    mobBadge.textContent = count;
+  } else {
+    badge.style.display = 'none';
+    mobBadge.style.display = 'none';
+  }
+}
+
+// ═════════════════════════════════════════════════════════
+// 10. FAVOURITES
+// ═════════════════════════════════════════════════════════
+function toggleFav(id, btn) {
+  const idx = favourites.indexOf(id);
+  if (idx > -1) {
+    favourites.splice(idx, 1);
+    btn.classList.remove('liked');
+    btn.querySelector('.material-icons').textContent = 'favorite_border';
+    toast('Removed from favourites', 'info');
+  } else {
+    favourites.push(id);
+    btn.classList.add('liked');
+    btn.querySelector('.material-icons').textContent = 'favorite';
+    toast('Added to favourites ❤️', 'success');
+  }
+  localStorage.setItem('infocity_favs', JSON.stringify(favourites));
+}
+
+// ═════════════════════════════════════════════════════════
+// 11. THEME TOGGLE
+// ═════════════════════════════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('infocity_theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+}
+// Restore saved theme
+(function restoreTheme() {
+  const saved = localStorage.getItem('infocity_theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeIcon').textContent = saved === 'dark' ? 'dark_mode' : 'light_mode';
+  }
+})();
+
+// ═════════════════════════════════════════════════════════
+// 12. HERO BANNER CAROUSEL
+// ═════════════════════════════════════════════════════════
+(() => {
+  const imgs = document.querySelectorAll('#heroSlides img');
+  const dots = document.querySelectorAll('#heroDots span');
+  let idx = 0;
+  setInterval(() => {
+    imgs[idx].classList.remove('active');
+    dots[idx].classList.remove('active');
+    idx = (idx + 1) % imgs.length;
+    imgs[idx].classList.add('active');
+    dots[idx].classList.add('active');
+  }, 5000);
+})();
+
+// ═════════════════════════════════════════════════════════
+// 13. NAVBAR SCROLL EFFECT
+// ═════════════════════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ═════════════════════════════════════════════════════════
+// 14. SCROLL REVEAL ANIMATION
+// ═════════════════════════════════════════════════════════
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ═════════════════════════════════════════════════════════
+// 15. TOAST SYSTEM
+// ═════════════════════════════════════════════════════════
+function toast(msg, type = 'info') {
+  const icons = { success: 'check_circle', error: 'error', info: 'info' };
+  const box = document.createElement('div');
+  box.className = 'toast ' + type;
+  box.innerHTML = `<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(box);
+  setTimeout(() => {
+    box.style.animation = 'slideOut .35s forwards';
+    setTimeout(() => box.remove(), 350);
+  }, 3500);
+}
+
+// ═════════════════════════════════════════════════════════
+// 16. KEYBOARD SHORTCUT (Ctrl+K → focus search)
+// ═════════════════════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape') {
+    closeQuickView();
+    searchDropdown.classList.remove('active');
+  }
+});
+
+</script>
 </body>
 </html>
