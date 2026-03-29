@@ -347,7 +347,7 @@ let currentUser=null;let allFoods=[];let cart=JSON.parse(localStorage.getItem('i
 
 function setupUser(user){const initials=user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);document.getElementById('userAvatar').textContent=initials;document.getElementById('userName').textContent=user.name.split(' ')[0];updateCartBadge()}
 
-(async function getLocation(){try{const res=await fetch('https://ipapi.co/json/');const data=await res.json();const loc=`${data.city||''}, ${data.region||''}, ${data.country_name||''}`.replace(/(^,\s*|,\s*$)/g,'');document.getElementById('locText').textContent=loc||'Location unavailable';document.getElementById('mobileLocText').textContent=loc||'Location unavailable'}catch(e){document.getElementById('locText').textContent='Location unavailable';document.getElementById('mobileLocText').textContent='Location unavailable'}})();
+(async function getLocation(){try{const res=await fetch('https://ipwho.is/');const data=await res.json();const loc=`${data.city||''}, ${data.region||''}, ${data.country_name||''}`.replace(/(^,\s*|,\s*$)/g,'');document.getElementById('locText').textContent=loc||'Location unavailable';document.getElementById('mobileLocText').textContent=loc||'Location unavailable'}catch(e){document.getElementById('locText').textContent='Location unavailable';document.getElementById('mobileLocText').textContent='Location unavailable'}})();
 
 async function loadAllFoods(){try{const{data,error}=await sb.from('foods').select('*').order('rating',{ascending:false});if(error)throw error;allFoods=data||[];renderTrending();renderRoyal();renderPopular();renderAllFoods(allFoods)}catch(e){console.error(e);toast('Failed to load menu.','error')}}
 
