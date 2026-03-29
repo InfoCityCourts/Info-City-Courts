@@ -12,463 +12,174 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root{--font-primary:'Poppins',sans-serif;--font-display:'Playfair Display',serif;--accent:#ff6b35;--accent-light:#ff8c5a;--accent-dark:#e8590c;--gold:#ffc300;--green:#22c55e;--red:#ef4444;--radius-sm:10px;--radius-md:16px;--radius-lg:24px;--radius-xl:32px;--nav-height:72px;--transition:.3s cubic-bezier(.4,0,.2,1)}
-    [data-theme="dark"]{--bg-primary:#0b0b0f;--bg-secondary:#13131a;--bg-card:#1a1a24;--bg-card-hover:#22222e;--bg-elevated:#1e1e2a;--bg-input:rgba(255,255,255,.05);--bg-nav:rgba(11,11,15,.85);--text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--border:rgba(255,255,255,.08);--border-hover:rgba(255,255,255,.15);--card-shadow:0 4px 20px rgba(0,0,0,.3)}
-    [data-theme="light"]{--bg-primary:#f8f8fc;--bg-secondary:#ffffff;--bg-card:#ffffff;--bg-card-hover:#f0f0f5;--bg-elevated:#ffffff;--bg-input:rgba(0,0,0,.04);--bg-nav:rgba(255,255,255,.88);--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,.65);--text-tertiary:rgba(26,26,46,.4);--border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);--card-shadow:0 4px 20px rgba(0,0,0,.06)}
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
-    body{font-family:var(--font-primary);background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s}
-    a{text-decoration:none;color:inherit}img{display:block;max-width:100%}button{font-family:var(--font-primary);cursor:pointer;border:none;background:none}input,select,textarea{font-family:var(--font-primary)}
-    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,107,53,.3);border-radius:3px}
+    [data-theme="dark"]{--bg-primary:#0b0b0f;--bg-secondary:#13131a;--bg-card:#1a1a24;--bg-card-hover:#22222e;--bg-input:rgba(255,255,255,.05);--bg-nav:rgba(11,11,15,.85);--text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--text-tertiary:rgba(255,255,255,.4);--border:rgba(255,255,255,.08);--border-hover:rgba(255,255,255,.15);--card-shadow:0 4px 20px rgba(0,0,0,.3)}
+    [data-theme="light"]{--bg-primary:#f8f8fc;--bg-secondary:#ffffff;--bg-card:#ffffff;--bg-card-hover:#f0f0f5;--bg-input:rgba(0,0,0,.04);--bg-nav:rgba(255,255,255,.88);--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,.65);--border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.15);--card-shadow:0 4px 20px rgba(0,0,0,.06)}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:var(--font-primary);background:var(--bg-primary);color:var(--text-primary);min-height:100vh;transition:background .4s,color .4s}
+    a{text-decoration:none;color:inherit}img{display:block;max-width:100%}button{font-family:var(--font-primary);cursor:pointer;border:none;background:none}input,textarea{font-family:var(--font-primary)}
     #pageLoader{position:fixed;inset:0;z-index:99999;background:var(--bg-primary);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s}
     #pageLoader.hidden{opacity:0;pointer-events:none}
-    .loader-brand{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .loader-ring{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:var(--bg-nav);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;padding:0 clamp(16px,4vw,48px);transition:background .4s,box-shadow .3s}
-    .navbar.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.15)}
-    .nav-left{display:flex;align-items:center;gap:16px;flex:1}
+    .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:var(--bg-nav);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;padding:0 clamp(16px,4vw,48px)}
+    .nav-left{display:flex;align-items:center;flex:1}
     .nav-brand{display:flex;align-items:center;gap:8px}
-    .nav-brand .material-icons{font-size:30px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .nav-brand span{font-size:1.15rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-brand .material-icons{font-size:30px;color:var(--accent)}
+    .nav-brand span{font-size:1.15rem;font-weight:800;color:var(--accent)}
     .nav-right{display:flex;align-items:center;gap:6px}
     .nav-btn{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;color:var(--text-secondary);transition:var(--transition)}
     .nav-btn:hover{background:var(--bg-input);color:var(--text-primary)}
-    .nav-btn .material-icons{font-size:22px}
-    .theme-toggle{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:var(--transition)}
-    .theme-toggle:hover{background:var(--bg-input)}
-    .theme-toggle .material-icons{font-size:22px;color:var(--text-secondary)}
-
+    .theme-toggle{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text-secondary)}
     .main{margin-top:var(--nav-height);padding:clamp(24px,4vw,48px) clamp(16px,4vw,60px);padding-bottom:100px;max-width:1100px;margin-left:auto;margin-right:auto}
     .page-header{margin-bottom:36px}
-    .page-header .ph-tag{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin-bottom:6px}
-    .page-header h1{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;line-height:1.2}
-    .page-header .ph-sub{font-size:.9rem;color:var(--text-tertiary);margin-top:6px}
-
+    .page-header h1{font-family:var(--font-display);font-size:2rem;font-weight:700}
     .cart-layout{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
-
-    /* Cart Items */
-    .cart-items{display:flex;flex-direction:column;gap:16px}
-    .cart-item{display:flex;gap:18px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);transition:var(--transition);position:relative}
-    .cart-item:hover{border-color:var(--border-hover)}
-    .ci-img{width:110px;height:110px;border-radius:var(--radius-md);overflow:hidden;flex-shrink:0;background:var(--bg-secondary)}
+    .cart-item{display:flex;gap:18px;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px}
+    .ci-img{width:110px;height:110px;border-radius:var(--radius-md);overflow:hidden;flex-shrink:0}
     .ci-img img{width:100%;height:100%;object-fit:cover}
     .ci-body{flex:1;display:flex;flex-direction:column;justify-content:space-between}
-    .ci-name{font-size:1rem;font-weight:700;line-height:1.3;margin-bottom:2px}
-    .ci-seller{font-size:.78rem;color:var(--text-tertiary);display:flex;align-items:center;gap:4px}
-    .ci-seller .material-icons{font-size:14px}
+    .ci-name{font-size:1rem;font-weight:700}
     .ci-price{font-size:1.1rem;font-weight:800;color:var(--accent)}
-    .ci-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-    .qty-control{display:flex;align-items:center;gap:0;background:var(--bg-input);border:1px solid var(--border);border-radius:50px;overflow:hidden}
-    .qty-control button{width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:var(--transition);color:var(--text-primary)}
-    .qty-control button:hover{background:var(--bg-card-hover)}
-    .qty-control button .material-icons{font-size:20px}
+    .qty-control{display:flex;align-items:center;background:var(--bg-input);border:1px solid var(--border);border-radius:50px}
+    .qty-control button{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text-primary)}
     .qty-control .qty-num{width:36px;text-align:center;font-size:.9rem;font-weight:700}
-    .ci-remove{display:flex;align-items:center;gap:4px;padding:8px 14px;border-radius:50px;font-size:.78rem;font-weight:600;color:var(--red);background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15);transition:var(--transition)}
-    .ci-remove:hover{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3)}
-    .ci-remove .material-icons{font-size:16px}
-    .ci-line-total{font-size:.82rem;color:var(--text-tertiary);margin-top:4px}
-
-    /* Summary Card */
-    .summary-card{position:sticky;top:calc(var(--nav-height) + 24px);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px;transition:var(--transition)}
-    .summary-card h3{font-size:1.1rem;font-weight:700;margin-bottom:22px;display:flex;align-items:center;gap:8px}
-    .summary-card h3 .material-icons{font-size:22px;color:var(--accent)}
-    .summary-row{display:flex;justify-content:space-between;padding:10px 0;font-size:.88rem;color:var(--text-secondary)}
-    .summary-row.total{border-top:2px solid var(--border);margin-top:10px;padding-top:16px;font-size:1.1rem;font-weight:800;color:var(--text-primary)}
-    .summary-row .sr-label{display:flex;align-items:center;gap:6px}
-    .summary-row.discount{color:var(--green)}
-    .summary-row.delivery .free{color:var(--green);font-weight:600}
-
+    .summary-card{position:sticky;top:90px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px}
+    .summary-row{display:flex;justify-content:space-between;padding:10px 0;font-size:.88rem}
+    .summary-row.total{border-top:2px solid var(--border);font-size:1.1rem;font-weight:800}
     .coupon-row{display:flex;gap:8px;margin:18px 0}
-    .coupon-row input{flex:1;padding:12px 16px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.85rem;color:var(--text-primary);outline:none;transition:var(--transition);text-transform:uppercase}
-    .coupon-row input:focus{border-color:var(--accent)}
-    .coupon-row input::placeholder{text-transform:none}
-    .coupon-row button{padding:12px 20px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.82rem;font-weight:700;color:var(--accent);transition:var(--transition);white-space:nowrap}
-    .coupon-row button:hover{border-color:var(--accent);background:rgba(255,107,53,.06)}
-    .coupon-applied{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:var(--radius-sm);font-size:.82rem;color:var(--green);font-weight:600;margin-bottom:12px}
-    .coupon-applied .material-icons{font-size:18px}
-    .coupon-applied .remove-coupon{margin-left:auto;cursor:pointer;color:var(--text-tertiary);font-size:16px;transition:var(--transition)}
-    .coupon-applied .remove-coupon:hover{color:var(--red)}
-
-    .btn-checkout{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;font-size:.95rem;font-weight:700;border-radius:var(--radius-md);transition:var(--transition);box-shadow:0 6px 25px rgba(255,107,53,.3);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px}
-    .btn-checkout:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(255,107,53,.4)}
-    .btn-checkout:disabled{opacity:.5;pointer-events:none}
-    .btn-checkout .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
-
-    .secure-note{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:.75rem;color:var(--text-tertiary)}
-    .secure-note .material-icons{font-size:16px;color:var(--green)}
-
-    /* Delivery Form */
+    .coupon-row input{flex:1;padding:12px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary)}
+    .coupon-row button{padding:12px 20px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--accent);font-weight:700}
+    .btn-checkout{width:100%;padding:16px;background:var(--accent);color:#fff;font-weight:700;border-radius:var(--radius-md);margin-top:18px}
     .delivery-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
-    .delivery-section h4{font-size:.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px}
-    .delivery-section h4 .material-icons{font-size:18px;color:var(--accent)}
     .del-form{display:flex;flex-direction:column;gap:10px}
-    .del-form input,.del-form textarea{padding:12px 14px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.85rem;color:var(--text-primary);outline:none;transition:var(--transition)}
-    .del-form input:focus,.del-form textarea:focus{border-color:var(--accent)}
-    .del-form textarea{resize:vertical;min-height:60px}
-    .del-form .del-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-    /* Empty State */
+    .del-form input,.del-form textarea{padding:12px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary)}
     .empty-state{text-align:center;padding:80px 20px}
-    .empty-state .material-icons{font-size:80px;color:var(--text-tertiary);margin-bottom:20px;opacity:.5}
-    .empty-state h2{font-size:1.4rem;font-weight:700;margin-bottom:8px}
-    .empty-state p{font-size:.92rem;color:var(--text-tertiary);margin-bottom:28px;line-height:1.6}
-    .empty-state .btn-browse{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;font-weight:700;font-size:.92rem;border-radius:var(--radius-md);transition:var(--transition);box-shadow:0 6px 25px rgba(255,107,53,.3)}
-    .empty-state .btn-browse:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(255,107,53,.4)}
-
+    .empty-state .material-icons{font-size:80px;opacity:.5}
     .toast-container{position:fixed;top:84px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
-    .toast{display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:var(--radius-md);font-size:.84rem;font-weight:500;backdrop-filter:blur(16px);animation:slideIn .4s cubic-bezier(.16,1,.3,1);box-shadow:0 12px 40px rgba(0,0,0,.3);max-width:380px}
-    .toast.success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:var(--green)}
-    .toast.error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:var(--red)}
-    .toast.info{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#3b82f6}
-    .toast .material-icons{font-size:22px}
+    .toast{display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:var(--radius-md);font-size:.84rem;font-weight:500;backdrop-filter:blur(16px);animation:slideIn .4s forwards;background:var(--bg-card);border:1px solid var(--border)}
     @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
-    @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
-
-    .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--bg-nav);backdrop-filter:blur(20px) saturate(1.4);border-top:1px solid var(--border);z-index:1000;padding:0 8px;align-items:center;justify-content:space-around}
-    .mob-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:var(--radius-sm);transition:var(--transition)}
-    .mob-nav-item .material-icons{font-size:24px;color:var(--text-tertiary);transition:var(--transition)}
-    .mob-nav-item span:last-child{font-size:.65rem;font-weight:600;color:var(--text-tertiary);transition:var(--transition)}
-    .mob-nav-item.active .material-icons{color:var(--accent)}
-    .mob-nav-item.active span:last-child{color:var(--accent)}
-
-    .footer{background:var(--bg-secondary);border-top:1px solid var(--border);padding:clamp(40px,6vw,60px) clamp(16px,4vw,60px) 30px}
-    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-    .footer-inner .fb-name{display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:800}
-    .footer-inner .fb-name .material-icons{font-size:24px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .footer-inner .fb-name span{background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .footer-inner p{font-size:.78rem;color:var(--text-tertiary)}
-
-    @media(max-width:900px){
-      .cart-layout{grid-template-columns:1fr}
-      .summary-card{position:static}
-    }
-    @media(max-width:768px){
-      .mobile-bottom-nav{display:flex}
-      .main{padding-bottom:100px}
-      .nav-btn .btn-label{display:none}
-    }
-    @media(max-width:480px){
-      .nav-brand span{display:none}
-      .cart-item{flex-direction:column}
-      .ci-img{width:100%;height:160px}
-      .del-form .del-row{grid-template-columns:1fr}
-    }
+    .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--bg-nav);border-top:1px solid var(--border);z-index:1000;justify-content:space-around;align-items:center}
+    .mob-nav-item{display:flex;flex-direction:column;align-items:center;color:var(--text-tertiary)}
+    .mob-nav-item.active{color:var(--accent)}
+    @media(max-width:900px){.cart-layout{grid-template-columns:1fr}.summary-card{position:static}}
+    @media(max-width:768px){.mobile-bottom-nav{display:flex}.main{padding-bottom:100px}.nav-btn .btn-label{display:none}}
   </style>
 </head>
 <body>
 
-<div id="pageLoader"><div class="loader-ring"></div><div class="loader-brand">Infocity Court</div></div>
+<div id="pageLoader"><div class="loader-ring"></div></div>
 <div class="toast-container" id="toastContainer"></div>
 
-<nav class="navbar" id="navbar">
-  <div class="nav-left"><a href="/customer/index.html" class="nav-brand"><span class="material-icons">restaurant</span><span>Infocity Court</span></a></div>
+<nav class="navbar">
+  <div class="nav-left"><a href="index.html" class="nav-brand"><span class="material-icons">restaurant</span><span>Infocity Court</span></a></div>
   <div class="nav-right">
     <button class="theme-toggle" onclick="toggleTheme()"><span class="material-icons" id="themeIcon">dark_mode</span></button>
-    <a href="/customer/index.html" class="nav-btn"><span class="material-icons">home</span><span class="btn-label">Home</span></a>
-    <a href="/customer/orders.html" class="nav-btn"><span class="material-icons">receipt_long</span><span class="btn-label">Orders</span></a>
-    <a href="/customer/account.html" class="nav-btn"><span class="material-icons">person</span><span class="btn-label">Account</span></a>
+    <a href="index.html" class="nav-btn"><span class="material-icons">home</span><span class="btn-label">Home</span></a>
+    <a href="orders.html" class="nav-btn"><span class="material-icons">receipt_long</span><span class="btn-label">Orders</span></a>
+    <a href="account.html" class="nav-btn"><span class="material-icons">person</span><span class="btn-label">Account</span></a>
   </div>
 </nav>
 
-<main class="main" id="mainContent">
-  <div class="page-header">
-    <div class="ph-tag">🛒 Shopping Cart</div>
-    <h1>Your Cart</h1>
-    <div class="ph-sub" id="cartCount">Loading items…</div>
-  </div>
-
-  <!-- Empty State -->
+<main class="main">
+  <div class="page-header"><h1>Your Cart</h1></div>
+  
   <div class="empty-state" id="emptyState" style="display:none">
     <span class="material-icons">remove_shopping_cart</span>
-    <h2>Your cart is empty</h2>
-    <p>Looks like you haven't added any delicious items yet. Explore our menu and find something you love!</p>
-    <a href="/customer/index.html" class="btn-browse"><span class="material-icons" style="font-size:20px">explore</span> Browse Menu</a>
+    <h2>Cart is empty</h2>
+    <br><a href="index.html" style="padding:12px 24px;background:var(--accent);color:#fff;border-radius:10px;font-weight:bold">Browse Menu</a>
   </div>
 
-  <!-- Cart Layout -->
   <div class="cart-layout" id="cartLayout">
-    <div class="cart-items" id="cartItems"></div>
-
+    <div id="cartItems"></div>
     <div class="summary-card">
-      <h3><span class="material-icons">receipt</span> Order Summary</h3>
-
-      <div id="couponApplied" class="coupon-applied" style="display:none">
-        <span class="material-icons">local_offer</span>
-        <span id="couponCodeDisplay">INFOCITY40</span> — <span id="couponSavings">40% off</span>
-        <span class="material-icons remove-coupon" onclick="removeCoupon()">close</span>
-      </div>
-
-      <div class="coupon-row" id="couponRow">
-        <input type="text" id="couponInput" placeholder="Enter coupon code"/>
-        <button onclick="applyCoupon()">Apply</button>
-      </div>
-
-      <div class="summary-row"><span class="sr-label">Subtotal</span><span id="sumSubtotal">₹0</span></div>
-      <div class="summary-row discount" id="discountRow" style="display:none"><span class="sr-label"><span class="material-icons" style="font-size:16px">local_offer</span> Discount</span><span id="sumDiscount">-₹0</span></div>
-      <div class="summary-row delivery"><span class="sr-label">Delivery Fee</span><span id="sumDelivery">₹40</span></div>
-      <div class="summary-row"><span class="sr-label">GST (5%)</span><span id="sumTax">₹0</span></div>
+      <h3>Order Summary</h3>
+      <div class="coupon-row"><input type="text" id="couponInput" placeholder="Coupon code"/><button onclick="applyCoupon()">Apply</button></div>
+      <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+      <div class="summary-row" id="discountRow" style="display:none;color:var(--green)"><span>Discount</span><span id="sumDiscount">-₹0</span></div>
+      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">₹40</span></div>
+      <div class="summary-row"><span>Tax (5%)</span><span id="sumTax">₹0</span></div>
       <div class="summary-row total"><span>Total</span><span id="sumTotal">₹0</span></div>
-
       <div class="delivery-section">
-        <h4><span class="material-icons">location_on</span> Delivery Address</h4>
+        <h4>Delivery Details</h4>
         <div class="del-form">
-          <input type="text" id="delAddress" placeholder="Full address (street, building)"/>
-          <div class="del-row">
-            <input type="text" id="delCity" placeholder="City"/>
-            <input type="text" id="delPincode" placeholder="Pincode"/>
-          </div>
-          <textarea id="delInstructions" placeholder="Delivery instructions (optional)"></textarea>
+          <input type="text" id="delAddress" placeholder="Full address"/>
+          <input type="text" id="delCity" placeholder="City"/>
+          <input type="text" id="delPincode" placeholder="Pincode"/>
         </div>
       </div>
-
-      <button class="btn-checkout" id="checkoutBtn" onclick="placeOrder()">
-        <span class="spinner" id="checkoutSpinner"></span>
-        <span class="material-icons" style="font-size:20px">shopping_bag</span>
-        Place Order
-      </button>
-      <div class="secure-note"><span class="material-icons">lock</span> Secure checkout — your data is encrypted</div>
+      <button class="btn-checkout" onclick="placeOrder()">Place Order</button>
     </div>
   </div>
 </main>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="fb-name"><span class="material-icons">restaurant</span><span>Infocity Court</span></div>
-    <p>© 2026 Infocity Court. All rights reserved.</p>
-  </div>
-</footer>
-
 <div class="mobile-bottom-nav">
-  <a href="/customer/index.html" class="mob-nav-item"><span class="material-icons">home</span><span>Home</span></a>
-  <a href="/customer/cart.html" class="mob-nav-item active"><span class="material-icons">shopping_cart</span><span>Cart</span></a>
-  <a href="/customer/orders.html" class="mob-nav-item"><span class="material-icons">receipt_long</span><span>Orders</span></a>
-  <a href="/customer/account.html" class="mob-nav-item"><span class="material-icons">person</span><span>Account</span></a>
+  <a href="index.html" class="mob-nav-item"><span class="material-icons">home</span>Home</a>
+  <a href="cart.html" class="mob-nav-item active"><span class="material-icons">shopping_cart</span>Cart</a>
+  <a href="orders.html" class="mob-nav-item"><span class="material-icons">receipt_long</span>Orders</a>
+  <a href="account.html" class="mob-nav-item"><span class="material-icons">person</span>Account</a>
 </div>
 
 <script>
-const SUPABASE_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
-const SUPABASE_KEY='YOUR_SUPABASE_ANON_KEY_HERE';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null;
-let cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]');
-let appliedCoupon=null;
+const SUPABASE_URL  = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';   // ← paste your anon/public key
 
-// Auth
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let currentUser=null; let cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]'); let appliedCoupon=null;
+
 (async function(){
   const uid=localStorage.getItem('infocity_uid');
-  if(!uid){window.location.href='/authentication.html';return}
+  if(!uid){window.location.href='../authentication.html';return}
   try{
     const{data}=await sb.from('Users').select('*').eq('id',uid).maybeSingle();
-    if(!data){localStorage.clear();window.location.href='/authentication.html';return}
+    if(!data){localStorage.clear();window.location.href='../authentication.html';return}
     currentUser=data;
-  }catch(e){toast('Connection error','error')}
-  renderCart();
-  document.getElementById('pageLoader').classList.add('hidden');
+  }catch(e){}
+  renderCart(); document.getElementById('pageLoader').classList.add('hidden');
 })();
 
 function renderCart(){
-  const container=document.getElementById('cartItems');
-  const empty=document.getElementById('emptyState');
-  const layout=document.getElementById('cartLayout');
-
-  if(!cart.length){
-    empty.style.display='block';
-    layout.style.display='none';
-    document.getElementById('cartCount').textContent='0 items in your cart';
-    return;
-  }
-
-  empty.style.display='none';
-  layout.style.display='grid';
-  document.getElementById('cartCount').textContent=`${cart.reduce((s,c)=>s+c.qty,0)} items in your cart`;
-
-  container.innerHTML=cart.map((item,i)=>`
-    <div class="cart-item">
-      <div class="ci-img"><img src="${item.image||'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=70'}" alt="${item.food_name}" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=70'"/></div>
-      <div class="ci-body">
-        <div>
-          <div class="ci-name">${item.food_name}</div>
-          <div class="ci-seller"><span class="material-icons">storefront</span>${item.seller_name||'Infocity Court'}</div>
-          <div class="ci-line-total">₹${item.price} × ${item.qty} = ₹${(item.price*item.qty).toFixed(2)}</div>
-        </div>
-        <div class="ci-bottom">
-          <div class="ci-price">₹${(item.price*item.qty).toFixed(2)}</div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <div class="qty-control">
-              <button onclick="changeQty(${i},-1)"><span class="material-icons">remove</span></button>
-              <span class="qty-num">${item.qty}</span>
-              <button onclick="changeQty(${i},1)"><span class="material-icons">add</span></button>
-            </div>
-            <button class="ci-remove" onclick="removeItem(${i})"><span class="material-icons">delete</span>Remove</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-
+  const container=document.getElementById('cartItems'); const empty=document.getElementById('emptyState'); const layout=document.getElementById('cartLayout');
+  if(!cart.length){empty.style.display='block';layout.style.display='none';return}
+  empty.style.display='none';layout.style.display='grid';
+  container.innerHTML=cart.map((item,i)=>`<div class="cart-item"><div class="ci-img"><img src="${item.image}"/></div><div class="ci-body"><div><div class="ci-name">${item.food_name}</div><div style="color:var(--text-tertiary);font-size:0.8rem">${item.seller_name}</div></div><div style="display:flex;justify-content:space-between;align-items:end"><div class="ci-price">₹${(item.price*item.qty).toFixed(2)}</div><div class="qty-control"><button onclick="changeQty(${i},-1)"><span class="material-icons">remove</span></button><span class="qty-num">${item.qty}</span><button onclick="changeQty(${i},1)"><span class="material-icons">add</span></button></div></div></div></div>`).join('');
   calculateSummary();
 }
-
-function changeQty(idx,delta){
-  cart[idx].qty+=delta;
-  if(cart[idx].qty<=0)cart.splice(idx,1);
-  saveCart();renderCart();
-}
-
-function removeItem(idx){
-  const name=cart[idx].food_name;
-  cart.splice(idx,1);
-  saveCart();renderCart();
-  toast(`${name} removed from cart`,'info');
-}
-
-function saveCart(){
-  localStorage.setItem('infocity_cart',JSON.stringify(cart));
-}
-
+function changeQty(idx,delta){cart[idx].qty+=delta; if(cart[idx].qty<=0)cart.splice(idx,1); localStorage.setItem('infocity_cart',JSON.stringify(cart)); renderCart();}
 function calculateSummary(){
   const subtotal=cart.reduce((s,c)=>s+(c.price*c.qty),0);
-  let discount=0;
-  if(appliedCoupon){
-    if(appliedCoupon.type==='percent') discount=subtotal*(appliedCoupon.value/100);
-    else discount=appliedCoupon.value;
-    discount=Math.min(discount,subtotal);
-  }
-  const delivery=subtotal>=500?0:40;
-  const tax=Math.round((subtotal-discount)*0.05*100)/100;
-  const total=Math.max(subtotal-discount+delivery+tax,0);
-
+  let discount=0; if(appliedCoupon) discount=appliedCoupon.type==='percent'?subtotal*(appliedCoupon.value/100):appliedCoupon.value;
+  const delivery=subtotal>=500?0:40; const tax=(subtotal-discount)*0.05; const total=Math.max(subtotal-discount+delivery+tax,0);
   document.getElementById('sumSubtotal').textContent='₹'+subtotal.toFixed(2);
-  document.getElementById('sumDelivery').innerHTML=delivery===0?'<span class="free">FREE</span>':'₹'+delivery.toFixed(2);
+  document.getElementById('sumDelivery').textContent=delivery===0?'FREE':'₹'+delivery.toFixed(2);
   document.getElementById('sumTax').textContent='₹'+tax.toFixed(2);
   document.getElementById('sumTotal').textContent='₹'+total.toFixed(2);
-
-  if(appliedCoupon){
-    document.getElementById('discountRow').style.display='flex';
-    document.getElementById('sumDiscount').textContent='-₹'+discount.toFixed(2);
-  }else{
-    document.getElementById('discountRow').style.display='none';
-  }
+  if(appliedCoupon){document.getElementById('discountRow').style.display='flex';document.getElementById('sumDiscount').textContent='-₹'+discount.toFixed(2)}
 }
-
-// Coupon System
-const COUPONS={
-  'INFOCITY40':{type:'percent',value:40,label:'40% off'},
-  'FLAT100':{type:'flat',value:100,label:'₹100 off'},
-  'WELCOME50':{type:'percent',value:50,label:'50% off'},
-  'FREE20':{type:'percent',value:20,label:'20% off'}
-};
-
 function applyCoupon(){
   const code=document.getElementById('couponInput').value.trim().toUpperCase();
-  if(!code){toast('Enter a coupon code','error');return}
-  if(COUPONS[code]){
-    appliedCoupon=COUPONS[code];
-    appliedCoupon.code=code;
-    document.getElementById('couponApplied').style.display='flex';
-    document.getElementById('couponCodeDisplay').textContent=code;
-    document.getElementById('couponSavings').textContent=appliedCoupon.label;
-    document.getElementById('couponRow').style.display='none';
-    calculateSummary();
-    toast(`Coupon ${code} applied! ${appliedCoupon.label}`,'success');
-  }else{
-    toast('Invalid coupon code','error');
-  }
+  const c={'INFOCITY40':{type:'percent',value:40},'FLAT100':{type:'flat',value:100}};
+  if(c[code]){appliedCoupon=c[code];appliedCoupon.code=code;calculateSummary();toast('Coupon applied!','success')}else toast('Invalid coupon','error');
 }
-
-function removeCoupon(){
-  appliedCoupon=null;
-  document.getElementById('couponApplied').style.display='none';
-  document.getElementById('couponRow').style.display='flex';
-  document.getElementById('couponInput').value='';
-  calculateSummary();
-  toast('Coupon removed','info');
-}
-
-// Place Order
 async function placeOrder(){
-  if(!cart.length){toast('Your cart is empty','error');return}
-  const addr=document.getElementById('delAddress').value.trim();
-  const city=document.getElementById('delCity').value.trim();
-  const pin=document.getElementById('delPincode').value.trim();
-  if(!addr||!city||!pin){toast('Please fill in your delivery address','error');return}
-
-  document.getElementById('checkoutSpinner').style.display='inline-block';
-  document.getElementById('checkoutBtn').disabled=true;
-
+  if(!cart.length)return;
+  const addr=document.getElementById('delAddress').value.trim(); const city=document.getElementById('delCity').value.trim(); const pin=document.getElementById('delPincode').value.trim();
+  if(!addr||!city||!pin){toast('Fill delivery details','error');return}
+  const subtotal=cart.reduce((s,c)=>s+(c.price*c.qty),0); let discount=appliedCoupon?(appliedCoupon.type==='percent'?subtotal*(appliedCoupon.value/100):appliedCoupon.value):0;
+  const delivery_fee=subtotal>=500?0:40; const tax=(subtotal-discount)*0.05; const total=Math.max(subtotal-discount+delivery_fee+tax,0);
   try{
-    const subtotal=cart.reduce((s,c)=>s+(c.price*c.qty),0);
-    let discount=0;
-    if(appliedCoupon){
-      discount=appliedCoupon.type==='percent'?subtotal*(appliedCoupon.value/100):appliedCoupon.value;
-      discount=Math.min(discount,subtotal);
-    }
-    const delivery_fee=subtotal>=500?0:40;
-    const tax=Math.round((subtotal-discount)*0.05*100)/100;
-    const total=Math.max(subtotal-discount+delivery_fee+tax,0);
-
-    // Insert order
-    const{data:order,error:orderErr}=await sb.from('orders').insert({
-      user_id:currentUser.id,
-      user_name:currentUser.name,
-      user_email:currentUser.email,
-      user_phone:currentUser.phone||'',
-      seller_name:cart[0].seller_name||'Infocity Court',
-      status:'pending',
-      subtotal,delivery_fee,tax,
-      discount:Math.round(discount*100)/100,
-      coupon_code:appliedCoupon?appliedCoupon.code:null,
-      total:Math.round(total*100)/100,
-      payment_method:'cod',
-      payment_status:'unpaid',
-      delivery_address:addr,
-      delivery_city:city,
-      delivery_pincode:pin,
-      delivery_instructions:document.getElementById('delInstructions').value.trim()||null,
-      status_history:[{status:'pending',timestamp:new Date().toISOString()}],
-      estimated_delivery_time:new Date(Date.now()+35*60000).toISOString(),
-      preparation_time_mins:25+Math.floor(Math.random()*15),
-      device:'web'
-    }).select('id,order_number').single();
-
-    if(orderErr)throw orderErr;
-
-    // Insert order items
-    const items=cart.map(c=>({
-      order_id:order.id,
-      food_id:c.id,
-      food_name:c.food_name,
-      food_image:c.image||null,
-      seller_name:c.seller_name||null,
-      unit_price:c.price,
-      quantity:c.qty
-    }));
-
-    const{error:itemsErr}=await sb.from('order_items').insert(items);
-    if(itemsErr)throw itemsErr;
-
-    // Clear cart
-    cart=[];saveCart();
-    appliedCoupon=null;
-
-    toast('Order placed successfully! 🎉','success');
-    setTimeout(()=>{window.location.href='/customer/orders.html'},1500);
-
-  }catch(e){
-    console.error(e);
-    toast('Order failed: '+(e.message||'Unknown error'),'error');
-  }
-
-  document.getElementById('checkoutSpinner').style.display='none';
-  document.getElementById('checkoutBtn').disabled=false;
+    const{data:order,error}=await sb.from('orders').insert({user_id:currentUser.id,user_name:currentUser.name,seller_name:cart[0].seller_name||'Restaurant',status:'pending',subtotal,delivery_fee,tax,discount,total,delivery_address:addr,delivery_city:city,delivery_pincode:pin}).select('id').single();
+    if(error)throw error;
+    const items=cart.map(c=>({order_id:order.id,food_id:c.id,food_name:c.food_name,seller_name:c.seller_name,unit_price:c.price,quantity:c.qty}));
+    await sb.from('order_items').insert(items);
+    localStorage.removeItem('infocity_cart');
+    toast('Order placed!','success');
+    setTimeout(()=>window.location.href='orders.html',1000);
+  }catch(e){toast('Failed to place order','error')}
 }
-
-// Theme
-function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('infocity_theme',n);document.getElementById('themeIcon').textContent=n==='dark'?'dark_mode':'light_mode'}
-(function(){const s=localStorage.getItem('infocity_theme');if(s){document.documentElement.setAttribute('data-theme',s);document.getElementById('themeIcon').textContent=s==='dark'?'dark_mode':'light_mode'}})();
-
-function toast(msg,type='info'){const icons={success:'check_circle',error:'error',info:'info'};const box=document.createElement('div');box.className='toast '+type;box.innerHTML=`<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;document.getElementById('toastContainer').appendChild(box);setTimeout(()=>{box.style.animation='slideOut .35s forwards';setTimeout(()=>box.remove(),350)},3500)}
-
-window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20)});
+function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('infocity_theme',n);}
+(function(){const s=localStorage.getItem('infocity_theme');if(s)document.documentElement.setAttribute('data-theme',s)})();
+function toast(msg,type='info'){const b=document.createElement('div');b.className='toast '+type;b.innerHTML=`<span>${msg}</span>`;document.getElementById('toastContainer').appendChild(b);setTimeout(()=>b.remove(),3000)}
 </script>
 </body>
 </html>

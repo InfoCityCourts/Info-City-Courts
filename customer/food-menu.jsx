@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://okifxlsmlzeyrvvxyzdx.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I";
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const FoodMenu = () => {
+  const [foodItems, setFoodItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch data from Supabase
+  useEffect(() => {
+    fetchFoodItems();
+  }, []);
+
+  const fetchFoodItems = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("food_items") // Your table name
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) throw error;
+      setFoodItems(data || []);
+    } catch (error) {
+      console.error("Error fetching food items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="menu-section" style={{ padding: "100px 20px", textAlign: "center" }}>
+        <div style={{ fontSize: "24px", color: "#ff6b35" }}>Loading delicious food...</div>
+      </div>
+    );
+  }
+
+  return (
+    <section className="menu-section" style={{ 
+      padding: "100px 20px", 
+      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      color: "white"
+    }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        {/* Section Title */}
+        <div style={{ textAlign: "center", marginBottom: "80px" }}>
+          <h2 style={{ 
+            fontSize: "48px", 
+            fontWeight: "bold", 
+            marginBottom: "20px",
+            textShadow: "2px 2px 4px rgba(0,0,0,0.3)"
+          }}>
+            Our Delicious Menu
+          </h2>
+          <div style={{ 
+            width: "100px", 
+            height: "4px", 
+            background: "#ff6b35", 
+            margin: "0 auto 20px" 
+          }}></div>
+          <p style={{ fontSize: "20px", opacity: 0.9 }}>
+            Freshly prepared with love
+          </p>
+        </div>
+
+        {/* Food Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: "30px" }}>
+          {foodItems.length === 0 ? (
+            <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px" }}>
+              <h3 style={{ fontSize: "28px", marginBottom: "20px" }}>No items found</h3>
+              <p>Add some food items to your Supabase table to see them here!</p>
+            </div>
+          ) : (
+            foodItems.map((item) => (
+              <div 
+                key={item.id}
+                className="food-card"
+                style={{
+                  background: "rgba(255,255,255,0.1)",
+                  backdropFilter: "blur(10px)",
+                  borderRadius: "20px",
+                  padding: "30px",
+                  textAlign: "center",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  position: "relative",
+                  overflow: "hidden"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-10px)";
+                  e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+                }}
+              >
+                {/* Food Image */}
+                {item.image_url && (
+                  <img 
+                    src={item.image_url} 
+                    alt={item.name}
+                    style={{
+                      width: "100%",
+                      height: "250px",
+                      objectFit: "cover",
+                      borderRadius: "15px",
+                      marginBottom: "20px"
+                    }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
+                )}
+
+                {/* Food Name & Price */}
+                <div style={{ marginBottom: "15px" }}>
+                  <h3 style={{ 
+                    fontSize: "28px", 
+                    marginBottom: "10px",
+                    color: "#ff6b35"
+                  }}>
+                    {item.name}
+                  </h3>
+                  <div style={{
+                    fontSize: "24px",
+                    fontWeight: "bold",
+                    color: "#ffd700",
+                    marginBottom: "15px"
+                  }}>
+                    ₹{item.price}
+                  </div>
+                </div>
+
+                {/* Description */}
+                <p style={{ 
+                  fontSize: "16px", 
+                  lineHeight: "1.6", 
+                  marginBottom: "25px",
+                  opacity: 0.9
+                }}>
+                  {item.description || "Delicious food prepared with fresh ingredients"}
+                </p>
+
+                {/* Category Badge */}
+                {item.category && (
+                  <div style={{
+                    display: "inline-block",
+                    background: "#ff6b35",
+                    color: "white",
+                    padding: "8px 20px",
+                    borderRadius: "25px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    marginBottom: "20px"
+                  }}>
+                    {item.category}
+                  </div>
+                )}
+
+                {/* Add to Cart Button */}
+                <button style={{
+                  background: "linear-gradient(45deg, #ff6b35, #f7931e)",
+                  color: "white",
+                  border: "none",
+                  padding: "15px 40px",
+                  borderRadius: "50px",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 10px 30px rgba(255,107,53,0.4)"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1)";
+                }}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FoodMenu;
