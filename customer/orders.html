@@ -4,108 +4,1218 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <meta name="theme-color" content="#0b0b0f"/>
-  <title>Infocity Court — My Orders</title>
+  <title>My Orders — Infocity Court</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{--font-primary:'Poppins',sans-serif;--accent:#ff6b35;--gold:#ffc300;--green:#22c55e;--red:#ef4444;--radius-md:16px;--nav-height:72px}
-    [data-theme="dark"]{--bg-primary:#0b0b0f;--bg-card:#1a1a24;--bg-input:rgba(255,255,255,.05);--bg-nav:rgba(11,11,15,.85);--text-primary:#ffffff;--text-secondary:rgba(255,255,255,.7);--border:rgba(255,255,255,.08)}
-    [data-theme="light"]{--bg-primary:#f8f8fc;--bg-card:#ffffff;--bg-input:rgba(0,0,0,.04);--bg-nav:rgba(255,255,255,.88);--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,.65);--border:rgba(0,0,0,.08)}
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;scroll-behavior:smooth}
-    body{font-family:var(--font-primary);background:var(--bg-primary);color:var(--text-primary);min-height:100vh}
-    a{text-decoration:none;color:inherit}button{font-family:var(--font-primary);cursor:pointer;border:none;background:none}
-    .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:var(--bg-nav);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,48px)}
-    .nav-brand{display:flex;align-items:center;gap:8px;font-size:1.15rem;font-weight:800;color:var(--accent)}
-    .nav-right{display:flex;gap:12px}
-    .nav-btn{display:flex;align-items:center;gap:6px;color:var(--text-secondary);font-weight:600;font-size:.85rem}
-    .main{margin-top:var(--nav-height);padding:40px 20px;max-width:800px;margin-left:auto;margin-right:auto}
-    .order-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:20px;padding:20px}
-    .oc-header{display:flex;justify-content:space-between;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:12px}
-    .status-chip{padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:700;text-transform:uppercase}
-    .status-chip.pending{background:rgba(251,191,36,.2);color:#fbbf24}
-    .status-chip.delivered{background:rgba(34,197,94,.2);color:var(--green)}
-    .oc-item{display:flex;justify-content:space-between;margin-bottom:8px;font-size:.9rem}
-    .oc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-weight:800}
-    .btn-reorder{padding:8px 16px;background:var(--bg-input);border:1px solid var(--accent);color:var(--accent);border-radius:50px;font-weight:700}
-    .mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--bg-nav);border-top:1px solid var(--border);z-index:1000;justify-content:space-around;align-items:center}
-    .mob-nav-item{display:flex;flex-direction:column;align-items:center;color:var(--text-secondary);font-size:.7rem}
-    .mob-nav-item.active{color:var(--accent)}
-    @media(max-width:768px){.mobile-bottom-nav{display:flex}.main{padding-bottom:100px}.nav-btn{display:none}}
+    /* ══════════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════════ */
+    :root{
+      --font:'Poppins',sans-serif;
+      --display:'Playfair Display',serif;
+      --accent:#ff6b35;--accent-d:#e8590c;--accent-glow:rgba(255,107,53,.18);
+      --gold:#ffc300;--gold-glow:rgba(255,195,0,.15);
+      --green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--cyan:#06b6d4;
+      --r-xs:8px;--r-sm:12px;--r-md:18px;--r-lg:26px;--r-xl:36px;--r-full:999px;
+      --tr:.28s cubic-bezier(.4,0,.2,1);--tr-spring:.5s cubic-bezier(.16,1,.3,1);
+      --sidebar-w:264px;--topbar-h:66px;
+    }
+    [data-theme="dark"]{
+      --bg:#080810;--bg2:#0f0f1a;--bg3:#13131e;
+      --card:#161622;--card-h:#1c1c2a;
+      --input:rgba(255,255,255,.045);--input-h:rgba(255,255,255,.07);
+      --nav-bg:rgba(8,8,16,.88);
+      --c1:#f0f0ff;--c2:rgba(240,240,255,.65);--c3:rgba(240,240,255,.35);--c4:rgba(240,240,255,.18);
+      --border:rgba(255,255,255,.07);--border-h:rgba(255,255,255,.14);
+      --shadow-sm:0 2px 12px rgba(0,0,0,.25);
+      --shadow:0 8px 32px rgba(0,0,0,.35);
+      --shadow-xl:0 24px 80px rgba(0,0,0,.5);
+      --shine:rgba(255,255,255,.025);
+    }
+    [data-theme="light"]{
+      --bg:#f0f0f8;--bg2:#f8f8ff;--bg3:#fff;
+      --card:#fff;--card-h:#f5f5ff;
+      --input:rgba(0,0,0,.04);--input-h:rgba(0,0,0,.07);
+      --nav-bg:rgba(255,255,255,.9);
+      --c1:#0e0e1f;--c2:rgba(14,14,31,.62);--c3:rgba(14,14,31,.38);--c4:rgba(14,14,31,.16);
+      --border:rgba(0,0,0,.08);--border-h:rgba(0,0,0,.14);
+      --shadow-sm:0 2px 12px rgba(0,0,0,.07);
+      --shadow:0 8px 32px rgba(0,0,0,.1);
+      --shadow-xl:0 24px 80px rgba(0,0,0,.15);
+      --shine:rgba(255,255,255,.6);
+    }
+
+    /* ══════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════ */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{font-size:16px;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+    body{font-family:var(--font);background:var(--bg);color:var(--c1);min-height:100vh;overflow-x:hidden;transition:background .45s,color .45s}
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none}
+    input,select,textarea{font-family:var(--font)}
+    ::selection{background:var(--accent);color:#fff}
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(255,107,53,.22);border-radius:4px}
+    ::-webkit-scrollbar-thumb:hover{background:rgba(255,107,53,.4)}
+
+    /* ══════════════════════════════════════════
+       PAGE LOADER
+    ══════════════════════════════════════════ */
+    #pageLoader{
+      position:fixed;inset:0;z-index:99999;
+      background:var(--bg);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+      transition:opacity .6s ease;
+    }
+    #pageLoader.hidden{opacity:0;pointer-events:none}
+    .loader-icon-wrap{
+      width:64px;height:64px;border-radius:20px;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 0 50px rgba(255,107,53,.4);
+      animation:iconPulse 2s ease infinite;
+    }
+    .loader-icon-wrap .material-icons{font-size:32px;color:#fff}
+    @keyframes iconPulse{0%,100%{box-shadow:0 0 30px rgba(255,107,53,.3)}50%{box-shadow:0 0 70px rgba(255,107,53,.65)}}
+    .loader-brand-name{
+      font-size:1.5rem;font-weight:800;letter-spacing:-.5px;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .loader-hint{font-size:.76rem;color:var(--c3);font-weight:500}
+    .loader-progress{width:150px;height:3px;background:var(--border);border-radius:3px;overflow:hidden}
+    .loader-progress-fill{height:100%;width:40%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:3px;animation:sweep 1.2s ease infinite}
+    @keyframes sweep{0%{transform:translateX(-150%)}100%{transform:translateX(350%)}}
+
+    /* ══════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════ */
+    .app{display:flex;min-height:100vh}
+
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:var(--sidebar-w);
+      background:var(--card);border-right:1px solid var(--border);
+      position:fixed;top:0;left:0;bottom:0;z-index:200;
+      display:flex;flex-direction:column;
+      transition:transform .35s cubic-bezier(.4,0,.2,1);
+      overflow-y:auto;overflow-x:hidden;
+    }
+    .sidebar::-webkit-scrollbar{width:0}
+    @media(max-width:960px){
+      .sidebar{transform:translateX(-100%)}
+      .sidebar.open{transform:translateX(0);box-shadow:var(--shadow-xl)}
+    }
+    .sb-brand{
+      padding:22px 20px 18px;display:flex;align-items:center;gap:12px;
+      border-bottom:1px solid var(--border);
+      position:relative;overflow:hidden;
+    }
+    .sb-brand::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-glow),transparent 60%);pointer-events:none}
+    .sb-logo-box{
+      width:40px;height:40px;border-radius:13px;flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent),var(--gold));
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 16px rgba(255,107,53,.3);
+    }
+    .sb-logo-box .material-icons{font-size:22px;color:#fff}
+    .sb-name{font-size:.98rem;font-weight:800;letter-spacing:-.3px;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .sb-tagline{font-size:.65rem;color:var(--c3);font-weight:500;margin-top:1px}
+    .sb-section{padding:18px 20px 8px;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--c4)}
+    .sb-nav{display:flex;flex-direction:column;gap:2px;padding:0 10px}
+    .sb-item{
+      display:flex;align-items:center;gap:11px;
+      padding:11px 13px;border-radius:var(--r-sm);
+      font-size:.85rem;font-weight:500;color:var(--c2);
+      transition:var(--tr);cursor:pointer;position:relative;
+      border:1px solid transparent;
+    }
+    .sb-item:hover{background:var(--input);color:var(--c1);border-color:var(--border)}
+    .sb-item.active{background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,107,53,.04));color:var(--accent);font-weight:700;border-color:rgba(255,107,53,.15)}
+    .sb-item.active::before{content:'';position:absolute;left:-1px;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+    .sb-item .material-icons{font-size:20px;flex-shrink:0}
+    .sb-badge{margin-left:auto;min-width:20px;height:20px;padding:0 5px;background:var(--accent);color:#fff;font-size:.62rem;font-weight:800;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(255,107,53,.4)}
+    .sb-item.danger{color:var(--red)}
+    .sb-item.danger:hover{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.12)}
+    .sb-bottom{margin-top:auto;padding:14px 10px;border-top:1px solid var(--border)}
+    .sb-user{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:var(--r-sm);background:var(--input);border:1px solid var(--border);transition:var(--tr)}
+    .sb-user:hover{border-color:var(--border-h)}
+    .sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--gold));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 2px 10px rgba(255,107,53,.3)}
+    .sb-user-info{flex:1;overflow:hidden}
+    .sb-user-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sb-user-role{font-size:.67rem;color:var(--c3);margin-top:1px}
+
+    /* ── MAIN ── */
+    .main-area{flex:1;margin-left:var(--sidebar-w);transition:margin .35s}
+    @media(max-width:960px){.main-area{margin-left:0}}
+
+    /* ── TOPBAR ── */
+    .topbar{
+      height:var(--topbar-h);background:var(--nav-bg);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;padding:0 clamp(14px,3vw,28px);
+      position:sticky;top:0;z-index:100;gap:12px;
+    }
+    .menu-toggle{width:38px;height:38px;display:none;align-items:center;justify-content:center;border-radius:var(--r-xs);border:1px solid var(--border);background:var(--input);transition:var(--tr);flex-shrink:0}
+    @media(max-width:960px){.menu-toggle{display:flex}}
+    .menu-toggle:hover{background:var(--input-h);border-color:var(--border-h)}
+    .menu-toggle .material-icons{font-size:22px;color:var(--c2)}
+    .tb-title-group{flex:1;overflow:hidden}
+    .tb-title{font-size:1.08rem;font-weight:800;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .tb-sub{font-size:.7rem;color:var(--c3);font-weight:500;margin-top:1px}
+    .tb-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+    .tb-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-full);border:1px solid transparent;transition:var(--tr)}
+    .tb-btn:hover{background:var(--input);border-color:var(--border)}
+    .tb-btn .material-icons{font-size:20px;color:var(--c2)}
+    .live-pill{display:flex;align-items:center;gap:5px;padding:5px 11px;background:var(--accent-glow);border:1px solid rgba(255,107,53,.22);border-radius:var(--r-full);font-size:.68rem;font-weight:700;color:var(--accent);white-space:nowrap}
+    .live-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.3s ease infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* ══════════════════════════════════════════
+       CONTENT
+    ══════════════════════════════════════════ */
+    .content{padding:clamp(16px,3vw,32px)}
+
+    /* ── STATS ── */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+    @media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:420px){.stats-row{grid-template-columns:1fr 1fr}}
+
+    .stat-card{
+      padding:20px 18px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);
+      display:flex;flex-direction:column;gap:14px;transition:var(--tr-spring);
+      position:relative;overflow:hidden;cursor:default;
+    }
+    .stat-card::before{content:'';position:absolute;inset:0;background:var(--shine);pointer-events:none}
+    .stat-card:hover{border-color:var(--border-h);transform:translateY(-4px);box-shadow:var(--shadow)}
+    .stat-card-top{display:flex;align-items:flex-start;justify-content:space-between}
+    .stat-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .stat-icon .material-icons{font-size:22px;color:#fff}
+    .stat-trend{display:inline-flex;align-items:center;gap:3px;font-size:.64rem;font-weight:700;padding:3px 7px;border-radius:var(--r-full)}
+    .stat-trend.up{background:rgba(34,197,94,.1);color:var(--green)}
+    .stat-trend.neutral{background:rgba(255,107,53,.1);color:var(--accent)}
+    .stat-trend .material-icons{font-size:11px}
+    .stat-num{font-size:1.65rem;font-weight:900;letter-spacing:-1px;line-height:1}
+    .stat-label{font-size:.72rem;color:var(--c3);font-weight:500;margin-top:4px}
+
+    /* ── ACTIVE BANNER ── */
+    .active-banner{
+      background:linear-gradient(135deg,rgba(255,107,53,.1),rgba(255,195,0,.06));
+      border:1px solid rgba(255,107,53,.18);border-radius:var(--r-lg);
+      padding:18px 22px;margin-bottom:22px;
+      display:none;align-items:center;gap:16px;
+      position:relative;overflow:hidden;
+    }
+    .active-banner::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.12),transparent 70%);pointer-events:none}
+    .ab-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-d));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(255,107,53,.35);flex-shrink:0;animation:iconPulse 2s ease infinite}
+    .ab-icon .material-icons{font-size:24px;color:#fff}
+    .ab-text{flex:1}
+    .ab-title{font-size:.95rem;font-weight:800;margin-bottom:3px}
+    .ab-sub{font-size:.76rem;color:var(--c3)}
+    .ab-num{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;flex-shrink:0}
+
+    /* ── SECTION CARD ── */
+    .sec-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-sm)}
+    .sec-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+    .sec-title{font-size:1rem;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+    .sec-title .material-icons{font-size:20px;color:var(--accent)}
+    .sec-refresh{font-size:.7rem;color:var(--c3);font-weight:500}
+
+    /* ── TABS ── */
+    .tabs{display:flex;gap:6px;overflow-x:auto;padding:14px 20px;border-bottom:1px solid var(--border);-ms-overflow-style:none;scrollbar-width:none}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{padding:7px 16px;border-radius:var(--r-full);font-size:.76rem;font-weight:700;white-space:nowrap;background:transparent;border:1.5px solid var(--border);color:var(--c3);transition:var(--tr);flex-shrink:0}
+    .tab:hover{border-color:var(--border-h);color:var(--c2)}
+    .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent-d));color:#fff;border-color:transparent;box-shadow:0 4px 18px rgba(255,107,53,.3)}
+    .tc{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;background:rgba(255,255,255,.2);border-radius:var(--r-full);font-size:.6rem;margin-left:5px}
+
+    /* ══════════════════════════════════════════
+       ORDER CARD
+    ══════════════════════════════════════════ */
+    .order-card{padding:22px 24px;border-bottom:1px solid var(--border);transition:background var(--tr);animation:cardIn .45s ease;position:relative}
+    .order-card:last-child{border-bottom:none}
+    .order-card:hover{background:var(--card-h)}
+    @keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    .oc-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+    .oc-meta .oc-restaurant{font-size:1.05rem;font-weight:800;letter-spacing:-.3px;margin-bottom:3px}
+    .oc-meta .oc-num{font-size:.72rem;color:var(--c3);font-weight:600;background:var(--input);border:1px solid var(--border);display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--r-full);margin-bottom:5px}
+    .oc-meta .oc-time{font-size:.72rem;color:var(--c3);display:flex;align-items:center;gap:4px}
+    .oc-meta .oc-time .material-icons{font-size:13px}
+    .oc-right{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+
+    /* Status chip */
+    .status-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--r-full);font-size:.72rem;font-weight:800;text-transform:capitalize;letter-spacing:.2px}
+    .status-chip .material-icons{font-size:14px}
+    .s-pending{background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);color:#fbbf24}
+    .s-confirmed{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:var(--blue)}
+    .s-preparing{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);color:var(--purple)}
+    .s-ready{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);color:var(--cyan)}
+    .s-out_for_delivery{background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);color:var(--accent)}
+    .s-delivered{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green)}
+    .s-cancelled{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:var(--red)}
+
+    /* ETA pill */
+    .eta-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--r-full);font-size:.68rem;font-weight:700}
+    .eta-pill .material-icons{font-size:13px}
+    .eta-active{background:rgba(255,107,53,.09);border:1px solid rgba(255,107,53,.2);color:var(--accent)}
+    .eta-done{background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.2);color:var(--green)}
+    .eta-cancelled{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.18);color:var(--red)}
+
+    /* ══════════════════════════════════════════
+       TRACKING STEPPER
+    ══════════════════════════════════════════ */
+    .tracking-wrap{
+      margin-bottom:20px;padding:20px 18px;
+      background:var(--input);border:1px solid var(--border);border-radius:var(--r-lg);
+      position:relative;overflow:hidden;
+    }
+    .tracking-wrap::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-glow),transparent 50%);pointer-events:none}
+    .tracking-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .tracking-lbl{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--c3);display:flex;align-items:center;gap:5px}
+    .tracking-lbl .material-icons{font-size:13px;color:var(--accent)}
+    .tracking-status{font-size:.74rem;font-weight:700;color:var(--accent)}
+    .stepper{display:flex;align-items:flex-start;position:relative;padding:0 4px}
+    .stepper-rail{position:absolute;top:18px;left:20px;right:20px;height:2px;background:var(--border);z-index:0;border-radius:2px}
+    .stepper-fill{position:absolute;top:18px;left:20px;height:2px;background:linear-gradient(90deg,var(--accent),var(--gold));z-index:1;transition:width .8s cubic-bezier(.4,0,.2,1);border-radius:2px;box-shadow:0 0 8px rgba(255,107,53,.4)}
+    .step{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:2}
+    .step-node{width:36px;height:36px;border-radius:50%;background:var(--bg2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .4s cubic-bezier(.16,1,.3,1);flex-shrink:0}
+    .step-node .material-icons{font-size:16px;color:var(--c3);transition:var(--tr)}
+    .step.done .step-node{background:linear-gradient(135deg,var(--accent),var(--accent-d));border-color:transparent;box-shadow:0 0 0 4px rgba(255,107,53,.12),0 4px 14px rgba(255,107,53,.3)}
+    .step.done .step-node .material-icons{color:#fff}
+    .step.active .step-node{background:var(--card);border-color:var(--accent);border-width:2.5px}
+    .step.active .step-node .material-icons{color:var(--accent)}
+    .step.active .step-node::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(255,107,53,.3);animation:ripple 1.6s ease infinite}
+    @keyframes ripple{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+    .step-lbl{font-size:.59rem;font-weight:700;color:var(--c3);text-align:center;line-height:1.3;max-width:52px}
+    .step.done .step-lbl{color:var(--c2)}
+    .step.active .step-lbl{color:var(--accent)}
+
+    /* Cancelled state */
+    .cancelled-block{display:flex;align-items:center;gap:14px;padding:14px 16px;background:rgba(239,68,68,.06);border-radius:var(--r-md);border:1px solid rgba(239,68,68,.15);margin-bottom:18px}
+    .cancelled-block-icon{width:40px;height:40px;border-radius:12px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .cancelled-block-icon .material-icons{font-size:20px;color:var(--red)}
+    .cb-title{font-size:.88rem;font-weight:700;color:var(--red);margin-bottom:2px}
+    .cb-sub{font-size:.74rem;color:var(--c3)}
+
+    /* ══════════════════════════════════════════
+       FOOD ITEMS
+    ══════════════════════════════════════════ */
+    .oc-items{margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
+    .oc-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--input);border:1px solid var(--border);border-radius:var(--r-md);transition:var(--tr)}
+    .oc-item:hover{border-color:var(--border-h);background:var(--input-h)}
+    .oc-item-img{width:50px;height:50px;border-radius:var(--r-sm);overflow:hidden;flex-shrink:0;background:var(--bg2);border:1px solid var(--border)}
+    .oc-item-img img{width:100%;height:100%;object-fit:cover}
+    .oc-item-info{flex:1;min-width:0}
+    .oc-item-name{font-size:.86rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .oc-item-meta{font-size:.7rem;color:var(--c3);margin-top:2px}
+    .oc-item-price{font-size:.92rem;font-weight:800;color:var(--accent);flex-shrink:0;white-space:nowrap}
+
+    /* ══════════════════════════════════════════
+       ADDRESS
+    ══════════════════════════════════════════ */
+    .oc-address{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;background:var(--input);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:16px}
+    .addr-icon-box{width:34px;height:34px;border-radius:10px;flex-shrink:0;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.2);display:flex;align-items:center;justify-content:center}
+    .addr-icon-box .material-icons{font-size:17px;color:var(--accent)}
+    .addr-body{}
+    .addr-lbl{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--c3);margin-bottom:4px}
+    .addr-text{font-size:.8rem;color:var(--c2);line-height:1.55}
+    .addr-note{font-size:.74rem;color:var(--c3);margin-top:5px;display:flex;align-items:flex-start;gap:4px}
+    .addr-note .material-icons{font-size:13px;margin-top:1px;flex-shrink:0}
+
+    /* ══════════════════════════════════════════
+       REVIEW
+    ══════════════════════════════════════════ */
+    .oc-review{padding:14px 16px;margin-bottom:16px;background:linear-gradient(135deg,rgba(255,195,0,.05),rgba(255,107,53,.04));border:1px solid rgba(255,195,0,.12);border-radius:var(--r-md)}
+    .oc-review-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .oc-review-lbl{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--gold)}
+    .stars{display:flex;gap:2px}
+    .stars .material-icons{font-size:16px;color:var(--gold)}
+    .stars .material-icons.off{color:var(--border)}
+    .oc-review-text{font-size:.82rem;color:var(--c2);line-height:1.6;font-style:italic}
+    .oc-reply{margin-top:10px;padding:10px 13px;background:rgba(255,107,53,.05);border-left:3px solid var(--accent);border-radius:0 var(--r-xs) var(--r-xs) 0}
+    .oc-reply-lbl{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin-bottom:3px}
+    .oc-reply-text{font-size:.8rem;color:var(--c2);line-height:1.5}
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    .oc-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:14px;border-top:1px solid var(--border)}
+    .oc-total-amt{font-size:1.15rem;font-weight:900;letter-spacing:-.3px}
+    .oc-total-amt em{color:var(--accent);font-style:normal}
+    .oc-pay{font-size:.7rem;color:var(--c3);display:flex;align-items:center;gap:4px;margin-top:3px}
+    .oc-pay .material-icons{font-size:13px}
+    .oc-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .oc-btn{padding:9px 17px;border-radius:var(--r-full);font-size:.75rem;font-weight:800;display:flex;align-items:center;gap:5px;transition:var(--tr);letter-spacing:.2px}
+    .oc-btn .material-icons{font-size:15px}
+    .btn-rate{background:rgba(255,195,0,.1);border:1px solid rgba(255,195,0,.25);color:var(--gold)}
+    .btn-rate:hover{background:rgba(255,195,0,.18);transform:translateY(-1px)}
+    .btn-rated{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18);color:var(--green);cursor:default}
+    .btn-cancel-ord{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:var(--red)}
+    .btn-cancel-ord:hover{background:rgba(239,68,68,.13);transform:translateY(-1px)}
+    .btn-reorder{background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.2);color:var(--accent)}
+    .btn-reorder:hover{background:rgba(255,107,53,.15);transform:translateY(-1px)}
+
+    /* ══════════════════════════════════════════
+       MODAL
+    ══════════════════════════════════════════ */
+    .modal-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px}
+    .modal-overlay.active{display:flex;animation:mIn .3s ease}
+    @keyframes mIn{from{opacity:0}to{opacity:1}}
+    .modal{background:var(--card);border-radius:var(--r-xl);border:1px solid var(--border);max-width:500px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-xl);animation:mScale .45s cubic-bezier(.16,1,.3,1)}
+    @keyframes mScale{from{transform:scale(.88) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid var(--border)}
+    .modal-head h3{font-size:1.02rem;font-weight:800;display:flex;align-items:center;gap:8px}
+    .modal-head h3 .material-icons{font-size:20px;color:var(--accent)}
+    .modal-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--input);transition:var(--tr)}
+    .modal-close:hover{background:var(--input-h);border-color:var(--border-h)}
+    .modal-close .material-icons{font-size:18px;color:var(--c3)}
+    .modal-body{padding:22px 26px}
+    .modal-foot{padding:16px 26px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:9px}
+
+    /* Star picker */
+    .star-picker{display:flex;justify-content:center;gap:10px;margin:18px 0 10px}
+    .sp-star{font-size:38px;color:var(--border);cursor:pointer;transition:color .2s,transform .2s;line-height:1;-webkit-text-fill-color:initial}
+    .sp-star:hover,.sp-star.lit{color:var(--gold);transform:scale(1.2)}
+    .sp-star.lit{text-shadow:0 0 20px rgba(255,195,0,.5)}
+    .rating-lbl-txt{text-align:center;font-size:.82rem;font-weight:700;color:var(--c3);min-height:22px;margin-bottom:16px;transition:var(--tr)}
+    .rate-items{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;max-height:190px;overflow-y:auto}
+    .rate-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--input);border:1px solid var(--border);border-radius:var(--r-sm)}
+    .rate-item-img{width:38px;height:38px;border-radius:8px;overflow:hidden;flex-shrink:0}
+    .rate-item-img img{width:100%;height:100%;object-fit:cover}
+    .rate-item-name{font-size:.82rem;font-weight:600;flex:1}
+    .rate-item-qty{font-size:.68rem;color:var(--c3)}
+
+    /* Form */
+    .fg{margin-bottom:14px}
+    .fg label{display:block;font-size:.7rem;font-weight:700;color:var(--c3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+    .fg textarea{width:100%;padding:11px 14px;background:var(--input);border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.85rem;color:var(--c1);outline:none;resize:vertical;min-height:80px;transition:var(--tr)}
+    .fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,107,53,.1)}
+
+    /* Buttons */
+    .btn-primary{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;background:linear-gradient(135deg,var(--accent),var(--accent-d));color:#fff;font-size:.84rem;font-weight:800;border-radius:var(--r-md);transition:var(--tr-spring);box-shadow:0 4px 18px rgba(255,107,53,.28);letter-spacing:.2px}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,53,.4)}
+    .btn-primary:disabled{opacity:.45;pointer-events:none}
+    .btn-primary .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .btn-secondary{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;background:var(--input);border:1.5px solid var(--border);color:var(--c1);font-size:.84rem;font-weight:600;border-radius:var(--r-md);transition:var(--tr)}
+    .btn-secondary:hover{border-color:var(--border-h);background:var(--input-h)}
+
+    /* Empty state */
+    .empty-state{text-align:center;padding:70px 24px}
+    .empty-icon-box{width:80px;height:80px;margin:0 auto 18px;border-radius:24px;background:var(--input);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+    .empty-icon-box .material-icons{font-size:36px;color:var(--c3)}
+    .empty-state h3{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+    .empty-state p{font-size:.82rem;color:var(--c3);max-width:320px;margin:0 auto 20px}
+    .empty-browse{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;background:linear-gradient(135deg,var(--accent),var(--accent-d));color:#fff;font-size:.84rem;font-weight:800;border-radius:var(--r-full);transition:var(--tr-spring);box-shadow:0 4px 18px rgba(255,107,53,.28)}
+    .empty-browse:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,107,53,.4)}
+    .empty-browse .material-icons{font-size:18px}
+
+    /* Toast */
+    .toast-wrap{position:fixed;top:18px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+    .toast{display:flex;align-items:center;gap:11px;padding:13px 18px;border-radius:var(--r-md);font-size:.82rem;font-weight:600;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--shadow-xl);pointer-events:all;animation:toastIn .4s cubic-bezier(.16,1,.3,1);max-width:360px;border:1px solid transparent}
+    .toast.success{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25);color:var(--green)}
+    .toast.error{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.25);color:var(--red)}
+    .toast.info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.25);color:var(--blue)}
+    .toast .material-icons{font-size:20px;flex-shrink:0}
+    @keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+    @keyframes toastOut{from{transform:translateX(0);opacity:1}to{transform:translateX(110%);opacity:0}}
+
+    /* Sidebar overlay */
+    .sb-overlay{position:fixed;inset:0;z-index:190;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);display:none}
+    .sb-overlay.on{display:block}
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media(max-width:600px){
+      .stepper .step-lbl{font-size:.54rem;max-width:44px}
+      .step-node{width:30px;height:30px}
+      .step-node .material-icons{font-size:14px}
+      .stepper-rail,.stepper-fill{top:15px}
+      .oc-actions{width:100%}
+      .oc-btn{flex:1;justify-content:center}
+      .oc-top{flex-direction:column;gap:10px}
+      .oc-right{flex-direction:row;align-items:center;width:100%;justify-content:space-between}
+      .modal-head,.modal-body,.modal-foot{padding-left:18px;padding-right:18px}
+    }
+    @media(max-width:380px){
+      .stats-row{grid-template-columns:1fr}
+      .live-pill{display:none}
+    }
   </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <a href="index.html" class="nav-brand"><span class="material-icons">restaurant</span> Infocity Court</a>
-  <div class="nav-right">
-    <a href="index.html" class="nav-btn"><span class="material-icons">home</span>Home</a>
-    <a href="cart.html" class="nav-btn"><span class="material-icons">shopping_cart</span>Cart</a>
-    <a href="account.html" class="nav-btn"><span class="material-icons">person</span>Account</a>
+<!-- PAGE LOADER -->
+<div id="pageLoader">
+  <div class="loader-icon-wrap"><span class="material-icons">restaurant</span></div>
+  <div class="loader-brand-name">Infocity Court</div>
+  <div class="loader-hint">Loading your orders…</div>
+  <div class="loader-progress"><div class="loader-progress-fill"></div></div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+
+<!-- RATING MODAL -->
+<div class="modal-overlay" id="ratingModal" onclick="if(event.target===this)closeRatingModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><span class="material-icons">star</span>Rate Your Order</h3>
+      <button class="modal-close" onclick="closeRatingModal()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;margin-bottom:14px">
+        <div id="rmRest" style="font-size:1rem;font-weight:800;margin-bottom:3px"></div>
+        <div id="rmOrdNum" style="font-size:.74rem;color:var(--c3)"></div>
+      </div>
+      <div class="rate-items" id="rmItems"></div>
+      <div style="font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--c3);text-align:center">Overall Experience</div>
+      <div class="star-picker" id="starPicker">
+        <span class="material-icons sp-star" onclick="setRating(1)">star</span>
+        <span class="material-icons sp-star" onclick="setRating(2)">star</span>
+        <span class="material-icons sp-star" onclick="setRating(3)">star</span>
+        <span class="material-icons sp-star" onclick="setRating(4)">star</span>
+        <span class="material-icons sp-star" onclick="setRating(5)">star</span>
+      </div>
+      <div class="rating-lbl-txt" id="ratingLbl"></div>
+      <div class="fg">
+        <label>Your Review <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <textarea id="rmReviewText" placeholder="What did you love? Anything we can improve?"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeRatingModal()">Skip</button>
+      <button class="btn-primary" id="rmSubmitBtn" onclick="submitRating()">
+        <span class="spinner" id="rmSpinner"></span>
+        <span class="material-icons" style="font-size:17px">send</span>Submit Review
+      </button>
+    </div>
   </div>
-</nav>
+</div>
 
-<main class="main">
-  <h1 style="margin-bottom:24px">My Orders</h1>
-  <div id="ordersList">Loading...</div>
-</main>
+<!-- APP -->
+<div class="app">
 
-<div class="mobile-bottom-nav">
-  <a href="index.html" class="mob-nav-item"><span class="material-icons">home</span>Home</a>
-  <a href="cart.html" class="mob-nav-item"><span class="material-icons">shopping_cart</span>Cart</a>
-  <a href="orders.html" class="mob-nav-item active"><span class="material-icons">receipt_long</span>Orders</a>
-  <a href="account.html" class="mob-nav-item"><span class="material-icons">person</span>Account</a>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo-box"><span class="material-icons">restaurant</span></div>
+      <div>
+        <div class="sb-name">Infocity Court</div>
+        <div class="sb-tagline">Food Court Platform</div>
+      </div>
+    </div>
+
+    <div class="sb-section">Navigation</div>
+    <nav class="sb-nav">
+      <div class="sb-item" onclick="goHome()">
+        <span class="material-icons">home</span>Home
+      </div>
+      <div class="sb-item active">
+        <span class="material-icons">receipt_long</span>My Orders
+        <span class="sb-badge" id="activeBadge" style="display:none">0</span>
+      </div>
+    </nav>
+
+    <div class="sb-section">Preferences</div>
+    <nav class="sb-nav">
+      <div class="sb-item" onclick="toggleTheme()">
+        <span class="material-icons" id="themeIconSb">dark_mode</span>Toggle Theme
+      </div>
+      <div class="sb-item danger" onclick="doLogout()">
+        <span class="material-icons">logout</span>Logout
+      </div>
+    </nav>
+
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sbAvatar">?</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sbName">Loading…</div>
+          <div class="sb-user-role">Customer Account</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <button class="menu-toggle" onclick="toggleSidebar()">
+        <span class="material-icons">menu</span>
+      </button>
+      <div class="tb-title-group">
+        <div class="tb-title">My Orders</div>
+        <div class="tb-sub" id="tbSub">Track &amp; manage your orders</div>
+      </div>
+      <div class="tb-actions">
+        <div class="live-pill"><div class="live-dot"></div>Live</div>
+        <button class="tb-btn" onclick="refreshOrders()" title="Refresh">
+          <span class="material-icons" id="refreshIcon">refresh</span>
+        </button>
+        <button class="tb-btn" onclick="toggleTheme()">
+          <span class="material-icons" id="themeIconTb">dark_mode</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-d))"><span class="material-icons">receipt_long</span></div>
+            <div class="stat-trend neutral"><span class="material-icons">history</span>All</div>
+          </div>
+          <div><div class="stat-num" id="sTotalOrders">0</div><div class="stat-label">Total Orders</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)"><span class="material-icons">local_fire_department</span></div>
+            <div class="stat-trend up"><span class="material-icons">trending_up</span>Live</div>
+          </div>
+          <div><div class="stat-num" id="sActiveOrders">0</div><div class="stat-label">Active Orders</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon" style="background:linear-gradient(135deg,var(--green),#16a34a)"><span class="material-icons">payments</span></div>
+            <div class="stat-trend up"><span class="material-icons">arrow_upward</span>Spent</div>
+          </div>
+          <div><div class="stat-num" id="sTotalSpent">₹0</div><div class="stat-label">Total Spent</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <div class="stat-icon" style="background:linear-gradient(135deg,var(--gold),#d97706)"><span class="material-icons">star</span></div>
+            <div class="stat-trend neutral"><span class="material-icons">rate_review</span>Rate</div>
+          </div>
+          <div><div class="stat-num" id="sUnrated">0</div><div class="stat-label">Unrated Orders</div></div>
+        </div>
+      </div>
+
+      <!-- Active banner -->
+      <div class="active-banner" id="activeBanner">
+        <div class="ab-icon"><span class="material-icons">local_fire_department</span></div>
+        <div class="ab-text">
+          <div class="ab-title">You have active orders in progress!</div>
+          <div class="ab-sub">Real-time tracking updates every 30 seconds</div>
+        </div>
+        <div class="ab-num" id="aBannerNum">0</div>
+      </div>
+
+      <!-- Orders -->
+      <div class="sec-card">
+        <div class="sec-header">
+          <div class="sec-title"><span class="material-icons">receipt_long</span>Order History</div>
+          <div class="sec-refresh" id="lastRefreshLbl">—</div>
+        </div>
+        <div class="tabs" id="orderTabs">
+          <button class="tab active" data-f="all"       onclick="filterOrders('all',this)">All <span class="tc" id="tcAll">0</span></button>
+          <button class="tab"         data-f="active"    onclick="filterOrders('active',this)">🔥 Active <span class="tc" id="tcActive">0</span></button>
+          <button class="tab"         data-f="delivered" onclick="filterOrders('delivered',this)">✅ Delivered</button>
+          <button class="tab"         data-f="cancelled" onclick="filterOrders('cancelled',this)">Cancelled</button>
+        </div>
+        <div id="ordersContainer"></div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <script>
-const SUPABASE_URL  = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';   // ← paste your anon/public key
+/* ════════════════════════════════════
+   SUPABASE CLIENT
+════════════════════════════════════ */
+const SUPABASE_URL = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+/* ════════════════════════════════════
+   STATE
+════════════════════════════════════ */
+let currentUser   = null;
+let allOrders     = [];
+let itemsByOrder  = {};    // keyed by String(order.id)
+let currentFilter = 'all';
+let ratingOrderId = null;
+let selectedStars = 0;
 
-(async function(){
-  const uid=localStorage.getItem('infocity_uid');
-  if(!uid){window.location.href='../authentication.html';return}
-  try{
-    const{data:orders}=await sb.from('orders').select('*').eq('user_id',uid).order('created_at',{ascending:false});
-    const container=document.getElementById('ordersList');
-    if(!orders||!orders.length){container.innerHTML='<p>No orders yet.</p>';return}
-    
-    // Fetch items manually
-    const{data:items}=await sb.from('order_items').select('*').in('order_id',orders.map(o=>o.id));
-    const allItems={};
-    (items||[]).forEach(it=>{if(!allItems[it.order_id])allItems[it.order_id]=[];allItems[it.order_id].push(it)});
+/* ════════════════════════════════════
+   BOOTSTRAP
+════════════════════════════════════ */
+(async () => {
+  applyStoredTheme();
 
-    container.innerHTML=orders.map(o=>`
-      <div class="order-card">
-        <div class="oc-header">
-          <div><div style="font-weight:700">${o.seller_name}</div><div style="font-size:0.8rem;color:var(--text-secondary)">${new Date(o.created_at).toLocaleDateString()}</div></div>
-          <div class="status-chip ${o.status}">${o.status}</div>
-        </div>
-        <div>${(allItems[o.id]||[]).map(it=>`<div class="oc-item"><span>${it.quantity}x ${it.food_name}</span><span>₹${it.unit_price}</span></div>`).join('')}</div>
-        <div class="oc-footer">
-          <div>Total: ₹${o.total}</div>
-          <button class="btn-reorder" onclick="reorder('${o.id}')">Reorder</button>
-        </div>
-      </div>
-    `).join('');
-  }catch(e){document.getElementById('ordersList').innerHTML='Error loading orders.'}
+  const uid = localStorage.getItem('infocity_uid');
+  if (!uid) { redirect('../authentication.html'); return; }
+
+  try {
+    const { data, error } = await sb.from('Users').select('*').eq('id', uid).maybeSingle();
+    if (error || !data) { clearAuth(); redirect('../authentication.html'); return; }
+    if (data.type !== 'customer') {
+      const map = { restaurant: '../restaurant/cart.html', foodcourt: '../register_foodcourt.html' };
+      redirect(map[data.type] || '../authentication.html'); return;
+    }
+    currentUser = data;
+    populateUserUI();
+    await fetchOrders();
+  } catch (err) {
+    console.error('Boot error:', err);
+    toast('Connection error — please refresh', 'error');
+  }
+
+  el('pageLoader').classList.add('hidden');
 })();
 
-async function reorder(orderId){
-  const{data:items}=await sb.from('order_items').select('*').eq('order_id',orderId);
-  if(items){
-    let cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]');
-    items.forEach(it=>{
-      cart.push({id:it.food_id,food_name:it.food_name,seller_name:it.seller_name,price:it.unit_price,qty:it.quantity});
-    });
-    localStorage.setItem('infocity_cart',JSON.stringify(cart));
-    window.location.href='cart.html';
-  }
+/* ════════════════════════════════════
+   USER UI
+════════════════════════════════════ */
+function populateUserUI() {
+  const ini = currentUser.name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  el('sbAvatar').textContent = ini;
+  el('sbName').textContent   = currentUser.name;
 }
-(function(){const s=localStorage.getItem('infocity_theme');if(s)document.documentElement.setAttribute('data-theme',s)})();
+
+/* ════════════════════════════════════
+   FETCH ORDERS — DATA ONLY, no render side-effects here
+════════════════════════════════════ */
+async function fetchOrders() {
+  let orders = null;
+
+  // Try fetching by user_id
+  try {
+    const { data, error } = await sb
+      .from('orders').select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+    if (!error && data) orders = data;
+  } catch (_) {}
+
+  // Fallback: user_name
+  if (!orders || !orders.length) {
+    try {
+      const { data, error } = await sb
+        .from('orders').select('*')
+        .eq('user_name', currentUser.name)
+        .order('created_at', { ascending: false });
+      if (!error && data) orders = data;
+    } catch (_) {}
+  }
+
+  allOrders = orders || [];
+
+  // Fetch order_items in bulk
+  itemsByOrder = {};
+  if (allOrders.length) {
+    try {
+      const ids = allOrders.map(o => o.id);  // keep as-is (numbers or strings)
+      const { data: items } = await sb.from('order_items').select('*').in('order_id', ids);
+      (items || []).forEach(it => {
+        const key = String(it.order_id);
+        if (!itemsByOrder[key]) itemsByOrder[key] = [];
+        itemsByOrder[key].push(it);
+      });
+    } catch (err) {
+      console.warn('order_items fetch failed:', err);
+    }
+  }
+
+  // Render is in a separate try/catch so data errors ≠ render errors
+  updateStats();
+
+  try {
+    renderOrders();
+  } catch (renderErr) {
+    console.error('Render error:', renderErr);
+    el('ordersContainer').innerHTML =
+      `<div style="padding:24px;color:var(--red);font-size:.85rem">⚠ Display error — please refresh the page.</div>`;
+  }
+
+  const now = new Date();
+  el('lastRefreshLbl').textContent = 'Updated ' + now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+}
+
+/* ════════════════════════════════════
+   STATS
+════════════════════════════════════ */
+const ACTIVE_STATUSES = ['pending','confirmed','preparing','ready','out_for_delivery'];
+
+function updateStats() {
+  const active    = allOrders.filter(o => ACTIVE_STATUSES.includes(o.status));
+  const delivered = allOrders.filter(o => o.status === 'delivered');
+  const unrated   = delivered.filter(o => !o.rating);
+  const spent     = delivered.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+
+  setText('sTotalOrders',  allOrders.length);
+  setText('sActiveOrders', active.length);
+  setText('sTotalSpent',   '₹' + spent.toFixed(0));
+  setText('sUnrated',      unrated.length);
+  setText('tcAll',         allOrders.length);
+  setText('tcActive',      active.length);
+
+  const badge = el('activeBadge');
+  if (active.length) { badge.style.display='flex'; badge.textContent=active.length; }
+  else badge.style.display = 'none';
+
+  const banner = el('activeBanner');
+  if (active.length) { banner.style.display='flex'; el('aBannerNum').textContent=active.length; }
+  else banner.style.display = 'none';
+
+  el('tbSub').textContent = allOrders.length
+    ? `${allOrders.length} order${allOrders.length!==1?'s':''} · ${active.length} active`
+    : 'Track & manage your orders';
+}
+
+/* ════════════════════════════════════
+   FILTER & RENDER
+════════════════════════════════════ */
+function filterOrders(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('#orderTabs .tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  try { renderOrders(); } catch(e){ console.error(e); }
+}
+
+function getFilteredOrders() {
+  if (currentFilter === 'all')     return allOrders;
+  if (currentFilter === 'active')  return allOrders.filter(o => ACTIVE_STATUSES.includes(o.status));
+  return allOrders.filter(o => o.status === currentFilter);
+}
+
+function renderOrders() {
+  const list = getFilteredOrders();
+  const container = el('ordersContainer');
+
+  if (!list.length) {
+    const noOrders = currentFilter === 'all' && !allOrders.length;
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-icon-box"><span class="material-icons">${noOrders?'receipt_long':'inbox'}</span></div>
+      <h3>${noOrders ? 'No orders yet' : 'Nothing here'}</h3>
+      <p>${noOrders
+        ? 'Your complete order history will appear once you place your first order.'
+        : 'No orders match this filter. Try a different tab.'}</p>
+      ${noOrders ? '<a href="index.html" class="empty-browse"><span class="material-icons">restaurant_menu</span>Explore Restaurants</a>' : ''}
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(o => {
+    try   { return buildOrderCard(o); }
+    catch (err) {
+      console.error('Card error for order', o.id, err);
+      // Show a safe fallback so one bad record doesn't blank the list
+      return `<div style="padding:16px 24px;font-size:.8rem;color:var(--red)">
+        ⚠ Could not display order #${safeId(o.id)} — ${esc(err.message)}
+      </div>`;
+    }
+  }).join('');
+}
+
+/* ════════════════════════════════════
+   STATUS CONFIG
+════════════════════════════════════ */
+const S_ICONS = {
+  pending:'schedule', confirmed:'thumb_up', preparing:'restaurant',
+  ready:'check_circle', out_for_delivery:'delivery_dining',
+  delivered:'done_all', cancelled:'cancel',
+};
+const S_LABELS = {
+  pending:'Order Placed', confirmed:'Confirmed', preparing:'Preparing',
+  ready:'Ready!', out_for_delivery:'On the Way',
+  delivered:'Delivered', cancelled:'Cancelled',
+};
+const RATING_LABELS = ['','😞 Poor','😕 Fair','😊 Good','😄 Great','🤩 Excellent!'];
+
+/* ════════════════════════════════════
+   ETA HELPER
+════════════════════════════════════ */
+function getETA(order) {
+  const s = order.status;
+  if (s === 'delivered') return { label:'Delivered ✓', cls:'eta-done' };
+  if (s === 'cancelled') return { label:'Cancelled',   cls:'eta-cancelled' };
+  if (s === 'pending')   return { label:'Awaiting restaurant', cls:'eta-active' };
+  if (s === 'ready')     return { label:'Ready for pickup!',   cls:'eta-active' };
+
+  const prepTime = parseInt(order.prep_time_mins) || 25;
+  const elapsed  = (Date.now() - new Date(order.created_at).getTime()) / 60000;
+  const etaMap   = {
+    confirmed:        prepTime + 20,
+    preparing:        Math.max(prepTime - Math.max(elapsed - 7, 0), 4) + 15,
+    out_for_delivery: 20,
+  };
+  const mins = Math.round(etaMap[s] || 30);
+  return { label: mins > 0 ? `~${mins} min away` : 'Any moment now!', cls:'eta-active' };
+}
+
+/* ════════════════════════════════════
+   STEPPER
+════════════════════════════════════ */
+const STEPS = [
+  { key:'pending',          icon:'receipt',         label:'Placed'    },
+  { key:'confirmed',        icon:'thumb_up',        label:'Confirmed' },
+  { key:'preparing',        icon:'restaurant',      label:'Preparing' },
+  { key:'ready',            icon:'check_circle',    label:'Ready'     },
+  { key:'out_for_delivery', icon:'delivery_dining', label:'On Way'    },
+  { key:'delivered',        icon:'done_all',        label:'Delivered' },
+];
+
+function buildStepper(status) {
+  const activeIdx  = STEPS.findIndex(s => s.key === status);
+  // Width: spread the fill from the first dot to the active dot
+  // Offset by (100/N)/2 on each side so line aligns with dot centres
+  const pct = activeIdx <= 0 ? 0 : (activeIdx / (STEPS.length - 1)) * 100;
+
+  const stepsHtml = STEPS.map((s, i) => {
+    const cls  = i < activeIdx ? 'done' : i === activeIdx ? 'active' : '';
+    const icon = i < activeIdx ? 'check' : s.icon;
+    return `<div class="step ${cls}">
+      <div class="step-node"><span class="material-icons">${icon}</span></div>
+      <div class="step-lbl">${s.label}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="tracking-wrap">
+    <div class="tracking-top">
+      <div class="tracking-lbl"><span class="material-icons">gps_fixed</span>Live Tracking</div>
+      <div class="tracking-status">${esc(S_LABELS[status] || status)}</div>
+    </div>
+    <div class="stepper">
+      <div class="stepper-rail"></div>
+      <div class="stepper-fill" style="width:${pct}%"></div>
+      ${stepsHtml}
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════
+   BUILD ORDER CARD
+   KEY FIX: always use String(order.id) for comparisons/slicing
+════════════════════════════════════ */
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60';
+
+function buildOrderCard(order) {
+  // ▶ THE FIX: cast id to string before any string operations
+  const oidStr  = String(order.id);
+  const shortId = oidStr.length > 8 ? oidStr.slice(0, 8) : oidStr;
+
+  const items       = itemsByOrder[oidStr] || [];
+  const d           = new Date(order.created_at);
+  const ds          = d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })
+                    + ' · ' + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+  const icon        = S_ICONS[order.status] || 'info';
+  const statusLabel = S_LABELS[order.status] || order.status.replace(/_/g,' ');
+  const eta         = getETA(order);
+  const isActive    = ACTIVE_STATUSES.includes(order.status);
+  const isDelivered = order.status === 'delivered';
+  const isCancelled = order.status === 'cancelled';
+  const canCancel   = ['pending','confirmed'].includes(order.status);
+  const hasRating   = order.rating && Number(order.rating) > 0;
+
+  /* Items */
+  const itemsHtml = items.length
+    ? items.map(it => {
+        const total = (parseFloat(it.unit_price||0) * (parseInt(it.quantity)||1)).toFixed(0);
+        return `<div class="oc-item">
+          <div class="oc-item-img">
+            <img src="${esc(it.food_image || FALLBACK_IMG)}"
+                 onerror="this.src='${FALLBACK_IMG}'" loading="lazy"/>
+          </div>
+          <div class="oc-item-info">
+            <div class="oc-item-name">${esc(it.food_name || 'Item')}</div>
+            <div class="oc-item-meta">×${it.quantity}${it.unit_price?' · ₹'+parseFloat(it.unit_price).toFixed(0)+' each':''}</div>
+          </div>
+          <div class="oc-item-price">₹${total}</div>
+        </div>`;
+      }).join('')
+    : `<div style="padding:12px 14px;font-size:.78rem;color:var(--c3);background:var(--input);border-radius:var(--r-sm);text-align:center">No item details on record</div>`;
+
+  /* Address */
+  const addrHtml = order.delivery_address ? `
+    <div class="oc-address">
+      <div class="addr-icon-box"><span class="material-icons">location_on</span></div>
+      <div class="addr-body">
+        <div class="addr-lbl">Delivery Address</div>
+        <div class="addr-text">${esc(order.delivery_address)}${order.delivery_city?', '+esc(order.delivery_city):''}${order.delivery_pincode?' — '+esc(order.delivery_pincode):''}</div>
+        ${order.delivery_instructions?`<div class="addr-note"><span class="material-icons">sticky_note_2</span>${esc(order.delivery_instructions)}</div>`:''}
+      </div>
+    </div>` : '';
+
+  /* Cancelled block */
+  const cancelBlock = isCancelled ? `
+    <div class="cancelled-block">
+      <div class="cancelled-block-icon"><span class="material-icons">info</span></div>
+      <div>
+        <div class="cb-title">${order.cancelled_by==='seller'?'Restaurant declined this order':'You cancelled this order'}</div>
+        ${order.cancellation_reason?`<div class="cb-sub">${esc(order.cancellation_reason)}</div>`:''}
+      </div>
+    </div>` : '';
+
+  /* Review */
+  let reviewHtml = '';
+  if (isDelivered && hasRating) {
+    const starsHtml = Array.from({length:5},(_,i) =>
+      `<span class="material-icons ${i<Math.round(Number(order.rating))?'':'off'}">star</span>`
+    ).join('');
+    reviewHtml = `<div class="oc-review">
+      <div class="oc-review-head">
+        <div class="oc-review-lbl">Your Review</div>
+        <div class="stars">${starsHtml}</div>
+      </div>
+      ${order.review?`<div class="oc-review-text">"${esc(order.review)}"</div>`:''}
+      ${order.review_reply?`<div class="oc-reply"><div class="oc-reply-lbl">Restaurant replied</div><div class="oc-reply-text">${esc(order.review_reply)}</div></div>`:''}
+    </div>`;
+  }
+
+  /* Payment icon */
+  const pmIcons = { cod:'payments', upi:'smartphone', card:'credit_card', wallet:'account_balance_wallet', online:'language' };
+  const pmIcon  = pmIcons[order.payment_method] || 'payments';
+
+  /* Actions */
+  const actionsHtml = [
+    isDelivered && !hasRating
+      ? `<button class="oc-btn btn-rate" onclick="openRatingModal('${oidStr}')"><span class="material-icons">star</span>Rate</button>` : '',
+    isDelivered && hasRating
+      ? `<button class="oc-btn btn-rated"><span class="material-icons">check_circle</span>${Number(order.rating)}★ Rated</button>` : '',
+    canCancel
+      ? `<button class="oc-btn btn-cancel-ord" onclick="cancelOrder('${oidStr}')"><span class="material-icons">cancel</span>Cancel</button>` : '',
+    (isDelivered || isCancelled) && items.length
+      ? `<button class="oc-btn btn-reorder" onclick="goHome()"><span class="material-icons">replay</span>Reorder</button>` : '',
+  ].filter(Boolean).join('');
+
+  /* Stepper — cancelled orders show their own block, not a stepper */
+  const trackingSection = isCancelled
+    ? cancelBlock
+    : buildStepper(order.status);
+
+  return `<div class="order-card" id="oc_${oidStr}">
+    <div class="oc-top">
+      <div class="oc-meta">
+        <div class="oc-restaurant">${esc(order.seller_name || 'Restaurant')}</div>
+        <div class="oc-num">#${order.order_number || shortId}</div>
+        <div class="oc-time"><span class="material-icons">schedule</span>${ds}</div>
+      </div>
+      <div class="oc-right">
+        <div class="status-chip s-${order.status}">
+          <span class="material-icons">${icon}</span>${statusLabel}
+        </div>
+        <div class="eta-pill ${eta.cls}">
+          <span class="material-icons">timer</span>${eta.label}
+        </div>
+      </div>
+    </div>
+
+    ${trackingSection}
+    ${reviewHtml}
+
+    <div class="oc-items">${itemsHtml}</div>
+    ${addrHtml}
+
+    <div class="oc-footer">
+      <div>
+        <div class="oc-total-amt">Total: <em>₹${parseFloat(order.total||0).toFixed(0)}</em></div>
+        <div class="oc-pay"><span class="material-icons">${pmIcon}</span>${(order.payment_method||'COD').toUpperCase()}</div>
+      </div>
+      <div class="oc-actions">${actionsHtml}</div>
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════
+   CANCEL ORDER
+════════════════════════════════════ */
+async function cancelOrder(oidStr) {
+  if (!confirm('Cancel this order? The restaurant will be notified.')) return;
+  try {
+    const { error } = await sb.from('orders').update({
+      status: 'cancelled',
+      cancelled_by: 'user',
+      cancellation_reason: 'Cancelled by customer',
+      cancelled_at: new Date().toISOString(),
+    }).eq('id', oidStr);
+    if (error) throw error;
+
+    const idx = allOrders.findIndex(o => String(o.id) === oidStr);
+    if (idx > -1) Object.assign(allOrders[idx], {
+      status:'cancelled', cancelled_by:'user', cancellation_reason:'Cancelled by customer'
+    });
+    updateStats();
+    try { renderOrders(); } catch(e){ console.error(e); }
+    toast('Order cancelled', 'info');
+  } catch (err) { toast('Failed: ' + err.message, 'error'); }
+}
+
+/* ════════════════════════════════════
+   RATING MODAL
+════════════════════════════════════ */
+function openRatingModal(oidStr) {
+  ratingOrderId = oidStr;
+  selectedStars = 0;
+
+  const order = allOrders.find(o => String(o.id) === oidStr);
+  if (!order) return;
+
+  el('rmRest').textContent   = order.seller_name || 'Restaurant';
+  el('rmOrdNum').textContent = order.order_number ? '#' + order.order_number : '#' + String(oidStr).slice(0,8);
+  el('rmReviewText').value   = '';
+
+  const items = itemsByOrder[oidStr] || [];
+  el('rmItems').innerHTML = items.map(it => `
+    <div class="rate-item">
+      <div class="rate-item-img">
+        <img src="${esc(it.food_image || FALLBACK_IMG)}"
+             onerror="this.src='${FALLBACK_IMG}'" loading="lazy"/>
+      </div>
+      <div class="rate-item-name">${esc(it.food_name)}</div>
+      <div class="rate-item-qty">×${it.quantity}</div>
+    </div>`).join('');
+
+  setRating(0);
+  el('ratingModal').classList.add('active');
+}
+
+function closeRatingModal() {
+  el('ratingModal').classList.remove('active');
+  ratingOrderId = null; selectedStars = 0;
+}
+
+function setRating(val) {
+  selectedStars = val;
+  document.querySelectorAll('.sp-star').forEach((s, i) => s.classList.toggle('lit', i < val));
+  el('ratingLbl').textContent = RATING_LABELS[val] || '';
+}
+
+async function submitRating() {
+  if (!selectedStars) { toast('Please pick a star rating', 'error'); return; }
+  const review = el('rmReviewText').value.trim();
+
+  el('rmSpinner').style.display = 'inline-block';
+  el('rmSubmitBtn').disabled = true;
+
+  try {
+    const { error } = await sb.from('orders').update({
+      rating:   selectedStars,
+      review:   review || null,
+      rated_at: new Date().toISOString(),
+    }).eq('id', ratingOrderId);
+    if (error) throw error;
+
+    const idx = allOrders.findIndex(o => String(o.id) === ratingOrderId);
+    if (idx > -1) Object.assign(allOrders[idx], { rating:selectedStars, review:review||null, rated_at:new Date().toISOString() });
+
+    closeRatingModal();
+    updateStats();
+    try { renderOrders(); } catch(e){ console.error(e); }
+    toast('Review submitted — thank you! 🌟', 'success');
+  } catch (err) { toast('Failed: ' + err.message, 'error'); }
+
+  el('rmSpinner').style.display = 'none';
+  el('rmSubmitBtn').disabled = false;
+}
+
+/* ════════════════════════════════════
+   MANUAL REFRESH
+════════════════════════════════════ */
+async function refreshOrders() {
+  const icon = el('refreshIcon');
+  icon.style.animation = 'spin .6s linear infinite';
+  await fetchOrders();
+  icon.style.animation = '';
+  toast('Orders refreshed', 'success');
+}
+
+/* ════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════ */
+function toggleSidebar() {
+  el('sidebar').classList.toggle('open');
+  el('sbOverlay').classList.toggle('on');
+}
+
+/* ════════════════════════════════════
+   THEME
+════════════════════════════════════ */
+function toggleTheme() {
+  const h = document.documentElement;
+  const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  h.setAttribute('data-theme', next);
+  localStorage.setItem('infocity_theme', next);
+  const ico = next === 'dark' ? 'dark_mode' : 'light_mode';
+  el('themeIconTb').textContent = ico;
+  el('themeIconSb').textContent = ico;
+}
+
+function applyStoredTheme() {
+  const t = localStorage.getItem('infocity_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  // Defer icon update — DOM may not be ready yet
+  window.addEventListener('DOMContentLoaded', () => {
+    const ico = t === 'dark' ? 'dark_mode' : 'light_mode';
+    try { el('themeIconTb').textContent = ico; el('themeIconSb').textContent = ico; } catch(_){}
+  });
+}
+
+/* ════════════════════════════════════
+   LOGOUT / NAVIGATION
+════════════════════════════════════ */
+function doLogout() {
+  if (!confirm('Log out of your account?')) return;
+  clearAuth(); redirect('../authentication.html');
+}
+function goHome()        { window.location.href = 'index.html'; }
+function clearAuth()     { ['infocity_uid','infocity_type','infocity_name'].forEach(k => localStorage.removeItem(k)); }
+function redirect(url)   { window.location.href = url; }
+
+/* ════════════════════════════════════
+   AUTO-REFRESH (30s, only when active orders exist)
+════════════════════════════════════ */
+setInterval(() => {
+  if (currentUser && allOrders.some(o => ACTIVE_STATUSES.includes(o.status))) fetchOrders();
+}, 30000);
+
+/* ════════════════════════════════════
+   UTILS
+════════════════════════════════════ */
+function el(id)         { return document.getElementById(id); }
+function setText(id, v) { const e = el(id); if (e) e.textContent = v; }
+
+/** Always returns a short string — safe even if id is a number */
+function safeId(id) {
+  const s = String(id);
+  return s.length > 8 ? s.slice(0, 8) : s;
+}
+
+function esc(s) {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function toast(msg, type = 'info') {
+  const icons = { success:'check_circle', error:'error', info:'info' };
+  const box = document.createElement('div');
+  box.className = `toast ${type}`;
+  box.innerHTML = `<span class="material-icons">${icons[type]||'info'}</span><span>${msg}</span>`;
+  el('toastWrap').appendChild(box);
+  setTimeout(() => {
+    box.style.animation = 'toastOut .35s forwards';
+    setTimeout(() => box.remove(), 360);
+  }, 3400);
+}
+
+/* Loader hidden class (injected to avoid FOUC) */
+document.head.insertAdjacentHTML('beforeend',
+  `<style>#pageLoader.hidden{opacity:0;pointer-events:none}</style>`);
 </script>
 </body>
 </html>

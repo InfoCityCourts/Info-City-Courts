@@ -572,7 +572,7 @@ async function submitFood(){
   const obj={
     food_name:name,
     seller_name:user.name,
-    seller_id:user.id,
+    seller_name:user.id,
     price,
     original_price:parseFloat(document.getElementById('fmOriginal').value)||null,
     description:document.getElementById('fmDesc').value.trim(),
