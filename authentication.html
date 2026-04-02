@@ -3,534 +3,1410 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Infocity Court — Welcome</title>
+  <title>Infocity Court — Sign In</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{font-size:16px;scroll-behavior:smooth}
-    body{font-family:'Poppins',sans-serif;min-height:100vh;background:#0b0b0f;color:#fff;overflow-x:hidden;display:flex;align-items:center;justify-content:center}
-    .bg-layer{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(255,107,53,.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(255,195,0,.10) 0%,transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(214,40,40,.08) 0%,transparent 50%),#0b0b0f}
-    .bg-layer::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
-    .float-icon{position:fixed;font-size:2.2rem;opacity:.10;z-index:0;animation:floatUp linear infinite;pointer-events:none}
-    @keyframes floatUp{0%{transform:translateY(110vh) rotate(0deg);opacity:0}10%{opacity:.10}90%{opacity:.10}100%{transform:translateY(-10vh) rotate(360deg);opacity:0}}
-    .auth-wrapper{position:relative;z-index:1;display:flex;width:min(1100px,95vw);min-height:680px;border-radius:28px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);backdrop-filter:blur(2px)}
-    .hero-panel{flex:1.1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:44px;overflow:hidden;background:#111}
-    .hero-panel .slides{position:absolute;inset:0;z-index:0}
-    .hero-panel .slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}
-    .hero-panel .slides img.active{opacity:1}
-    .hero-panel .overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(11,11,15,.3) 0%,rgba(11,11,15,.85) 100%)}
-    .hero-content{position:relative;z-index:2}
-    .hero-content .brand{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-    .hero-content .brand .material-icons{font-size:36px;background:linear-gradient(135deg,#ff6b35,#ffc300);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero-content .brand span{font-size:1.55rem;font-weight:800;background:linear-gradient(135deg,#ff6b35,#ffc300);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero-content h2{font-size:1.95rem;font-weight:700;line-height:1.25;margin-bottom:10px}
-    .hero-content p{font-size:.92rem;font-weight:300;color:rgba(255,255,255,.7);max-width:360px;line-height:1.6}
-    .hero-dots{display:flex;gap:8px;margin-top:22px}
-    .hero-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);transition:.3s}
-    .hero-dots span.active{width:28px;border-radius:4px;background:linear-gradient(135deg,#ff6b35,#ffc300)}
-    .rating-badge{position:absolute;top:28px;right:28px;z-index:3;display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.45);backdrop-filter:blur(12px);padding:8px 14px;border-radius:40px;font-size:.82rem;font-weight:600}
-    .rating-badge .material-icons{font-size:18px;color:#ffc300}
-    .form-panel{flex:1;background:rgba(18,18,24,.92);backdrop-filter:blur(40px);padding:44px 40px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
-    .tab-bar{display:flex;background:rgba(255,255,255,.05);border-radius:14px;padding:5px;margin-bottom:32px}
-    .tab-bar button{flex:1;padding:12px 0;font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:600;border:none;border-radius:10px;background:transparent;color:rgba(255,255,255,.45);cursor:pointer;transition:.35s}
-    .tab-bar button.active{background:linear-gradient(135deg,#ff6b35,#e8590c);color:#fff;box-shadow:0 4px 20px rgba(255,107,53,.35)}
-    .form-title{font-size:1.6rem;font-weight:700;margin-bottom:4px}
-    .form-subtitle{font-size:.85rem;font-weight:300;color:rgba(255,255,255,.5);margin-bottom:28px}
-    .input-group{position:relative;margin-bottom:18px}
-    .input-group .material-icons{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:20px;color:rgba(255,255,255,.3);transition:.3s}
-    .input-group input,.input-group select{width:100%;padding:15px 16px 15px 50px;font-family:'Poppins',sans-serif;font-size:.88rem;color:#fff;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:14px;outline:none;transition:.35s;appearance:none;-webkit-appearance:none}
-    .input-group select option{background:#1a1a24;color:#fff}
-    .input-group input::placeholder{color:rgba(255,255,255,.28)}
-    .input-group input:focus,.input-group select:focus{border-color:rgba(255,107,53,.6);background:rgba(255,107,53,.06);box-shadow:0 0 0 3px rgba(255,107,53,.10)}
-    .input-group input:focus~.material-icons,.input-group select:focus~.material-icons{color:#ff6b35}
-    .pw-toggle{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:20px;color:rgba(255,255,255,.3);cursor:pointer;transition:.3s;user-select:none}
-    .pw-toggle:hover{color:#ffc300}
-    .type-selector{display:flex;gap:10px;margin-bottom:22px}
-    .type-card{flex:1;padding:16px 8px;text-align:center;border:1.5px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.03);cursor:pointer;transition:.35s}
-    .type-card:hover{border-color:rgba(255,107,53,.3);background:rgba(255,107,53,.05)}
-    .type-card.selected{border-color:#ff6b35;background:rgba(255,107,53,.10);box-shadow:0 0 20px rgba(255,107,53,.15)}
-    .type-card .material-icons{font-size:28px;display:block;margin:0 auto 6px;color:rgba(255,255,255,.4);transition:.3s}
-    .type-card.selected .material-icons{color:#ff6b35}
-    .type-card span{font-size:.74rem;font-weight:600;color:rgba(255,255,255,.5);transition:.3s}
-    .type-card.selected span{color:#fff}
-    .btn-submit{width:100%;padding:16px;font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;color:#fff;border:none;border-radius:14px;background:linear-gradient(135deg,#ff6b35 0%,#e8590c 50%,#d62828 100%);background-size:200% 200%;cursor:pointer;transition:.4s;box-shadow:0 6px 30px rgba(255,107,53,.30);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;position:relative;overflow:hidden}
-    .btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%);opacity:0;transition:.4s}
-    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgba(255,107,53,.40);background-position:100% 100%}
-    .btn-submit:hover::before{opacity:1}
-    .btn-submit:active{transform:translateY(0) scale(.985)}
-    .btn-submit:disabled{opacity:.55;pointer-events:none}
-    .spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .divider{display:flex;align-items:center;gap:14px;margin:22px 0}
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
-    .divider span{font-size:.75rem;color:rgba(255,255,255,.25);font-weight:500;white-space:nowrap}
-    .toast-container{position:fixed;top:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:10px}
-    .toast{display:flex;align-items:center;gap:12px;padding:16px 22px;border-radius:16px;font-size:.85rem;font-weight:500;backdrop-filter:blur(16px);animation:slideIn .4s cubic-bezier(.16,1,.3,1);box-shadow:0 12px 40px rgba(0,0,0,.3);max-width:380px}
-    .toast.success{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#22c55e}
-    .toast.error{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#ef4444}
-    .toast.info{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#3b82f6}
-    .toast .material-icons{font-size:22px}
-    @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
-    @keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(120%);opacity:0}}
-    .page-loader{position:fixed;inset:0;z-index:10000;background:#0b0b0f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s}
-    .page-loader.hidden{opacity:0;pointer-events:none}
-    .page-loader .brand-text{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#ff6b35,#ffc300);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .loader-ring{width:44px;height:44px;border:3px solid rgba(255,107,53,.15);border-top-color:#ff6b35;border-radius:50%;animation:spin .8s linear infinite}
-    .form-section{display:none}
-    .form-section.active{display:block;animation:fadeUp .45s cubic-bezier(.16,1,.3,1)}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .input-group.error input,.input-group.error select{border-color:rgba(239,68,68,.6);background:rgba(239,68,68,.06)}
-    .input-group .error-msg{font-size:.72rem;color:#ef4444;margin-top:5px;display:none;padding-left:4px}
-    .input-group.error .error-msg{display:block}
-    @media(max-width:840px){.auth-wrapper{flex-direction:column;min-height:auto}.hero-panel{min-height:260px;padding:28px}.hero-content h2{font-size:1.4rem}.form-panel{padding:32px 24px}}
-    @media(max-width:480px){.type-selector{flex-direction:column;gap:8px}.type-card{flex-direction:row;display:flex;align-items:center;gap:10px;padding:14px 18px}.type-card .material-icons{margin:0;font-size:24px}}
+    /* ── TOKENS ── */
+    :root {
+      --ink:       #0d0d0d;
+      --ink2:      #1a1610;
+      --parchment: #faf7f2;
+      --warm:      #f5efe4;
+      --gold:      #c8973a;
+      --gold2:     #e8b86d;
+      --gold3:     #f5d08a;
+      --ember:     #c0392b;
+      --ember2:    #e74c3c;
+      --smoke:     rgba(255,255,255,0.06);
+      --line:      rgba(255,255,255,0.08);
+      --line2:     rgba(200,151,58,0.2);
+      --glass:     rgba(15,13,10,0.72);
+      --r:         16px;
+      --r2:        24px;
+      --r3:        40px;
+    }
 
-    /* DEBUG INFO BAR */
-    .debug-bar{position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,.9);color:#0f0;font-family:monospace;font-size:.75rem;padding:8px 16px;display:none}
-    .debug-bar.show{display:block}
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 16px; height: 100%; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: var(--ink);
+      color: #fff;
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+      position: relative;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    /* ── AMBIENT LIGHT ── */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 60% at 20% 100%, rgba(200,151,58,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 0%, rgba(192,57,43,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 40% at 50% 50%, rgba(200,151,58,0.03) 0%, transparent 70%);
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT VISUAL PANEL ── */
+    .visual {
+      flex: 1.15;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .visual-slides {
+      position: absolute;
+      inset: 0;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .slide.active { opacity: 1; }
+
+    .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=85'); }
+    .slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=85'); }
+    .slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=85'); }
+    .slide:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=1200&q=85'); }
+
+    .visual-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(13,13,13,0.55) 0%, transparent 60%),
+        linear-gradient(to top, rgba(13,13,13,0.88) 0%, rgba(13,13,13,0.2) 45%, transparent 70%);
+    }
+
+    .visual-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: 44px 48px;
+    }
+
+    /* Logo */
+    .v-logo {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .v-logo-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, var(--gold), var(--gold2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(200,151,58,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    .v-logo-mark svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--ink);
+    }
+
+    .v-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .v-logo-text small {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 3px;
+    }
+
+    /* Bottom content */
+    .v-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .v-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 3.2vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .v-headline em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--gold2), var(--gold3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .v-tagline {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.52);
+      letter-spacing: 0.02em;
+      max-width: 340px;
+      line-height: 1.7;
+    }
+
+    /* Dots */
+    .v-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .v-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.22);
+      transition: all 0.45s ease;
+      cursor: pointer;
+    }
+
+    .v-dot.active {
+      width: 26px;
+      border-radius: 3px;
+      background: var(--gold);
+    }
+
+    /* Trust badges */
+    .v-trust {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .v-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      font-weight: 400;
+    }
+
+    .v-badge-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,151,58,0.25);
+      background: rgba(200,151,58,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    /* ── RIGHT FORM PANEL ── */
+    .form-panel {
+      width: clamp(380px, 38%, 480px);
+      flex-shrink: 0;
+      background: linear-gradient(180deg, rgba(20,16,10,0.97) 0%, rgba(15,12,8,0.99) 100%);
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .form-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    .form-inner {
+      flex: 1;
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* Tab bar */
+    .tabs {
+      display: flex;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 4px;
+      margin-bottom: 36px;
+      gap: 3px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 11px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: rgba(255,255,255,0.32);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+      color: var(--ink);
+      font-weight: 600;
+      box-shadow: 0 3px 14px rgba(200,151,58,0.28);
+    }
+
+    /* Form sections */
+    .fsect { display: none; }
+    .fsect.active {
+      display: flex;
+      flex-direction: column;
+      animation: riseIn 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .form-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .form-sub {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.36);
+      margin-bottom: 30px;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* Input group */
+    .ig {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .ig-label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 7px;
+    }
+
+    .ig-wrap {
+      position: relative;
+    }
+
+    .ig-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      opacity: 0.3;
+      transition: opacity 0.25s;
+      pointer-events: none;
+    }
+
+    .ig-input {
+      width: 100%;
+      padding: 14px 46px 14px 46px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: #fff;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--r);
+      outline: none;
+      transition: all 0.28s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .ig-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .ig-input:focus {
+      background: rgba(200,151,58,0.05);
+      border-color: rgba(200,151,58,0.45);
+      box-shadow: 0 0 0 3px rgba(200,151,58,0.08);
+    }
+
+    .ig-input:focus ~ .ig-icon,
+    .ig-wrap:focus-within .ig-icon {
+      opacity: 0.7;
+    }
+
+    .ig.has-error .ig-input {
+      border-color: rgba(192,57,43,0.5);
+      background: rgba(192,57,43,0.04);
+    }
+
+    .ig-err {
+      font-size: 0.7rem;
+      color: var(--ember2);
+      margin-top: 5px;
+      display: none;
+      padding-left: 2px;
+    }
+
+    .ig.has-error .ig-err { display: block; }
+
+    .ig-eye {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.3;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      background: none;
+      border: none;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ig-eye:hover { opacity: 0.7; }
+    .ig-eye svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; }
+
+    /* select */
+    .ig-select {
+      width: 100%;
+      padding: 14px 46px 14px 46px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.04) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23ffffff' stroke-opacity='.35' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--r);
+      outline: none;
+      transition: all 0.28s ease;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .ig-select option { background: #1a1610; color: #fff; }
+    .ig-select:focus {
+      background-color: rgba(200,151,58,0.05);
+      border-color: rgba(200,151,58,0.45);
+      box-shadow: 0 0 0 3px rgba(200,151,58,0.08);
+      color: #fff;
+    }
+
+    /* Type selector */
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    .type-card {
+      padding: 16px 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--r);
+      background: rgba(255,255,255,0.025);
+      cursor: pointer;
+      transition: all 0.28s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .type-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      opacity: 0;
+      transition: opacity 0.28s;
+    }
+
+    .type-card:hover { border-color: rgba(200,151,58,0.25); }
+
+    .type-card.sel {
+      border-color: rgba(200,151,58,0.5);
+      box-shadow: 0 0 0 1px rgba(200,151,58,0.2) inset, 0 6px 20px rgba(200,151,58,0.12);
+    }
+
+    .type-card.sel::before { opacity: 0.06; }
+
+    .type-card-icon {
+      position: relative;
+      z-index: 1;
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 8px;
+      opacity: 0.35;
+      transition: opacity 0.28s;
+    }
+
+    .type-card.sel .type-card-icon { opacity: 1; }
+
+    .type-card-icon svg { width: 100%; height: 100%; fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+    .type-card-label {
+      position: relative;
+      z-index: 1;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.38);
+      transition: color 0.28s;
+      letter-spacing: 0.04em;
+    }
+
+    .type-card.sel .type-card-label { color: var(--gold2); }
+
+    .type-err {
+      font-size: 0.7rem;
+      color: var(--ember2);
+      margin-top: -8px;
+      margin-bottom: 12px;
+      display: none;
+      padding-left: 2px;
+    }
+
+    /* Strength bar */
+    .strength-track {
+      height: 2px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      margin: -6px 0 16px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 2px;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+
+    /* Admin zone */
+    .admin-zone {
+      display: none;
+      flex-direction: column;
+      animation: riseIn 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .admin-zone.active { display: flex; }
+
+    .danger-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(192,57,43,0.08);
+      border: 1px solid rgba(192,57,43,0.22);
+      border-radius: var(--r);
+      margin-bottom: 24px;
+    }
+
+    .danger-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .danger-icon svg { width: 100%; height: 100%; fill: none; stroke: var(--ember2); stroke-width: 2; stroke-linecap: round; }
+
+    .danger-text {
+      font-size: 0.76rem;
+      color: rgba(231,76,60,0.8);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .danger-text strong { color: var(--ember2); font-weight: 600; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 15px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      border: none;
+      border-radius: var(--r);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 50%, #f0c070 100%);
+      background-size: 200% 200%;
+      cursor: pointer;
+      transition: all 0.38s ease;
+      box-shadow: 0 5px 22px rgba(200,151,58,0.28), inset 0 1px 0 rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      letter-spacing: 0.03em;
+      position: relative;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(200,151,58,0.38);
+      background-position: 100% 100%;
+    }
+
+    .btn-submit:hover::after { opacity: 1; }
+    .btn-submit:active { transform: translateY(0) scale(0.987); }
+    .btn-submit:disabled { opacity: 0.48; pointer-events: none; }
+
+    .btn-submit svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      flex-shrink: 0;
+    }
+
+    /* Admin toggle link */
+    .admin-link-wrap {
+      margin-top: 22px;
+      text-align: center;
+    }
+
+    .admin-link {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.2);
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.25s;
+      padding: 6px;
+    }
+
+    .admin-link:hover { color: rgba(192,57,43,0.6); }
+
+    .admin-back {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      padding: 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+
+    .admin-back:hover { color: rgba(255,255,255,0.6); }
+    .admin-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .divider span {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.2);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .alt-link {
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.28);
+    }
+
+    .alt-link a {
+      color: var(--gold2);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .alt-link a:hover { color: var(--gold3); }
+
+    /* Spinner */
+    .spinner {
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(15,12,8,0.25);
+      border-top-color: var(--ink);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOASTS ── */
+    .toast-dock {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-radius: var(--r);
+      font-size: 0.82rem;
+      font-weight: 500;
+      backdrop-filter: blur(24px);
+      animation: tIn 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+      max-width: 360px;
+      pointer-events: all;
+      letter-spacing: 0.01em;
+    }
+
+    .toast.ok  { background: rgba(26,34,22,0.95); border: 1px solid rgba(34,197,94,0.28); color: #4ade80; }
+    .toast.bad { background: rgba(34,18,18,0.95); border: 1px solid rgba(192,57,43,0.28); color: #f87171; }
+    .toast.inf { background: rgba(18,22,34,0.95); border: 1px solid rgba(100,149,237,0.28); color: #93c5fd; }
+    .toast svg { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+
+    @keyframes tIn  { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes tOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(110%); opacity: 0; } }
+
+    /* ── PAGE LOADER ── */
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: opacity 0.55s ease;
+    }
+
+    .loader.out { opacity: 0; pointer-events: none; }
+
+    .loader-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, var(--gold), var(--gold2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 28px rgba(200,151,58,0.35);
+      animation: loader-pulse 2.2s ease-in-out infinite;
+    }
+
+    .loader-mark svg { width: 24px; height: 24px; fill: var(--ink); }
+
+    @keyframes loader-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 8px 28px rgba(200,151,58,0.35); }
+      50%       { transform: scale(1.06); box-shadow: 0 12px 36px rgba(200,151,58,0.5); }
+    }
+
+    .loader-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.05em;
+    }
+
+    .loader-bar {
+      width: 100px;
+      height: 1.5px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loader-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      animation: barSweep 1.1s ease infinite;
+    }
+
+    @keyframes barSweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(220%); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 840px) {
+      body { overflow-y: auto; }
+      .layout { flex-direction: column; }
+      .visual { min-height: 280px; flex: none; }
+      .visual-content { padding: 28px 28px 32px; }
+      .v-headline { font-size: 2rem; }
+      .v-trust { display: none; }
+      .form-panel { width: 100%; border-left: none; border-top: 1px solid var(--line); }
+      .form-inner { min-height: auto; padding: 36px 28px 48px; justify-content: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .form-inner { padding: 28px 20px 40px; }
+      .type-row { grid-template-columns: 1fr 1fr; }
+      .v-headline { font-size: 1.7rem; }
+      .v-logo { display: none; }
+    }
   </style>
 </head>
-
 <body>
 
-<div class="page-loader" id="pageLoader">
-  <div class="loader-ring"></div>
-  <div class="brand-text">Infocity Court</div>
+<!-- PAGE LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-mark">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" opacity="0"/><path d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.66 10.48 12h.01L7.8 14.39c-.64.64-1.49.99-2.4.99-1.87 0-3.39-1.52-3.39-3.38S3.53 8.62 5.4 8.62c.91 0 1.76.35 2.44 1.03l1.13 1 1.51-1.34L9.22 8.2C8.2 7.18 6.84 6.62 5.4 6.62 2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53l2.83-2.5.01.01L13.52 12h-.01l2.69-2.39c.64-.64 1.49-.99 2.4-.99 1.87 0 3.39 1.52 3.39 3.38s-1.52 3.38-3.39 3.38c-.91 0-1.76-.35-2.44-1.03l-1.13-1-1.51 1.34 1.27 1.12c1.02 1.01 2.37 1.57 3.81 1.57C21.58 17.38 24 14.96 24 12s-2.42-5.38-5.4-5.38z"/></svg>
+  </div>
+  <div class="loader-name">Infocity Court</div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
 </div>
 
-<div class="bg-layer"></div>
-<div class="toast-container" id="toastContainer"></div>
+<!-- AMBIENT LIGHT -->
+<div class="ambient"></div>
 
-<!-- DEBUG BAR — remove in production -->
-<div class="debug-bar" id="debugBar"></div>
+<!-- TOAST DOCK -->
+<div class="toast-dock" id="toastDock"></div>
 
-<div class="auth-wrapper">
-  <div class="hero-panel">
-    <div class="slides">
-      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="" class="active"/>
-      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" alt=""/>
-      <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=800&q=80" alt=""/>
-      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" alt=""/>
-      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80" alt=""/>
+<div class="layout">
+
+  <!-- LEFT VISUAL -->
+  <div class="visual">
+    <div class="visual-slides">
+      <div class="slide active"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
     </div>
-    <div class="overlay"></div>
-    <div class="rating-badge"><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span><span class="material-icons">star</span>&nbsp;5-Star Dining</div>
-    <div class="hero-content">
-      <div class="brand"><span class="material-icons">restaurant</span><span>Infocity Court</span></div>
-      <h2 id="heroTitle">Discover Exquisite<br/>Culinary Experiences</h2>
-      <p id="heroSub">Join thousands of food lovers, restaurants, and food courts on the premium dining platform.</p>
-      <div class="hero-dots" id="heroDots"><span class="active"></span><span></span><span></span><span></span><span></span></div>
+    <div class="visual-overlay"></div>
+    <div class="visual-content">
+      <div class="v-logo">
+        <div class="v-logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M12 3C8.13 3 5 6.13 5 10c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-1.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm2 12.7V16h-4v-.3C8.48 14.63 7 12.46 7 10c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.46-1.48 4.63-3 5.7zM9 18h6v1H9v-1z"/></svg>
+        </div>
+        <div class="v-logo-text">Infocity Court<small>Premium Dining Platform</small></div>
+      </div>
+      <div class="v-bottom">
+        <div>
+          <div class="v-headline" id="vHeadline">Where <em>extraordinary</em><br/>flavours find you</div>
+          <div class="v-tagline" id="vTagline">Connect with premium restaurants, track your orders, and experience dining redefined for the modern palate.</div>
+        </div>
+        <div>
+          <div class="v-dots" id="vDots">
+            <div class="v-dot active" onclick="goSlide(0)"></div>
+            <div class="v-dot" onclick="goSlide(1)"></div>
+            <div class="v-dot" onclick="goSlide(2)"></div>
+            <div class="v-dot" onclick="goSlide(3)"></div>
+          </div>
+        </div>
+        <div class="v-trust">
+          <div class="v-badge"><div class="v-badge-dot">✦</div>Premium Restaurants</div>
+          <div class="v-badge"><div class="v-badge-dot">◈</div>Real-time Tracking</div>
+          <div class="v-badge"><div class="v-badge-dot">◎</div>Secure Payments</div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- RIGHT FORM PANEL -->
   <div class="form-panel">
-    <div class="tab-bar">
-      <button class="active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-      <button id="tabSignup" onclick="switchTab('signup')">Create Account</button>
-    </div>
+    <div class="form-inner">
 
-    <!-- LOGIN -->
-    <div class="form-section active" id="loginSection">
-      <div class="form-title">Welcome back 👋</div>
-      <div class="form-subtitle">Sign in to continue your food journey</div>
-      <form id="loginForm" onsubmit="handleLogin(event)" novalidate>
-        <div class="input-group" id="lgEmailGroup"><input type="email" id="lgEmail" placeholder="Email address" autocomplete="email"/><span class="material-icons">mail</span><div class="error-msg" id="lgEmailErr">Please enter a valid email</div></div>
-        <div class="input-group" id="lgPassGroup"><input type="password" id="lgPass" placeholder="Password" autocomplete="current-password"/><span class="material-icons">lock</span><span class="material-icons pw-toggle" onclick="togglePw('lgPass',this)">visibility_off</span><div class="error-msg" id="lgPassErr">Password is required</div></div>
-        <button type="submit" class="btn-submit" id="loginBtn"><span class="spinner" id="loginSpinner"></span><span class="material-icons" style="font-size:20px">login</span> Sign In</button>
-      </form>
-      <div class="divider"><span>New to Infocity Court?</span></div>
-      <p style="text-align:center"><a href="#" onclick="switchTab('signup');return false;" style="color:#ff6b35;font-weight:600;text-decoration:none;font-size:.88rem">Create a free account →</a></p>
-    </div>
+      <!-- NORMAL TAB BAR (hidden in admin mode) -->
+      <div class="tabs" id="tabBar">
+        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+        <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Create Account</button>
+      </div>
 
-    <!-- SIGNUP -->
-    <div class="form-section" id="signupSection">
-      <div class="form-title">Join Infocity Court ✨</div>
-      <div class="form-subtitle">Create your account in seconds</div>
-      <form id="signupForm" onsubmit="handleSignup(event)" novalidate>
-        <div class="input-group" id="suNameGroup"><input type="text" id="suName" placeholder="Full name" autocomplete="name"/><span class="material-icons">person</span><div class="error-msg" id="suNameErr">Name is required</div></div>
-        <div class="input-group" id="suPhoneGroup"><input type="tel" id="suPhone" placeholder="Phone number" autocomplete="tel"/><span class="material-icons">phone</span><div class="error-msg" id="suPhoneErr">Enter a valid phone (10+ digits)</div></div>
-        <div class="input-group" id="suEmailGroup"><input type="email" id="suEmail" placeholder="Email address" autocomplete="email"/><span class="material-icons">mail</span><div class="error-msg" id="suEmailErr">Enter a valid email</div></div>
-        <div class="input-group" id="suPassGroup"><input type="password" id="suPass" placeholder="Create password (min 6 chars)" autocomplete="new-password"/><span class="material-icons">lock</span><span class="material-icons pw-toggle" onclick="togglePw('suPass',this)">visibility_off</span><div class="error-msg" id="suPassErr">Minimum 6 characters required</div></div>
-        <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.06);margin:-10px 0 18px;overflow:hidden"><div id="pwStrengthBar" style="height:100%;width:0;border-radius:2px;transition:.4s"></div></div>
-        <label style="font-size:.82rem;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:10px;display:block">I am a…</label>
-        <div class="type-selector" id="typeSelector">
-          <div class="type-card" data-type="customer" onclick="selectType(this)"><span class="material-icons">person_outline</span><span>Customer</span></div>
-          <div class="type-card" data-type="restaurant" onclick="selectType(this)"><span class="material-icons">storefront</span><span>Restaurant</span></div>
-          <div class="type-card" data-type="foodcourt" onclick="selectType(this)"><span class="material-icons">food_bank</span><span>Food Court</span></div>
+      <!-- ADMIN BACK BUTTON -->
+      <button class="admin-back" id="adminBack" onclick="exitAdmin()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        Back to Sign In
+      </button>
+
+      <!-- ══ LOGIN ══ -->
+      <div class="fsect active" id="sectLogin">
+        <div class="form-eyebrow">Welcome back</div>
+        <div class="form-title">Sign in to your account</div>
+        <div class="form-sub">Continue your dining journey where you left off.</div>
+
+        <form onsubmit="doLogin(event)" novalidate>
+          <div class="ig" id="igLgEmail">
+            <label class="ig-label">Email address</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/></svg>
+              <input class="ig-input" type="email" id="lgEmail" placeholder="you@example.com" autocomplete="email"/>
+            </div>
+            <div class="ig-err">Please enter a valid email address</div>
+          </div>
+
+          <div class="ig" id="igLgPass">
+            <label class="ig-label">Password</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="ig-input" type="password" id="lgPass" placeholder="Your password" autocomplete="current-password"/>
+              <button type="button" class="ig-eye" onclick="toggleEye('lgPass',this)">
+                <svg id="eyeLg" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="ig-err">Password is required</div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnLogin">
+            <span class="spinner" id="spLogin"></span>
+            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </button>
+        </form>
+
+        <div class="divider"><span>Don't have an account?</span></div>
+        <div class="alt-link"><a href="#" onclick="switchTab('signup');return false">Create a free account →</a></div>
+
+        <div class="admin-link-wrap">
+          <button class="admin-link" onclick="enterAdmin()">Admin Access</button>
         </div>
-        <div class="error-msg" id="typeErr" style="display:none;font-size:.72rem;color:#ef4444;margin:-12px 0 12px 4px">Please select your account type</div>
-        <button type="submit" class="btn-submit" id="signupBtn"><span class="spinner" id="signupSpinner"></span><span class="material-icons" style="font-size:20px">how_to_reg</span> Create Account</button>
-      </form>
-      <div class="divider"><span>Already have an account?</span></div>
-      <p style="text-align:center"><a href="#" onclick="switchTab('login');return false;" style="color:#ff6b35;font-weight:600;text-decoration:none;font-size:.88rem">← Sign in instead</a></p>
+      </div>
+
+      <!-- ══ SIGNUP ══ -->
+      <div class="fsect" id="sectSignup">
+        <div class="form-eyebrow">Get started</div>
+        <div class="form-title">Create your account</div>
+        <div class="form-sub">Join Infocity Court in seconds — free forever.</div>
+
+        <form onsubmit="doSignup(event)" novalidate>
+          <div class="ig" id="igSuName">
+            <label class="ig-label">Full name</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input class="ig-input" type="text" id="suName" placeholder="John Smith" autocomplete="name"/>
+            </div>
+            <div class="ig-err">Full name is required</div>
+          </div>
+
+          <div class="ig" id="igSuPhone">
+            <label class="ig-label">Phone number</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6 6l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+              <input class="ig-input" type="tel" id="suPhone" placeholder="+91 98765 43210" autocomplete="tel"/>
+            </div>
+            <div class="ig-err">Enter a valid phone number (10+ digits)</div>
+          </div>
+
+          <div class="ig" id="igSuEmail">
+            <label class="ig-label">Email address</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/></svg>
+              <input class="ig-input" type="email" id="suEmail" placeholder="you@example.com" autocomplete="email"/>
+            </div>
+            <div class="ig-err">Enter a valid email address</div>
+          </div>
+
+          <div class="ig" id="igSuPass">
+            <label class="ig-label">Password</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="ig-input" type="password" id="suPass" placeholder="Minimum 6 characters" autocomplete="new-password"/>
+              <button type="button" class="ig-eye" onclick="toggleEye('suPass',this)">
+                <svg id="eyeSu" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="ig-err">Minimum 6 characters required</div>
+          </div>
+          <div class="strength-track"><div class="strength-fill" id="strengthBar"></div></div>
+
+          <label class="ig-label" style="margin-bottom:10px;display:block">I am a…</label>
+          <div class="type-row">
+            <div class="type-card" data-t="customer" onclick="pickType(this)">
+              <div class="type-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="type-card-label">Customer</div>
+            </div>
+            <div class="type-card" data-t="restaurant" onclick="pickType(this)">
+              <div class="type-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2"/><path d="M18 2v4h3"/><path d="M15 2v8a2 2 0 0 0 2 2h4"/></svg>
+              </div>
+              <div class="type-card-label">Restaurant</div>
+            </div>
+          </div>
+          <div class="type-err" id="typeErr">Please select your account type</div>
+
+          <button type="submit" class="btn-submit" id="btnSignup">
+            <span class="spinner" id="spSignup"></span>
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Create Account
+          </button>
+        </form>
+
+        <div class="divider"><span>Already have an account?</span></div>
+        <div class="alt-link"><a href="#" onclick="switchTab('login');return false">← Sign in instead</a></div>
+      </div>
+
+      <!-- ══ ADMIN PANEL ══ -->
+      <div class="admin-zone" id="sectAdmin">
+        <div class="danger-banner">
+          <div class="danger-icon">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="danger-text">
+            <strong>Restricted Access — Admin Only</strong><br/>
+            This panel is exclusively for platform administrators. Unauthorised access is strictly prohibited and will be logged.
+          </div>
+        </div>
+
+        <div class="form-eyebrow" style="color:rgba(192,57,43,0.7)">Danger Zone</div>
+        <div class="form-title">Admin Sign In</div>
+        <div class="form-sub">Use your administrator credentials to access the control panel.</div>
+
+        <form onsubmit="doAdminLogin(event)" novalidate>
+          <div class="ig" id="igAdEmail">
+            <label class="ig-label">Admin Email</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/></svg>
+              <input class="ig-input" type="email" id="adEmail" placeholder="admin@infocitycourt.com" autocomplete="off"/>
+            </div>
+            <div class="ig-err">Enter admin email</div>
+          </div>
+
+          <div class="ig" id="igAdPass">
+            <label class="ig-label">Admin Password</label>
+            <div class="ig-wrap">
+              <svg class="ig-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="ig-input" type="password" id="adPass" placeholder="Administrator password" autocomplete="off"/>
+              <button type="button" class="ig-eye" onclick="toggleEye('adPass',this)">
+                <svg id="eyeAd" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="ig-err">Password is required</div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="btnAdmin" style="background:linear-gradient(135deg,#8b0000,var(--ember),#c0392b);box-shadow:0 5px 22px rgba(192,57,43,0.3);color:#fff">
+            <span class="spinner" id="spAdmin"></span>
+            <svg viewBox="0 0 24 24" stroke="#fff"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Access Admin Panel
+          </button>
+        </form>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
-  // ═══════════════════════════════════════════════════════════
-  // CONFIG
-  // ═══════════════════════════════════════════════════════════
-const SUPABASE_URL  = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';   // ← paste your anon/public key
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+/* ═══════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════ */
+const SB_URL = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-  // ═══════════════════════════════════════════════════════════
-  // ██  FIX: ALL ROUTES ARE NOW RELATIVE PATHS              ██
-  // ██  This works on file://, localhost, AND production     ██
-  // ═══════════════════════════════════════════════════════════
-  //
-  // Folder structure expected:
-  //   root/
-  //   ├── authentication.html    ← YOU ARE HERE
-  //   ├── register_foodcourt.html
-  //   ├── customer/
-  //   │   ├── index.html
-  //   │   ├── cart.html
-  //   │   ├── orders.html
-  //   │   └── account.html
-  //   └── restaurant/
-  //       └── index.html
+/* ── ADMIN CREDENTIALS (hardcoded, never stored in DB) ── */
+const ADMIN_EMAIL    = 'admin@infocitycourt.com';
+const ADMIN_PASSWORD = 'IC@Admin#2025!';
 
-  const ROUTES = {
-    customer   : 'customer/index.html',
-    restaurant : 'restaurant/index.html',
-    foodcourt  : 'register_foodcourt.html'
+const ROUTES = {
+  customer  : 'customer/index.html',
+  restaurant: 'restaurant/index.html',
+  admin     : 'admin/index.html'
+};
+
+/* ═══════════════════════════════════════════════
+   BOOT — check existing session
+═══════════════════════════════════════════════ */
+(function boot() {
+  const uid  = localStorage.getItem('infocity_uid');
+  const type = localStorage.getItem('infocity_type');
+  if (uid && type && ROUTES[type]) {
+    window.location.href = ROUTES[type];
+    return;
+  }
+  document.getElementById('loader').classList.add('out');
+})();
+
+/* ═══════════════════════════════════════════════
+   SLIDESHOW
+═══════════════════════════════════════════════ */
+const SLIDES_DATA = [
+  { h: 'Where <em>extraordinary</em><br/>flavours find you',         t: 'Connect with premium restaurants and experience dining redefined for the modern palate.' },
+  { h: 'Fine dining,<br/><em>reimagined</em> for today',            t: 'Discover handpicked restaurants, exclusive menus, and seamless ordering — all in one place.' },
+  { h: 'Fresh. Local.<br/><em>Unforgettable.</em>',                 t: 'Support local restaurants while enjoying world-class cuisine delivered to your door.' },
+  { h: 'Your next great<br/>meal is <em>one tap</em> away',         t: 'Browse menus, place orders, and track deliveries in real time with zero friction.' },
+];
+
+let slideIdx = 0;
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.v-dot');
+
+function goSlide(i) {
+  slides[slideIdx].classList.remove('active');
+  dots[slideIdx].classList.remove('active');
+  slideIdx = i;
+  slides[slideIdx].classList.add('active');
+  dots[slideIdx].classList.add('active');
+  document.getElementById('vHeadline').innerHTML = SLIDES_DATA[slideIdx].h;
+  document.getElementById('vTagline').textContent = SLIDES_DATA[slideIdx].t;
+}
+
+setInterval(() => goSlide((slideIdx + 1) % slides.length), 5500);
+
+/* ═══════════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════════ */
+function switchTab(tab) {
+  const toLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', toLogin);
+  document.getElementById('tabSignup').classList.toggle('active', !toLogin);
+  document.getElementById('sectLogin').classList.toggle('active', toLogin);
+  document.getElementById('sectSignup').classList.toggle('active', !toLogin);
+  clearErrs();
+}
+
+/* ═══════════════════════════════════════════════
+   ADMIN MODE
+═══════════════════════════════════════════════ */
+function enterAdmin() {
+  document.getElementById('tabBar').style.display = 'none';
+  document.getElementById('sectLogin').classList.remove('active');
+  document.getElementById('sectSignup').classList.remove('active');
+  document.getElementById('sectAdmin').classList.add('active');
+  document.getElementById('adminBack').style.display = 'flex';
+}
+
+function exitAdmin() {
+  document.getElementById('tabBar').style.display = 'flex';
+  document.getElementById('sectAdmin').classList.remove('active');
+  document.getElementById('sectLogin').classList.add('active');
+  document.getElementById('adminBack').style.display = 'none';
+  clearErrs();
+}
+
+/* ═══════════════════════════════════════════════
+   TYPE SELECTOR
+═══════════════════════════════════════════════ */
+let selectedType = '';
+function pickType(el) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedType = el.dataset.t;
+  document.getElementById('typeErr').style.display = 'none';
+}
+
+/* ═══════════════════════════════════════════════
+   PASSWORD EYE
+═══════════════════════════════════════════════ */
+function toggleEye(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.style.opacity = show ? '0.7' : '0.3';
+}
+
+/* ═══════════════════════════════════════════════
+   PASSWORD STRENGTH
+═══════════════════════════════════════════════ */
+document.getElementById('suPass').addEventListener('input', function () {
+  const v = this.value;
+  let s = 0;
+  if (v.length >= 6)           s++;
+  if (v.length >= 10)          s++;
+  if (/[A-Z]/.test(v))        s++;
+  if (/[0-9]/.test(v))        s++;
+  if (/[^A-Za-z0-9]/.test(v)) s++;
+  const pct    = (s / 5) * 100;
+  const colors = ['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
+  const bar    = document.getElementById('strengthBar');
+  bar.style.width      = pct + '%';
+  bar.style.background = colors[Math.min(s, 4)];
+});
+
+/* ═══════════════════════════════════════════════
+   VALIDATION HELPERS
+═══════════════════════════════════════════════ */
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRe = /^\+?\d{10,15}$/;
+
+function setErr(id, show) {
+  document.getElementById(id).classList.toggle('has-error', show);
+}
+
+function clearErrs() {
+  document.querySelectorAll('.ig').forEach(g => g.classList.remove('has-error'));
+  document.getElementById('typeErr').style.display = 'none';
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+function toast(msg, kind = 'inf') {
+  const icons = {
+    ok:  '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+    bad: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    inf: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
   };
+  const el = document.createElement('div');
+  el.className = 'toast ' + kind;
+  el.innerHTML = (icons[kind] || icons.inf) + `<span>${msg}</span>`;
+  document.getElementById('toastDock').appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'tOut 0.35s forwards';
+    setTimeout(() => el.remove(), 350);
+  }, 4200);
+}
 
-  // ═══════════════════════════════════════════════════════════
-  // DEBUG HELPER — shows what's happening (remove in prod)
-  // ═══════════════════════════════════════════════════════════
-  function debug(msg) {
-    console.log('[AUTH DEBUG]', msg);
-    const bar = document.getElementById('debugBar');
-    bar.classList.add('show');
-    bar.textContent = '[DEBUG] ' + msg;
+/* ═══════════════════════════════════════════════
+   LOADING STATE
+═══════════════════════════════════════════════ */
+function setLoading(btnId, spId, on) {
+  document.getElementById(btnId).disabled = on;
+  document.getElementById(spId).style.display = on ? 'inline-block' : 'none';
+}
+
+/* ═══════════════════════════════════════════════
+   REDIRECT
+═══════════════════════════════════════════════ */
+function redirectTo(type) {
+  const route = ROUTES[type];
+  if (!route) { toast('Unknown account type', 'bad'); return; }
+  setTimeout(() => { window.location.href = route; }, 750);
+}
+
+/* ═══════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════ */
+async function doLogin(e) {
+  e.preventDefault();
+  clearErrs();
+  const email = document.getElementById('lgEmail').value.trim();
+  const pass  = document.getElementById('lgPass').value;
+  let ok = true;
+  if (!emailRe.test(email)) { setErr('igLgEmail', true); ok = false; }
+  if (!pass)                { setErr('igLgPass', true);  ok = false; }
+  if (!ok) return;
+
+  setLoading('btnLogin', 'spLogin', true);
+  try {
+    const { data, error } = await sb.from('Users')
+      .select('id, name, email, type')
+      .eq('email', email)
+      .eq('password', pass)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) { toast('Invalid email or password', 'bad'); return; }
+
+    localStorage.setItem('infocity_uid',  String(data.id));
+    localStorage.setItem('infocity_type', data.type);
+    localStorage.setItem('infocity_name', data.name);
+    toast(`Welcome back, ${data.name}!`, 'ok');
+    redirectTo(data.type);
+  } catch (err) {
+    console.error(err);
+    toast('Something went wrong. Try again.', 'bad');
   }
+  setLoading('btnLogin', 'spLogin', false);
+}
 
-  // ═══════════════════════════════════════════════════════════
-  // AUTO-REDIRECT — check if user is already logged in
-  // ═══════════════════════════════════════════════════════════
-  (function checkReturningUser() {
-    const uid  = localStorage.getItem('infocity_uid');
-    const type = localStorage.getItem('infocity_type');
+/* ═══════════════════════════════════════════════
+   SIGNUP
+═══════════════════════════════════════════════ */
+async function doSignup(e) {
+  e.preventDefault();
+  clearErrs();
+  const name  = document.getElementById('suName').value.trim();
+  const phone = document.getElementById('suPhone').value.trim().replace(/[\s\-()]/g,'');
+  const email = document.getElementById('suEmail').value.trim();
+  const pass  = document.getElementById('suPass').value;
+  let ok = true;
+  if (!name)                { setErr('igSuName',  true); ok = false; }
+  if (!phoneRe.test(phone)) { setErr('igSuPhone', true); ok = false; }
+  if (!emailRe.test(email)) { setErr('igSuEmail', true); ok = false; }
+  if (pass.length < 6)      { setErr('igSuPass',  true); ok = false; }
+  if (!selectedType)        { document.getElementById('typeErr').style.display = 'block'; ok = false; }
+  if (!ok) return;
 
-    debug('Checking: uid=' + uid + ', type=' + type);
-
-    if (uid && type && ROUTES[type]) {
-      const target = ROUTES[type];
-      debug('Redirecting returning user to: ' + target);
-      window.location.href = target;
-      return;  // stop execution, page is navigating
-    }
-
-    // Not logged in — show the page
-    debug('No session found. Showing login page.');
-    document.getElementById('pageLoader').classList.add('hidden');
-  })();
-
-  // ═══════════════════════════════════════════════════════════
-  // FLOATING FOOD ICONS
-  // ═══════════════════════════════════════════════════════════
-  (() => {
-    const emojis = ['🍕','🍔','🍣','🍩','🥗','🌮','🍰','🥂','🍜','🥘','🍷','🧁'];
-    for (let i = 0; i < 18; i++) {
-      const el = document.createElement('div');
-      el.className = 'float-icon';
-      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.animationDuration = (14 + Math.random() * 20) + 's';
-      el.style.animationDelay = (Math.random() * 20) + 's';
-      el.style.fontSize = (1.4 + Math.random() * 1.6) + 'rem';
-      document.body.appendChild(el);
-    }
-  })();
-
-  // ═══════════════════════════════════════════════════════════
-  // IMAGE CAROUSEL
-  // ═══════════════════════════════════════════════════════════
-  (() => {
-    const imgs = document.querySelectorAll('.slides img');
-    const dots = document.querySelectorAll('#heroDots span');
-    const titles = [
-      'Discover Exquisite<br/>Culinary Experiences',
-      'Fine Dining,<br/>Redefined',
-      'Fresh Flavors<br/>Every Day',
-      'Your Favorite<br/>Restaurants Await',
-      'Artisan Pizzas<br/>& Much More'
-    ];
-    const subs = [
-      'Join thousands of food lovers on the premium dining platform.',
-      'Reserve tables at the best restaurants around you.',
-      'Healthy, delicious meals curated just for you.',
-      'Browse menus, order ahead, and skip the wait.',
-      'Handcrafted with passion — delivered to your door.'
-    ];
-    let idx = 0;
-    setInterval(() => {
-      imgs[idx].classList.remove('active');
-      dots[idx].classList.remove('active');
-      idx = (idx + 1) % imgs.length;
-      imgs[idx].classList.add('active');
-      dots[idx].classList.add('active');
-      document.getElementById('heroTitle').innerHTML = titles[idx];
-      document.getElementById('heroSub').textContent = subs[idx];
-    }, 5000);
-  })();
-
-  // ═══════════════════════════════════════════════════════════
-  // TAB SWITCHING
-  // ═══════════════════════════════════════════════════════════
-  function switchTab(tab) {
-    const isLogin = tab === 'login';
-    document.getElementById('tabLogin').classList.toggle('active', isLogin);
-    document.getElementById('tabSignup').classList.toggle('active', !isLogin);
-    document.getElementById('loginSection').classList.toggle('active', isLogin);
-    document.getElementById('signupSection').classList.toggle('active', !isLogin);
-    clearErrors();
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // TYPE SELECTOR
-  // ═══════════════════════════════════════════════════════════
-  let selectedType = '';
-  function selectType(el) {
-    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedType = el.dataset.type;
-    document.getElementById('typeErr').style.display = 'none';
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // PASSWORD VISIBILITY
-  // ═══════════════════════════════════════════════════════════
-  function togglePw(inputId, icon) {
-    const inp = document.getElementById(inputId);
-    const show = inp.type === 'password';
-    inp.type = show ? 'text' : 'password';
-    icon.textContent = show ? 'visibility' : 'visibility_off';
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // PASSWORD STRENGTH
-  // ═══════════════════════════════════════════════════════════
-  document.getElementById('suPass').addEventListener('input', function() {
-    const v = this.value;
-    let s = 0;
-    if (v.length >= 6)  s++;
-    if (v.length >= 10) s++;
-    if (/[A-Z]/.test(v)) s++;
-    if (/[0-9]/.test(v)) s++;
-    if (/[^A-Za-z0-9]/.test(v)) s++;
-    const pct = (s / 5) * 100;
-    const colors = ['#ef4444','#f97316','#eab308','#22c55e','#10b981'];
-    const bar = document.getElementById('pwStrengthBar');
-    bar.style.width = pct + '%';
-    bar.style.background = colors[Math.min(s, 4)];
-  });
-
-  // ═══════════════════════════════════════════════════════════
-  // VALIDATION
-  // ═══════════════════════════════════════════════════════════
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phoneRe = /^\+?\d{10,15}$/;
-
-  function setErr(groupId, show) {
-    document.getElementById(groupId).classList.toggle('error', show);
-  }
-  function clearErrors() {
-    document.querySelectorAll('.input-group').forEach(g => g.classList.remove('error'));
-    document.getElementById('typeErr').style.display = 'none';
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // TOAST
-  // ═══════════════════════════════════════════════════════════
-  function toast(msg, type = 'info') {
-    const icons = { success:'check_circle', error:'error', info:'info' };
-    const box = document.createElement('div');
-    box.className = 'toast ' + type;
-    box.innerHTML = `<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;
-    document.getElementById('toastContainer').appendChild(box);
-    setTimeout(() => {
-      box.style.animation = 'slideOut .35s forwards';
-      setTimeout(() => box.remove(), 350);
-    }, 4000);
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // LOADING STATE
-  // ═══════════════════════════════════════════════════════════
-  function setLoading(btnId, spinnerId, loading) {
-    document.getElementById(btnId).disabled = loading;
-    document.getElementById(spinnerId).style.display = loading ? 'inline-block' : 'none';
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // ██  REDIRECT HELPER — works on all environments         ██
-  // ═══════════════════════════════════════════════════════════
-  function redirectTo(type) {
-    const route = ROUTES[type];
-    if (!route) {
-      debug('ERROR: No route for type: ' + type);
-      toast('Unknown account type: ' + type, 'error');
+  setLoading('btnSignup', 'spSignup', true);
+  try {
+    const { data: existing } = await sb.from('Users').select('id').eq('email', email).maybeSingle();
+    if (existing) {
+      toast('Email already registered. Sign in instead.', 'bad');
+      setErr('igSuEmail', true);
       return;
     }
-    debug('Navigating to: ' + route);
-    toast('Redirecting…', 'success');
 
-    // Use setTimeout to ensure toast is visible
-    setTimeout(() => {
-      window.location.href = route;
-    }, 800);
+    const { data: nu, error } = await sb
+      .from('Users')
+      .insert([{ name, phone, email, password: pass, type: selectedType }])
+      .select('id, name, type')
+      .single();
+
+    if (error) throw error;
+
+    localStorage.setItem('infocity_uid',  String(nu.id));
+    localStorage.setItem('infocity_type', nu.type);
+    localStorage.setItem('infocity_name', nu.name);
+    toast('Account created! Redirecting…', 'ok');
+    redirectTo(nu.type);
+  } catch (err) {
+    console.error(err);
+    toast('Registration failed: ' + (err.message || 'Try again'), 'bad');
+  }
+  setLoading('btnSignup', 'spSignup', false);
+}
+
+/* ═══════════════════════════════════════════════
+   ADMIN LOGIN
+   Credentials are hardcoded — no DB lookup needed.
+   If you want a DB-based approach, add a row in Users
+   with type='admin' and match here instead.
+═══════════════════════════════════════════════ */
+async function doAdminLogin(e) {
+  e.preventDefault();
+  clearErrs();
+  const email = document.getElementById('adEmail').value.trim();
+  const pass  = document.getElementById('adPass').value;
+  let ok = true;
+  if (!email) { setErr('igAdEmail', true); ok = false; }
+  if (!pass)  { setErr('igAdPass',  true); ok = false; }
+  if (!ok) return;
+
+  setLoading('btnAdmin', 'spAdmin', true);
+
+  // Small artificial delay for UX / security feel
+  await new Promise(r => setTimeout(r, 900));
+
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
+    localStorage.setItem('infocity_uid',  'admin');
+    localStorage.setItem('infocity_type', 'admin');
+    localStorage.setItem('infocity_name', 'Administrator');
+    toast('Admin access granted. Loading panel…', 'ok');
+    redirectTo('admin');
+  } else {
+    toast('Invalid admin credentials. Access denied.', 'bad');
+    setErr('igAdEmail', true);
+    setErr('igAdPass',  true);
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // LOGIN
-  // ═══════════════════════════════════════════════════════════
-  async function handleLogin(e) {
-    e.preventDefault();
-    clearErrors();
-
-    const email = document.getElementById('lgEmail').value.trim();
-    const pass  = document.getElementById('lgPass').value;
-
-    let valid = true;
-    if (!emailRe.test(email)) { setErr('lgEmailGroup', true); valid = false; }
-    if (!pass)                { setErr('lgPassGroup', true);  valid = false; }
-    if (!valid) return;
-
-    setLoading('loginBtn', 'loginSpinner', true);
-
-    try {
-      debug('Login: querying Users table for email=' + email);
-
-      const { data, error } = await sb
-        .from('Users')
-        .select('id, name, email, password, type')
-        .eq('email', email)
-        .eq('password', pass)
-        .maybeSingle();
-
-      if (error) {
-        debug('Login query error: ' + JSON.stringify(error));
-        throw error;
-      }
-
-      if (!data) {
-        debug('Login: no matching user found');
-        toast('Invalid email or password. Please try again.', 'error');
-        setLoading('loginBtn', 'loginSpinner', false);
-        return;
-      }
-
-      debug('Login success: id=' + data.id + ', type=' + data.type);
-
-      // ✅ Save to localStorage
-      localStorage.setItem('infocity_uid',  String(data.id));
-      localStorage.setItem('infocity_type', data.type);
-      localStorage.setItem('infocity_name', data.name);
-
-      toast(`Welcome back, ${data.name}!`, 'success');
-      redirectTo(data.type);
-
-    } catch (err) {
-      console.error(err);
-      toast('Something went wrong. Try again later.', 'error');
-    }
-
-    setLoading('loginBtn', 'loginSpinner', false);
-  }
-
-  // ═══════════════════════════════════════════════════════════
-  // SIGNUP
-  // ═══════════════════════════════════════════════════════════
-  async function handleSignup(e) {
-    e.preventDefault();
-    clearErrors();
-
-    const name  = document.getElementById('suName').value.trim();
-    const phone = document.getElementById('suPhone').value.trim().replace(/[\s\-()]/g, '');
-    const email = document.getElementById('suEmail').value.trim();
-    const pass  = document.getElementById('suPass').value;
-
-    let valid = true;
-    if (!name)                { setErr('suNameGroup', true);  valid = false; }
-    if (!phoneRe.test(phone)) { setErr('suPhoneGroup', true); valid = false; }
-    if (!emailRe.test(email)) { setErr('suEmailGroup', true); valid = false; }
-    if (pass.length < 6)     { setErr('suPassGroup', true);  valid = false; }
-    if (!selectedType) {
-      document.getElementById('typeErr').style.display = 'block';
-      valid = false;
-    }
-    if (!valid) return;
-
-    setLoading('signupBtn', 'signupSpinner', true);
-
-    try {
-      // 1. Check duplicate email
-      debug('Signup: checking for existing email=' + email);
-
-      const { data: existing, error: lookupErr } = await sb
-        .from('Users')
-        .select('id')
-        .eq('email', email)
-        .maybeSingle();
-
-      if (lookupErr) {
-        debug('Lookup error: ' + JSON.stringify(lookupErr));
-        throw lookupErr;
-      }
-
-      if (existing) {
-        debug('Signup: email already exists');
-        toast('An account with this email already exists.', 'error');
-        setErr('suEmailGroup', true);
-        document.getElementById('suEmailErr').textContent = 'Email already registered';
-        setLoading('signupBtn', 'signupSpinner', false);
-        return;
-      }
-
-      // 2. Insert new user
-      debug('Signup: inserting new user type=' + selectedType);
-
-      const { data: newUser, error: insertErr } = await sb
-        .from('Users')
-        .insert([{ name, phone, email, password: pass, type: selectedType }])
-        .select('id, name, type')
-        .single();
-
-      if (insertErr) {
-        debug('Insert error: ' + JSON.stringify(insertErr));
-        throw insertErr;
-      }
-
-      debug('Signup success: id=' + newUser.id + ' (type: ' + typeof newUser.id + '), type=' + newUser.type);
-
-      // 3. ✅ Save to localStorage — convert id to string!
-      localStorage.setItem('infocity_uid',  String(newUser.id));
-      localStorage.setItem('infocity_type', newUser.type);
-      localStorage.setItem('infocity_name', newUser.name);
-
-      // 4. Verify what we saved
-      debug('Saved to localStorage: uid=' + localStorage.getItem('infocity_uid') + ', type=' + localStorage.getItem('infocity_type'));
-
-      toast('Account created successfully! Redirecting…', 'success');
-      redirectTo(newUser.type);
-
-    } catch (err) {
-      console.error(err);
-      debug('Signup error: ' + (err.message || JSON.stringify(err)));
-      toast('Registration failed: ' + (err.message || 'Please try again.'), 'error');
-    }
-
-    setLoading('signupBtn', 'signupSpinner', false);
-  }
+  setLoading('btnAdmin', 'spAdmin', false);
+}
 </script>
 </body>
 </html>
