@@ -468,7 +468,6 @@ input,select,textarea{font-family:var(--poppins)}
         </div>
         <div class="up-prog" id="upProg"><div class="fill" id="upFill" style="width:0%"></div></div>
         <div class="img-prevs" id="imgPrevs"></div>
-        <input type="hidden" id="dmImgs"/>
       </div>
       <div class="fg"><label>Dish Name *</label><input type="text" id="dmNm" placeholder="e.g. Butter Chicken, Wood-fired Pizza…"/></div>
       <div class="fg2">
@@ -626,60 +625,61 @@ input,select,textarea{font-family:var(--poppins)}
 </div>
 
 <script>
-const SB_URL   = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
-const SB_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
-const IMGBB    = '6f40c9d4dbfa9661998113660fb16677'; // replace with your imgbb key if needed
-const sb       = supabase.createClient(SB_URL, SB_KEY);
+const SB_URL = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
+const IMGBB  = '6f40c9d4dbfa9661998113660fb16677';
+const sb     = supabase.createClient(SB_URL, SB_KEY);
 
-let user=null,allOrders=[],iMap={},allFoods=[],ordFlt='all',editId=null,upURLs=[];
-const ACT=['pending','confirmed','preparing','out_for_delivery'];
-const SICO={pending:'schedule',confirmed:'thumb_up',preparing:'restaurant',out_for_delivery:'delivery_dining',delivered:'done_all',cancelled:'cancel'};
-const SLBL={pending:'Pending',confirmed:'Confirmed',preparing:'Preparing',out_for_delivery:'Out for Delivery',delivered:'Delivered',cancelled:'Cancelled'};
-const PM={cash_on_delivery:'payments',cod:'payments',upi:'smartphone',card:'credit_card',wallet:'account_balance_wallet',online:'language'};
-const FB='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60';
+let user=null, allOrders=[], iMap={}, allFoods=[], ordFlt='all', editId=null, upURLs=[];
+const ACT  = ['pending','confirmed','preparing','out_for_delivery'];
+const SICO = {pending:'schedule',confirmed:'thumb_up',preparing:'restaurant',out_for_delivery:'delivery_dining',delivered:'done_all',cancelled:'cancel'};
+const SLBL = {pending:'Pending',confirmed:'Confirmed',preparing:'Preparing',out_for_delivery:'Out for Delivery',delivered:'Delivered',cancelled:'Cancelled'};
+const PM   = {cash_on_delivery:'payments',cod:'payments',upi:'smartphone',card:'credit_card',wallet:'account_balance_wallet',online:'language'};
+const FB   = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60';
 
 /* ── BOOT ── */
 (async()=>{
   applyTheme();
-  const uid=localStorage.getItem('infocity_uid');
-  if(!uid){location.href='../authentication.html';return}
+  const uid = localStorage.getItem('infocity_uid');
+  if(!uid){ location.href='../authentication.html'; return; }
   try{
     const{data,error}=await sb.from('Users').select('*').eq('id',uid).maybeSingle();
-    if(error||!data){clearLS();location.href='../authentication.html';return}
-    if(data.type!=='restaurant'){const m={customer:'../customer/index.html',foodcourt:'../register_foodcourt.html'};location.href=m[data.type]||'../authentication.html';return}
+    if(error||!data){ clearLS(); location.href='../authentication.html'; return; }
+    if(data.type!=='restaurant'){
+      const m={customer:'../customer/index.html',foodcourt:'../register_foodcourt.html'};
+      location.href=m[data.type]||'../authentication.html'; return;
+    }
     user=data;
     const ini=user.name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);
     g('sbAv').textContent=ini; g('sbNm').textContent=user.name;
     await loadAll();
-  }catch(e){console.error(e);toast('Connection error','error')}
+  }catch(e){ console.error(e); toast('Connection error','error'); }
   g('loader').classList.add('out');
 })();
 
-async function loadAll(){await Promise.all([loadOrders(),loadMenu()])}
+async function loadAll(){ await Promise.all([loadOrders(), loadMenu()]); }
 
-/* ── ORDERS — no seller filter, shows ALL ── */
+/* ── ORDERS ── */
 async function loadOrders(){
   try{
     const{data,error}=await sb.from('orders').select('*').order('created_at',{ascending:false});
-    if(error)throw error;
+    if(error) throw error;
     allOrders=data||[];
     iMap={};
     if(allOrders.length){
       const ids=allOrders.map(o=>o.id);
       const{data:its}=await sb.from('order_items').select('*').in('order_id',ids);
-      (its||[]).forEach(it=>{const k=String(it.order_id);if(!iMap[k])iMap[k]=[];iMap[k].push(it)});
+      (its||[]).forEach(it=>{ const k=String(it.order_id); if(!iMap[k]) iMap[k]=[]; iMap[k].push(it); });
     }
     rebuildUI();
-  }catch(e){console.error(e);toast('Failed to load orders: '+e.message,'error')}
+  }catch(e){ console.error(e); toast('Failed to load orders: '+e.message,'error'); }
 }
 
-function rebuildUI(){
-  updBadges();updStats();renderOrders();renderRecent();renderEarnings();renderReviews();
-}
+function rebuildUI(){ updBadges(); updStats(); renderOrders(); renderRecent(); renderEarnings(); renderReviews(); }
 
 function updBadges(){
   const pc=allOrders.filter(o=>o.status==='pending').length;
-  const b=g('pendBdg');b.style.display=pc?'flex':'none';b.textContent=pc;
+  const b=g('pendBdg'); b.style.display=pc?'flex':'none'; b.textContent=pc;
   setText('tcAll',allOrders.length);
   setText('tcPnd',pc);
   setText('tcCnf',allOrders.filter(o=>o.status==='confirmed').length);
@@ -694,54 +694,81 @@ function updStats(){
   const rev=del.reduce((s,o)=>s+(parseFloat(o.total)||0),0);
   const rated=allOrders.filter(o=>o.order_rating);
   const avg=rated.length?rated.reduce((s,o)=>s+o.order_rating,0)/rated.length:0;
-  setText('dsPend',pnd);setText('dsAct',act);setText('dsDel',del.length);
-  setText('dsCan',can);setText('dsRev','₹'+fmt(rev));
+  setText('dsPend',pnd); setText('dsAct',act); setText('dsDel',del.length);
+  setText('dsCan',can); setText('dsRev','₹'+fmt(rev));
   setText('dsRat',avg?avg.toFixed(1)+' ★':'—');
 }
 
-function filt(f,btn){ordFlt=f;document.querySelectorAll('#ordTabs .tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');renderOrders()}
+function filt(f,btn){
+  ordFlt=f;
+  document.querySelectorAll('#ordTabs .tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderOrders();
+}
+
 function renderOrders(){
   const list=ordFlt==='all'?allOrders:allOrders.filter(o=>o.status===ordFlt);
   const box=g('ordBox');
-  if(!list.length){box.innerHTML='<div class="empty"><div class="empty-ico"><span class="material-icons-round">inbox</span></div><h3>No orders</h3><p>No orders match this filter.</p></div>';return}
+  if(!list.length){ box.innerHTML='<div class="empty"><div class="empty-ico"><span class="material-icons-round">inbox</span></div><h3>No orders</h3><p>No orders match this filter.</p></div>'; return; }
   box.innerHTML=list.map(o=>card(o,false)).join('');
 }
+
 function renderRecent(){
-  const box=g('dashRec'),rc=allOrders.slice(0,7);
-  if(!rc.length){box.innerHTML='<div class="empty"><div class="empty-ico"><span class="material-icons-round">inbox</span></div><h3>No orders yet</h3><p>Orders appear here in real time.</p></div>';return}
+  const box=g('dashRec'), rc=allOrders.slice(0,7);
+  if(!rc.length){ box.innerHTML='<div class="empty"><div class="empty-ico"><span class="material-icons-round">inbox</span></div><h3>No orders yet</h3><p>Orders appear here in real time.</p></div>'; return; }
   box.innerHTML=rc.map(o=>card(o,true)).join('');
 }
 
 /* ── STEPPER ── */
-const STEPS=[{k:'pending',i:'receipt',l:'Placed'},{k:'confirmed',i:'thumb_up',l:'Confirmed'},{k:'preparing',i:'restaurant',l:'Preparing'},{k:'out_for_delivery',i:'delivery_dining',l:'Delivering'},{k:'delivered',i:'done_all',l:'Delivered'}];
+const STEPS=[
+  {k:'pending',i:'receipt',l:'Placed'},
+  {k:'confirmed',i:'thumb_up',l:'Confirmed'},
+  {k:'preparing',i:'restaurant',l:'Preparing'},
+  {k:'out_for_delivery',i:'delivery_dining',l:'Delivering'},
+  {k:'delivered',i:'done_all',l:'Delivered'}
+];
 function mkStepper(st){
-  if(st==='cancelled')return'';
+  if(st==='cancelled') return '';
   const ai=STEPS.findIndex(s=>s.k===st);
   const pct=ai<=0?0:(ai/(STEPS.length-1))*100;
-  const html=STEPS.map((s,i)=>{const cls=i<ai?'done':i===ai?'cur':'';const ico=i<ai?'check':s.i;return`<div class="step ${cls}"><div class="stp-dot"><span class="material-icons-round">${ico}</span></div><div class="stp-nm">${s.l}</div></div>`}).join('');
-  return`<div class="stepper"><div class="stp-lbl"><span class="material-icons-round">gps_fixed</span>Order Progress</div><div class="steps"><div class="stp-rail"><div class="stp-fill" style="width:${pct}%"></div></div>${html}</div></div>`;
+  const html=STEPS.map((s,i)=>{
+    const cls=i<ai?'done':i===ai?'cur':'';
+    const ico=i<ai?'check':s.i;
+    return `<div class="step ${cls}"><div class="stp-dot"><span class="material-icons-round">${ico}</span></div><div class="stp-nm">${s.l}</div></div>`;
+  }).join('');
+  return `<div class="stepper"><div class="stp-lbl"><span class="material-icons-round">gps_fixed</span>Order Progress</div><div class="steps"><div class="stp-rail"><div class="stp-fill" style="width:${pct}%"></div></div>${html}</div></div>`;
 }
 
-/* ── BUILD ORDER CARD ── */
+/* ── ORDER CARD ── */
 function card(o,compact){
-  const oid=String(o.id),its=iMap[oid]||[];
+  const oid=String(o.id), its=iMap[oid]||[];
   const d=new Date(o.created_at);
   const ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const canA=o.status==='pending',canP=o.status==='confirmed',canS=o.status==='preparing',canD=o.status==='out_for_delivery',canDc=['pending','confirmed'].includes(o.status);
+  const canA=o.status==='pending', canP=o.status==='confirmed', canS=o.status==='preparing', canD=o.status==='out_for_delivery', canDc=['pending','confirmed'].includes(o.status);
 
-  const itemsH=its.length?its.map(it=>`<div class="oitem"><div class="oitem-img"><img src="${esc(it.food_image||FB)}" onerror="this.src='${FB}'" loading="lazy"/></div><div style="flex:1;min-width:0"><div class="oitem-nm">${esc(it.food_name||'Item')}</div><div class="oitem-sub">×${it.quantity} · ₹${fmt(it.unit_price)} each${it.category?' · '+esc(it.category):''}</div></div><div class="oitem-px">₹${fmt(it.line_total||it.unit_price*it.quantity)}</div></div>`).join(''):`<div style="padding:10px;font-size:.73rem;color:var(--c3);background:var(--inp);border-radius:var(--r-sm);text-align:center;border:1px solid var(--bdr)">No item details available</div>`;
+  const itemsH=its.length
+    ?its.map(it=>`<div class="oitem"><div class="oitem-img"><img src="${esc(it.food_image||FB)}" onerror="this.src='${FB}'" loading="lazy"/></div><div style="flex:1;min-width:0"><div class="oitem-nm">${esc(it.food_name||'Item')}</div><div class="oitem-sub">×${it.quantity} · ₹${fmt(it.unit_price)} each${it.category?' · '+esc(it.category):''}</div></div><div class="oitem-px">₹${fmt(it.line_total||it.unit_price*it.quantity)}</div></div>`).join('')
+    :`<div style="padding:10px;font-size:.73rem;color:var(--c3);background:var(--inp);border-radius:var(--r-sm);text-align:center;border:1px solid var(--bdr)">No item details available</div>`;
 
-  const addrH=!compact&&o.delivery_address?`<div class="oaddr"><div class="oaddr-ico"><span class="material-icons-round">location_on</span></div><div><div class="oaddr-lbl">Delivery Address</div><div class="oaddr-txt">${esc(o.delivery_address)}, ${esc(o.delivery_city)} — ${esc(o.delivery_pincode)}</div>${o.delivery_instructions?`<div class="oaddr-nt"><span class="material-icons-round">notes</span>${esc(o.delivery_instructions)}</div>`:''}</div></div>`:'';
+  const addrH=!compact&&o.delivery_address
+    ?`<div class="oaddr"><div class="oaddr-ico"><span class="material-icons-round">location_on</span></div><div><div class="oaddr-lbl">Delivery Address</div><div class="oaddr-txt">${esc(o.delivery_address)}, ${esc(o.delivery_city)} — ${esc(o.delivery_pincode)}</div>${o.delivery_instructions?`<div class="oaddr-nt"><span class="material-icons-round">notes</span>${esc(o.delivery_instructions)}</div>`:''}</div></div>`
+    :'';
 
-  const priceH=!compact?`<div class="pb"><div class="pb-row"><span>Subtotal</span><span>₹${fmt(o.subtotal)}</span></div>${o.delivery_fee>0?`<div class="pb-row"><span>Delivery</span><span>₹${fmt(o.delivery_fee)}</span></div>`:''}${o.tax>0?`<div class="pb-row"><span>Tax</span><span>₹${fmt(o.tax)}</span></div>`:''}${o.discount>0?`<div class="pb-row sav"><span>Discount</span><span>−₹${fmt(o.discount)}</span></div>`:''}${o.savings>0?`<div class="pb-row sav"><span>Savings</span><span>−₹${fmt(o.savings)}</span></div>`:''}<div class="pb-row tot"><span>Total</span><span>₹${fmt(o.total)}</span></div></div>`:'';
+  const priceH=!compact
+    ?`<div class="pb"><div class="pb-row"><span>Subtotal</span><span>₹${fmt(o.subtotal)}</span></div>${o.delivery_fee>0?`<div class="pb-row"><span>Delivery</span><span>₹${fmt(o.delivery_fee)}</span></div>`:''}${o.tax>0?`<div class="pb-row"><span>Tax</span><span>₹${fmt(o.tax)}</span></div>`:''}${o.discount>0?`<div class="pb-row sav"><span>Discount</span><span>−₹${fmt(o.discount)}</span></div>`:''}${o.savings>0?`<div class="pb-row sav"><span>Savings</span><span>−₹${fmt(o.savings)}</span></div>`:''}<div class="pb-row tot"><span>Total</span><span>₹${fmt(o.total)}</span></div></div>`
+    :'';
 
-  const tsH=!compact&&(o.confirmed_at||o.preparing_at||o.out_for_delivery_at||o.delivered_at||o.cancelled_at)?`<div class="ts-row">${o.confirmed_at?tsp('thumb_up','Confirmed',o.confirmed_at):''}${o.preparing_at?tsp('restaurant','Preparing',o.preparing_at):''}${o.out_for_delivery_at?tsp('delivery_dining','Dispatched',o.out_for_delivery_at):''}${o.delivered_at?tsp('done_all','Delivered',o.delivered_at):''}${o.cancelled_at?tsp('cancel','Cancelled',o.cancelled_at):''}</div>`:'';
+  const tsH=!compact&&(o.confirmed_at||o.preparing_at||o.out_for_delivery_at||o.delivered_at||o.cancelled_at)
+    ?`<div class="ts-row">${o.confirmed_at?tsp('thumb_up','Confirmed',o.confirmed_at):''}${o.preparing_at?tsp('restaurant','Preparing',o.preparing_at):''}${o.out_for_delivery_at?tsp('delivery_dining','Dispatched',o.out_for_delivery_at):''}${o.delivered_at?tsp('done_all','Delivered',o.delivered_at):''}${o.cancelled_at?tsp('cancel','Cancelled',o.cancelled_at):''}</div>`
+    :'';
 
-  const canBlock=o.status==='cancelled'&&!compact?`<div style="display:flex;align-items:center;gap:10px;padding:11px 13px;background:rgba(160,65,45,.06);border:1px solid rgba(160,65,45,.15);border-radius:var(--r-md);margin:11px 0"><span class="material-icons-round" style="color:var(--rose);font-size:18px">cancel</span><div><div style="font-size:.8rem;font-weight:700;color:var(--rose)">Order Cancelled</div><div style="font-size:.67rem;color:var(--c3)">${esc(o.cancellation_reason||'No reason')}${o.cancelled_by?' · by '+esc(o.cancelled_by):''}</div></div></div>`:'';
+  const canBlock=o.status==='cancelled'&&!compact
+    ?`<div style="display:flex;align-items:center;gap:10px;padding:11px 13px;background:rgba(160,65,45,.06);border:1px solid rgba(160,65,45,.15);border-radius:var(--r-md);margin:11px 0"><span class="material-icons-round" style="color:var(--rose);font-size:18px">cancel</span><div><div style="font-size:.8rem;font-weight:700;color:var(--rose)">Order Cancelled</div><div style="font-size:.67rem;color:var(--c3)">${esc(o.cancellation_reason||'No reason')}${o.cancelled_by?' · by '+esc(o.cancelled_by):''}</div></div></div>`
+    :'';
 
   const acts=`<div class="oc-acts">${canA?`<button class="oact oa-accept" onclick="upSt('${oid}','confirmed')"><span class="material-icons-round">thumb_up</span>Accept</button>`:''} ${canP?`<button class="oact oa-prepare" onclick="upSt('${oid}','preparing')"><span class="material-icons-round">soup_kitchen</span>Start Prep</button>`:''} ${canS?`<button class="oact oa-ship" onclick="upSt('${oid}','out_for_delivery')"><span class="material-icons-round">delivery_dining</span>Send Out</button>`:''} ${canD?`<button class="oact oa-deliver" onclick="upSt('${oid}','delivered')"><span class="material-icons-round">done_all</span>Mark Delivered</button>`:''} ${canDc?`<button class="oact oa-decline" onclick="declineOrd('${oid}')"><span class="material-icons-round">close</span>Decline</button>`:''}</div>`;
 
-  return`<div class="ocard" id="oc_${oid}"><div class="oc-stripe ${o.status}"></div>
+  return `<div class="ocard" id="oc_${oid}"><div class="oc-stripe ${o.status}"></div>
     <div class="oc-r1">
       <div><div class="oc-idpill">#${oid}</div>${o.seller_name?`<div class="oc-rest">${esc(o.seller_name)}</div>`:''}<div class="oc-cust">${esc(o.user_name)}</div><div class="oc-metas">${o.user_phone?`<div class="oc-m"><span class="material-icons-round">phone</span>${esc(o.user_phone)}</div>`:''}<div class="oc-m"><span class="material-icons-round">schedule</span>${ds}</div>${o.item_count?`<div class="oc-m"><span class="material-icons-round">shopping_bag</span>${o.item_count} item${o.item_count!==1?'s':''}</div>`:''}</div></div>
       <div><div class="chip ch-${o.status}"><span class="material-icons-round">${SICO[o.status]||'info'}</span>${SLBL[o.status]||o.status}</div></div>
@@ -755,28 +782,35 @@ function card(o,compact){
   </div>`;
 }
 
-function tsp(ico,lbl,ts){const d=new Date(ts);return`<div class="ts-p"><span class="material-icons-round">${ico}</span>${lbl}: ${d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})} ${d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>`}
+function tsp(ico,lbl,ts){
+  const d=new Date(ts);
+  return `<div class="ts-p"><span class="material-icons-round">${ico}</span>${lbl}: ${d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})} ${d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>`;
+}
 
 /* ── UPDATE STATUS ── */
 async function upSt(oid,st){
   const tsF={confirmed:'confirmed_at',preparing:'preparing_at',out_for_delivery:'out_for_delivery_at',delivered:'delivered_at'};
-  const up={status:st};if(tsF[st])up[tsF[st]]=new Date().toISOString();
+  const up={status:st};
+  if(tsF[st]) up[tsF[st]]=new Date().toISOString();
   try{
     const{error}=await sb.from('orders').update(up).eq('id',oid);
-    if(error)throw error;
-    const i=allOrders.findIndex(o=>String(o.id)===oid);if(i>-1)Object.assign(allOrders[i],up);
-    rebuildUI();toast('Order: '+SLBL[st],'success');
-  }catch(e){toast('Failed: '+e.message,'error')}
+    if(error) throw error;
+    const i=allOrders.findIndex(o=>String(o.id)===oid);
+    if(i>-1) Object.assign(allOrders[i],up);
+    rebuildUI(); toast('Order: '+SLBL[st],'success');
+  }catch(e){ toast('Failed: '+e.message,'error'); }
 }
+
 async function declineOrd(oid){
-  if(!confirm('Decline this order?'))return;
+  if(!confirm('Decline this order?')) return;
   const up={status:'cancelled',cancelled_by:'restaurant',cancellation_reason:'Declined by restaurant',cancelled_at:new Date().toISOString()};
   try{
     const{error}=await sb.from('orders').update(up).eq('id',oid);
-    if(error)throw error;
-    const i=allOrders.findIndex(o=>String(o.id)===oid);if(i>-1)Object.assign(allOrders[i],up);
-    rebuildUI();toast('Order declined','info');
-  }catch(e){toast('Failed: '+e.message,'error')}
+    if(error) throw error;
+    const i=allOrders.findIndex(o=>String(o.id)===oid);
+    if(i>-1) Object.assign(allOrders[i],up);
+    rebuildUI(); toast('Order declined','info');
+  }catch(e){ toast('Failed: '+e.message,'error'); }
 }
 
 /* ── EARNINGS ── */
@@ -784,71 +818,115 @@ function renderEarnings(){
   const del=allOrders.filter(o=>o.status==='delivered');
   const tot=del.reduce((s,o)=>s+(parseFloat(o.total)||0),0);
   const avg=del.length?tot/del.length:0;
-  setText('eTotal','₹'+fmt(tot));setText('eAvg','₹'+fmt(avg));
-  const today=del.filter(o=>isToday(o.created_at)),week=del.filter(o=>isThisWeek(o.created_at));
-  const tR=today.reduce((s,o)=>s+(parseFloat(o.total)||0),0),wR=week.reduce((s,o)=>s+(parseFloat(o.total)||0),0);
-  g('eBd').innerHTML=[{v:del.length,l:'Orders Delivered',c:'var(--forest)'},{v:'₹'+fmt(tR),l:"Today's Revenue",c:'var(--copper)'},{v:'₹'+fmt(wR),l:'This Week',c:'var(--dusty)'},{v:'₹'+fmt(tot),l:'All Time',c:'var(--gold)'},{v:allOrders.filter(o=>o.status==='pending').length,l:'Pending',c:'#b45309'},{v:allOrders.filter(o=>o.status==='cancelled').length,l:'Cancelled',c:'var(--rose)'}].map(b=>`<div class="ebd"><div class="ebd-v" style="color:${b.c}">${b.v}</div><div class="ebd-l">${b.l}</div></div>`).join('');
+  setText('eTotal','₹'+fmt(tot)); setText('eAvg','₹'+fmt(avg));
+  const today=del.filter(o=>isToday(o.created_at)), week=del.filter(o=>isThisWeek(o.created_at));
+  const tR=today.reduce((s,o)=>s+(parseFloat(o.total)||0),0), wR=week.reduce((s,o)=>s+(parseFloat(o.total)||0),0);
+  g('eBd').innerHTML=[
+    {v:del.length,l:'Orders Delivered',c:'var(--forest)'},
+    {v:'₹'+fmt(tR),l:"Today's Revenue",c:'var(--copper)'},
+    {v:'₹'+fmt(wR),l:'This Week',c:'var(--dusty)'},
+    {v:'₹'+fmt(tot),l:'All Time',c:'var(--gold)'},
+    {v:allOrders.filter(o=>o.status==='pending').length,l:'Pending',c:'#b45309'},
+    {v:allOrders.filter(o=>o.status==='cancelled').length,l:'Cancelled',c:'var(--rose)'}
+  ].map(b=>`<div class="ebd"><div class="ebd-v" style="color:${b.c}">${b.v}</div><div class="ebd-l">${b.l}</div></div>`).join('');
+
   const box=g('eList');
-  if(!del.length){box.innerHTML='<div class="empty"><div class="empty-ico"><span class="material-icons-round">payments</span></div><h3>No earnings yet</h3><p>Revenue from delivered orders shows here.</p></div>';return}
-  box.innerHTML=del.map(o=>{const d=new Date(o.created_at),ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}),oid=String(o.id),its=(iMap[oid]||[]).map(i=>esc(i.food_name)).join(', ').slice(0,55);
-    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 21px;border-bottom:1px solid var(--bdr);flex-wrap:wrap;gap:7px" onmouseenter="this.style.background='var(--card-h)'" onmouseleave="this.style.background=''"><div><div style="font-size:.81rem;font-weight:700;margin-bottom:2px">${esc(o.user_name)}${o.seller_name?` <span style="font-weight:400;color:var(--c3)">· ${esc(o.seller_name)}</span>`:''}</div><div style="font-size:.65rem;color:var(--c3);display:flex;gap:7px;flex-wrap:wrap"><span>#${oid}</span><span>${ds}</span>${its?`<span>${its}</span>`:''}</div></div><div style="display:flex;align-items:center;gap:9px">${o.order_rating?`<div style="display:flex;align-items:center;gap:2px;font-size:.7rem;color:#b45309"><span class="material-icons-round" style="font-size:12px">star</span>${o.order_rating}</div>`:''}<div style="font-family:var(--playfair);font-size:.98rem;font-weight:700;color:var(--copper)">₹${fmt(o.total)}</div></div></div>`}).join('');
+  if(!del.length){ box.innerHTML='<div class="empty"><div class="empty-ico"><span class="material-icons-round">payments</span></div><h3>No earnings yet</h3><p>Revenue from delivered orders shows here.</p></div>'; return; }
+  box.innerHTML=del.map(o=>{
+    const d=new Date(o.created_at), ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const oid=String(o.id), its=(iMap[oid]||[]).map(i=>esc(i.food_name)).join(', ').slice(0,55);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 21px;border-bottom:1px solid var(--bdr);flex-wrap:wrap;gap:7px" onmouseenter="this.style.background='var(--card-h)'" onmouseleave="this.style.background=''"><div><div style="font-size:.81rem;font-weight:700;margin-bottom:2px">${esc(o.user_name)}${o.seller_name?` <span style="font-weight:400;color:var(--c3)">· ${esc(o.seller_name)}</span>`:''}</div><div style="font-size:.65rem;color:var(--c3);display:flex;gap:7px;flex-wrap:wrap"><span>#${oid}</span><span>${ds}</span>${its?`<span>${its}</span>`:''}</div></div><div style="display:flex;align-items:center;gap:9px">${o.order_rating?`<div style="display:flex;align-items:center;gap:2px;font-size:.7rem;color:#b45309"><span class="material-icons-round" style="font-size:12px">star</span>${o.order_rating}</div>`:''}<div style="font-family:var(--playfair);font-size:.98rem;font-weight:700;color:var(--copper)">₹${fmt(o.total)}</div></div></div>`;
+  }).join('');
 }
 
 /* ── MENU ── */
 async function loadMenu(){
   try{
-    // NO is_deleted filter — column doesn't exist in your schema
     const{data,error}=await sb.from('foods').select('*').eq('seller_name',user.name).order('created_at',{ascending:false});
-    if(error)throw error;
-    allFoods=data||[];renderMenu();
-  }catch(e){console.error('Menu:',e);toast('Menu load failed: '+e.message,'error')}
+    if(error) throw error;
+    allFoods=data||[]; renderMenu();
+  }catch(e){ console.error('Menu:',e); toast('Menu load failed: '+e.message,'error'); }
 }
 
 function renderMenu(){
-  const grid=g('menuGrid'),em=g('menuEm');
-  if(!allFoods.length){grid.innerHTML='';em.style.display='block';return}
+  const grid=g('menuGrid'), em=g('menuEm');
+  if(!allFoods.length){ grid.innerHTML=''; em.style.display='block'; return; }
   em.style.display='none';
-  grid.innerHTML=allFoods.map(f=>{const img=firstImg(f.images);return`<div class="mcard"><div class="mcard-img"><img src="${esc(img)}" onerror="this.src='${FB}'" loading="lazy"/><div class="mc-bgs">${f.is_featured?'<span class="mc-bg" style="background:rgba(201,146,42,.88);color:#fff">⭐ Featured</span>':''}${f.is_bestseller?'<span class="mc-bg" style="background:rgba(45,80,22,.88);color:#fff">🏆 Best</span>':''}</div></div><div class="mc-body"><div class="mc-nr"><div class="mc-nm">${esc(f.food_name)}</div><div class="mc-px">₹${fmt(f.price)}</div></div><div class="mc-stats"><div class="mstat"><span class="material-icons-round">star</span>${(f.rating||0).toFixed(1)} (${f.rating_count||0})</div><div class="mstat"><span class="material-icons-round">shopping_bag</span>${f.total_orders||0}</div>${f.prep_time_mins?`<div class="mstat"><span class="material-icons-round">timer</span>${f.prep_time_mins}m</div>`:''}</div>${f.description?`<div class="mc-desc">${esc(f.description)}</div>`:''}${f.original_price&&f.original_price>f.price?`<div style="font-size:.66rem;color:var(--forest-l);margin-bottom:3px">Save ₹${fmt(f.original_price-f.price)} <s style="color:var(--c3)">₹${fmt(f.original_price)}</s></div>`:''}<div class="mc-foot"><button class="mc-btn mc-edit" onclick="openEdit('${esc(String(f.id))}')"><span class="material-icons-round">edit</span>Edit</button><button class="mc-btn mc-del" onclick="delDish('${esc(String(f.id))}','${esc(f.food_name)}')"><span class="material-icons-round">delete</span>Delete</button></div></div></div>`}).join('');
+  grid.innerHTML=allFoods.map(f=>{
+    const img=firstImg(f.images);
+    return `<div class="mcard"><div class="mcard-img"><img src="${esc(img)}" onerror="this.src='${FB}'" loading="lazy"/><div class="mc-bgs">${f.is_featured?'<span class="mc-bg" style="background:rgba(201,146,42,.88);color:#fff">⭐ Featured</span>':''}${f.is_bestseller?'<span class="mc-bg" style="background:rgba(45,80,22,.88);color:#fff">🏆 Best</span>':''}</div></div><div class="mc-body"><div class="mc-nr"><div class="mc-nm">${esc(f.food_name)}</div><div class="mc-px">₹${fmt(f.price)}</div></div><div class="mc-stats"><div class="mstat"><span class="material-icons-round">star</span>${(f.rating||0).toFixed(1)} (${f.rating_count||0})</div><div class="mstat"><span class="material-icons-round">shopping_bag</span>${f.total_orders||0}</div>${f.prep_time_mins?`<div class="mstat"><span class="material-icons-round">timer</span>${f.prep_time_mins}m</div>`:''}</div>${f.description?`<div class="mc-desc">${esc(f.description)}</div>`:''}${f.original_price&&f.original_price>f.price?`<div style="font-size:.66rem;color:var(--forest-l);margin-bottom:3px">Save ₹${fmt(f.original_price-f.price)} <s style="color:var(--c3)">₹${fmt(f.original_price)}</s></div>`:''}<div class="mc-foot"><button class="mc-btn mc-edit" onclick="openEdit('${esc(String(f.id))}')"><span class="material-icons-round">edit</span>Edit</button><button class="mc-btn mc-del" onclick="delDish('${esc(String(f.id))}','${esc(f.food_name)}')"><span class="material-icons-round">delete</span>Delete</button></div></div></div>`;
+  }).join('');
 }
 
-function openAdd(){editId=null;upURLs=[];g('dmTtl').textContent='Add New Dish';clearForm();g('dishModal').classList.add('on')}
+function openAdd(){ editId=null; upURLs=[]; g('dmTtl').textContent='Add New Dish'; clearForm(); g('dishModal').classList.add('on'); }
+
 function openEdit(id){
-  const f=allFoods.find(x=>String(x.id)===id);if(!f)return;
-  editId=id;upURLs=f.images?f.images.split(',').map(s=>s.trim()).filter(Boolean):[];
+  const f=allFoods.find(x=>String(x.id)===id); if(!f) return;
+  editId=id;
+  // ── FIX: images column is a postgres array, handle both array and legacy string ──
+  upURLs = parseImagesField(f.images);
   g('dmTtl').textContent='Edit Dish';
-  g('dmNm').value=f.food_name;g('dmPx').value=f.price;g('dmOpx').value=f.original_price||'';
-  g('dmDesc').value=f.description||'';g('dmImgs').value=f.images||'';
-  g('dmCat').value=f.category||'';g('dmCui').value=f.cuisine||'';
-  g('dmPrep').value=f.prep_time_mins||'';g('dmSrv').value=f.serves||'';
-  renderPrevs();g('dishModal').classList.add('on');
+  g('dmNm').value=f.food_name; g('dmPx').value=f.price; g('dmOpx').value=f.original_price||'';
+  g('dmDesc').value=f.description||'';
+  g('dmCat').value=f.category||''; g('dmCui').value=f.cuisine||'';
+  g('dmPrep').value=f.prep_time_mins||''; g('dmSrv').value=f.serves||'';
+  renderPrevs(); g('dishModal').classList.add('on');
 }
-function closeModal(){g('dishModal').classList.remove('on');editId=null;upURLs=[]}
+
+function closeModal(){ g('dishModal').classList.remove('on'); editId=null; upURLs=[]; }
+
 function clearForm(){
-  ['dmNm','dmPx','dmOpx','dmDesc','dmImgs','dmPrep','dmSrv'].forEach(id=>g(id).value='');
-  g('dmCat').value='';g('dmCui').value='';g('imgPrevs').innerHTML='';g('imgInput').value='';
-  upURLs=[];setText('upState','');
+  ['dmNm','dmPx','dmOpx','dmDesc','dmPrep','dmSrv'].forEach(id=>g(id).value='');
+  g('dmCat').value=''; g('dmCui').value='';
+  g('imgPrevs').innerHTML=''; g('imgInput').value='';
+  upURLs=[]; setText('upState','');
 }
 
 async function saveDish(){
-  const nm=g('dmNm').value.trim(),px=parseFloat(g('dmPx').value);
-  if(!nm||isNaN(px)||px<0){toast('Dish name and valid price required','error');return}
-  const obj={food_name:nm,seller_name:user.name,seller_id:user.id,price:px,original_price:parseFloat(g('dmOpx').value)||null,description:g('dmDesc').value.trim()||null,images:upURLs.join(', ')||null,category:g('dmCat').value||null,cuisine:g('dmCui').value||null,prep_time_mins:parseInt(g('dmPrep').value)||20,serves:parseInt(g('dmSrv').value)||1};
-  g('dmSp').style.display='inline-block';g('dmSave').disabled=true;
+  const nm=g('dmNm').value.trim(), px=parseFloat(g('dmPx').value);
+  if(!nm||isNaN(px)||px<0){ toast('Dish name and valid price required','error'); return; }
+
+  // ── THE CORE FIX ──
+  // images column is text[] in Supabase (PostgreSQL array).
+  // Always send a real JS array — never a comma-joined string.
+  const obj={
+    food_name:nm,
+    seller_name:user.name,
+    seller_id:user.id,
+    price:px,
+    original_price:parseFloat(g('dmOpx').value)||null,
+    description:g('dmDesc').value.trim()||null,
+    images: upURLs.length ? upURLs : null,   // ← send array, not string
+    category:g('dmCat').value||null,
+    cuisine:g('dmCui').value||null,
+    prep_time_mins:parseInt(g('dmPrep').value)||20,
+    serves:parseInt(g('dmSrv').value)||1
+  };
+
+  g('dmSp').style.display='inline-block'; g('dmSave').disabled=true;
   try{
-    if(editId){const{error}=await sb.from('foods').update(obj).eq('id',editId);if(error)throw error;toast('Dish updated!','success')}
-    else{const{error}=await sb.from('foods').insert(obj);if(error)throw error;toast('Dish added!','success')}
-    closeModal();await loadMenu();updStats();
-  }catch(e){toast('Save failed: '+e.message,'error')}
-  g('dmSp').style.display='none';g('dmSave').disabled=false;
+    if(editId){
+      const{error}=await sb.from('foods').update(obj).eq('id',editId);
+      if(error) throw error;
+      toast('Dish updated!','success');
+    } else {
+      const{error}=await sb.from('foods').insert(obj);
+      if(error) throw error;
+      toast('Dish added!','success');
+    }
+    closeModal(); await loadMenu(); updStats();
+  }catch(e){ toast('Save failed: '+e.message,'error'); }
+  g('dmSp').style.display='none'; g('dmSave').disabled=false;
 }
 
 async function delDish(id,nm){
-  if(!confirm(`Delete "${nm}"?`))return;
+  if(!confirm(`Delete "${nm}"?`)) return;
   try{
     const{error}=await sb.from('foods').delete().eq('id',id);
-    if(error)throw error;
-    allFoods=allFoods.filter(f=>String(f.id)!==id);renderMenu();updStats();toast(`"${nm}" deleted`,'info');
-  }catch(e){toast('Delete failed: '+e.message,'error')}
+    if(error) throw error;
+    allFoods=allFoods.filter(f=>String(f.id)!==id); renderMenu(); updStats();
+    toast(`"${nm}" deleted`,'info');
+  }catch(e){ toast('Delete failed: '+e.message,'error'); }
 }
 
 /* ── IMGBB UPLOAD ── */
@@ -858,62 +936,79 @@ async function uploadOne(file,i,total){
     rdr.onload=async ev=>{
       try{
         const b64=ev.target.result.split(',')[1];
-        const fd=new FormData();fd.append('key',IMGBB);fd.append('image',b64);
+        const fd=new FormData();
+        fd.append('key',IMGBB);
+        fd.append('image',b64);
         const r=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});
         const j=await r.json();
-        if(j.success){g('upFill').style.width=Math.round(((i+1)/total)*100)+'%';res(j.data.url)}
-        else rej(new Error(j.error?.message||'Upload failed'));
-      }catch(e){rej(e)}
+        if(j.success){
+          g('upFill').style.width=Math.round(((i+1)/total)*100)+'%';
+          res(j.data.url);
+        } else {
+          rej(new Error(j.error?.message||'Upload failed'));
+        }
+      }catch(e){ rej(e); }
     };
     rdr.readAsDataURL(file);
   });
 }
 
 async function onFiles(files){
-  if(!files||!files.length)return;
-  const arr=Array.from(files),total=arr.length;
+  if(!files||!files.length) return;
+  const arr=Array.from(files), total=arr.length;
   setText('upState',`Uploading ${total} image${total>1?'s':''}…`);
-  g('upProg').style.display='block';g('upFill').style.width='0%';g('dmSave').disabled=true;
+  g('upProg').style.display='block'; g('upFill').style.width='0%'; g('dmSave').disabled=true;
   try{
-    for(let i=0;i<arr.length;i++){const url=await uploadOne(arr[i],i,total);upURLs.push(url)}
-    g('dmImgs').value=upURLs.join(', ');renderPrevs();
+    for(let i=0;i<arr.length;i++){
+      const url=await uploadOne(arr[i],i,total);
+      upURLs.push(url);
+    }
+    renderPrevs();
     setText('upState',`✓ ${total} image${total>1?'s':''} uploaded`);
     toast(`${total} image${total>1?'s':''} uploaded!`,'success');
-  }catch(e){toast('Upload error: '+e.message,'error');console.error(e);setText('upState','Upload failed — try again')}
-  setTimeout(()=>{g('upProg').style.display='none'},1000);
+  }catch(e){
+    toast('Upload error: '+e.message,'error');
+    console.error(e);
+    setText('upState','Upload failed — try again');
+  }
+  setTimeout(()=>{ g('upProg').style.display='none'; },1000);
   g('dmSave').disabled=false;
 }
-function onDrop(e){e.preventDefault();g('upZone').classList.remove('drag');onFiles(e.dataTransfer.files)}
-function renderPrevs(){g('imgPrevs').innerHTML=upURLs.map((u,i)=>`<div class="ipv"><img src="${esc(u)}" onerror="this.style.opacity='.3'"/><button class="ipv-del" onclick="rmImg(${i})" type="button"><span class="material-icons-round">close</span></button></div>`).join('')}
-function rmImg(i){upURLs.splice(i,1);g('dmImgs').value=upURLs.join(', ');renderPrevs()}
+
+function onDrop(e){ e.preventDefault(); g('upZone').classList.remove('drag'); onFiles(e.dataTransfer.files); }
+function renderPrevs(){
+  g('imgPrevs').innerHTML=upURLs.map((u,i)=>`<div class="ipv"><img src="${esc(u)}" onerror="this.style.opacity='.3'"/><button class="ipv-del" onclick="rmImg(${i})" type="button"><span class="material-icons-round">close</span></button></div>`).join('');
+}
+function rmImg(i){ upURLs.splice(i,1); renderPrevs(); }
 
 /* ── REVIEWS ── */
 function renderReviews(){
   const rw=allOrders.filter(o=>o.order_rating&&o.order_review);
-  const box=g('rvBox'),em=g('rvEm'),sc=g('rvStat');
-  if(!rw.length){box.innerHTML='';em.style.display='block';sc.innerHTML='';return}
+  const box=g('rvBox'), em=g('rvEm'), sc=g('rvStat');
+  if(!rw.length){ box.innerHTML=''; em.style.display='block'; sc.innerHTML=''; return; }
   em.style.display='none';
   const avg=rw.reduce((s,o)=>s+o.order_rating,0)/rw.length;
   sc.innerHTML=`<div style="display:flex;align-items:center;gap:4px;font-size:.76rem;font-weight:700;color:#b45309"><span class="material-icons-round" style="font-size:15px;color:#f59e0b">star</span>${avg.toFixed(1)} avg · ${rw.length} review${rw.length!==1?'s':''}</div>`;
   box.innerHTML=rw.map(o=>{
-    const d=new Date(o.updated_at||o.created_at),ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
-    const ini=o.user_name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2),oid=String(o.id);
+    const d=new Date(o.updated_at||o.created_at), ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const ini=o.user_name.trim().split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2), oid=String(o.id);
     const its=iMap[oid]||[];
     const stars=Array.from({length:5},(_,i)=>`<span class="material-icons-round" style="color:${i<o.order_rating?'#f59e0b':'var(--bdr)'}">star</span>`).join('');
     const ics=its.filter(it=>it.item_rating).map(it=>`<div class="rv-ic"><span class="material-icons-round">fastfood</span>${esc(it.food_name)} — ${it.item_rating}★${it.item_review?' "'+esc(it.item_review)+'"':''}</div>`).join('');
-    return`<div class="rvcard"><div class="rv-top"><div class="rv-av">${ini}</div><div style="flex:1"><div class="rv-nm">${esc(o.user_name)}</div><div class="rv-dt">${ds}${o.seller_name?' · '+esc(o.seller_name):''}</div></div><div class="rv-stars">${stars}</div></div><div class="rv-ord"><span class="material-icons-round">receipt</span>#${oid} · ₹${fmt(o.total)}</div>${o.order_review?`<div class="rv-txt">"${esc(o.order_review)}"</div>`:''}${ics?`<div class="rv-ichips">${ics}</div>`:''} ${o.review_reply?`<div class="rv-reply"><div class="rv-rlbl">Your Reply</div><div class="rv-rtxt">${esc(o.review_reply)}</div></div>`:`<div class="rv-form"><textarea class="rv-ta" id="rp_${oid}" placeholder="Write a reply…"></textarea><button class="rv-send" onclick="sendReply('${oid}')"><span class="material-icons-round">send</span>Reply</button></div>`}</div>`;
+    return `<div class="rvcard"><div class="rv-top"><div class="rv-av">${ini}</div><div style="flex:1"><div class="rv-nm">${esc(o.user_name)}</div><div class="rv-dt">${ds}${o.seller_name?' · '+esc(o.seller_name):''}</div></div><div class="rv-stars">${stars}</div></div><div class="rv-ord"><span class="material-icons-round">receipt</span>#${oid} · ₹${fmt(o.total)}</div>${o.order_review?`<div class="rv-txt">"${esc(o.order_review)}"</div>`:''}${ics?`<div class="rv-ichips">${ics}</div>`:''}${o.review_reply?`<div class="rv-reply"><div class="rv-rlbl">Your Reply</div><div class="rv-rtxt">${esc(o.review_reply)}</div></div>`:`<div class="rv-form"><textarea class="rv-ta" id="rp_${oid}" placeholder="Write a reply…"></textarea><button class="rv-send" onclick="sendReply('${oid}')"><span class="material-icons-round">send</span>Reply</button></div>`}</div>`;
   }).join('');
 }
 
 async function sendReply(oid){
-  const el=g('rp_'+oid),txt=el?el.value.trim():'';
-  if(!txt){toast('Write a reply first','error');return}
+  const el=g('rp_'+oid), txt=el?el.value.trim():'';
+  if(!txt){ toast('Write a reply first','error'); return; }
   try{
     const{error}=await sb.from('orders').update({review_reply:txt,review_replied_at:new Date().toISOString()}).eq('id',oid);
-    if(error)throw error;
-    const i=allOrders.findIndex(o=>String(o.id)===oid);if(i>-1)allOrders[i].review_reply=txt;
-    renderReviews();toast('Reply sent!','success');
-  }catch(e){toast('Failed: '+e.message,'error')}
+    if(error) throw error;
+    const i=allOrders.findIndex(o=>String(o.id)===oid);
+    if(i>-1) allOrders[i].review_reply=txt;
+    renderReviews(); toast('Reply sent!','success');
+  }catch(e){ toast('Failed: '+e.message,'error'); }
 }
 
 /* ── NAVIGATION ── */
@@ -922,35 +1017,72 @@ function go(v,el){
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   g('v'+v.charAt(0).toUpperCase()+v.slice(1)).classList.add('active');
   document.querySelectorAll('.sb-item[data-v]').forEach(i=>i.classList.remove('on'));
-  if(el)el.classList.add('on');
+  if(el) el.classList.add('on');
   g('tbTtl').textContent=TTLS[v]||v;
-  if(window.innerWidth<=960)closeSb();
+  if(window.innerWidth<=960) closeSb();
 }
 
 /* ── SIDEBAR ── */
-function openSb(){g('sidebar').classList.add('open');g('sbOv').classList.add('on')}
-function closeSb(){g('sidebar').classList.remove('open');g('sbOv').classList.remove('on')}
+function openSb(){ g('sidebar').classList.add('open'); g('sbOv').classList.add('on'); }
+function closeSb(){ g('sidebar').classList.remove('open'); g('sbOv').classList.remove('on'); }
 
 /* ── THEME ── */
-function toggleTheme(){const h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('ic_theme',n);const ico=n==='dark'?'light_mode':'dark_mode';g('thIcoTb').textContent=ico;g('thIcoSb').textContent=ico}
-function applyTheme(){const t=localStorage.getItem('ic_theme')||'light';document.documentElement.setAttribute('data-theme',t);window.addEventListener('DOMContentLoaded',()=>{const ico=t==='dark'?'light_mode':'dark_mode';try{g('thIcoTb').textContent=ico;g('thIcoSb').textContent=ico}catch(_){}})}
+function toggleTheme(){
+  const h=document.documentElement, n=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',n); localStorage.setItem('ic_theme',n);
+  const ico=n==='dark'?'light_mode':'dark_mode';
+  g('thIcoTb').textContent=ico; g('thIcoSb').textContent=ico;
+}
+function applyTheme(){
+  const t=localStorage.getItem('ic_theme')||'light';
+  document.documentElement.setAttribute('data-theme',t);
+  window.addEventListener('DOMContentLoaded',()=>{
+    const ico=t==='dark'?'light_mode':'dark_mode';
+    try{ g('thIcoTb').textContent=ico; g('thIcoSb').textContent=ico; }catch(_){}
+  });
+}
 
 /* ── AUTO REFRESH 30s ── */
-setInterval(()=>{if(user)loadOrders()},30000);
+setInterval(()=>{ if(user) loadOrders(); },30000);
 
 /* ── LOGOUT ── */
-function doLogout(){if(!confirm('Sign out?'))return;clearLS();location.href='../authentication.html'}
-function clearLS(){['infocity_uid','infocity_type','infocity_name'].forEach(k=>localStorage.removeItem(k))}
+function doLogout(){ if(!confirm('Sign out?')) return; clearLS(); location.href='../authentication.html'; }
+function clearLS(){ ['infocity_uid','infocity_type','infocity_name'].forEach(k=>localStorage.removeItem(k)); }
 
 /* ── UTILS ── */
-function g(id){return document.getElementById(id)}
-function setText(id,v){const e=g(id);if(e)e.textContent=v}
-function esc(s){if(s==null)return'';const d=document.createElement('div');d.textContent=String(s);return d.innerHTML}
-function fmt(n){const v=parseFloat(n)||0;return v>=1000?v.toLocaleString('en-IN',{maximumFractionDigits:0}):v.toFixed(0)}
-function firstImg(s){if(!s)return FB;const a=s.split(',').map(x=>x.trim()).filter(Boolean);return a[0]||FB}
-function isToday(ts){const d=new Date(ts),n=new Date();return d.getDate()===n.getDate()&&d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear()}
-function isThisWeek(ts){const d=new Date(ts),n=new Date(),s=new Date(n);s.setDate(n.getDate()-n.getDay());return d>=s}
-function toast(msg,type='info'){const ic={success:'check_circle',error:'error',info:'info'};const b=document.createElement('div');b.className=`toast ${type}`;b.innerHTML=`<span class="material-icons-round">${ic[type]||'info'}</span><span>${msg}</span>`;g('toastWrap').appendChild(b);setTimeout(()=>{b.style.animation='tOut .32s forwards';setTimeout(()=>b.remove(),340)},3600)}
+function g(id){ return document.getElementById(id); }
+function setText(id,v){ const e=g(id); if(e) e.textContent=v; }
+function esc(s){
+  if(s==null) return '';
+  const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML;
+}
+function fmt(n){ const v=parseFloat(n)||0; return v>=1000?v.toLocaleString('en-IN',{maximumFractionDigits:0}):v.toFixed(0); }
+
+// ── FIX: handle images as postgres array (string[]) OR legacy comma-string ──
+function parseImagesField(images){
+  if(!images) return [];
+  // Already a JS array (Supabase returns arrays as arrays)
+  if(Array.isArray(images)) return images.filter(Boolean);
+  // Legacy: comma-separated string stored in a text column
+  if(typeof images==='string') return images.split(',').map(s=>s.trim()).filter(Boolean);
+  return [];
+}
+
+// firstImg now handles both array and string
+function firstImg(images){
+  const arr=parseImagesField(images);
+  return arr[0]||FB;
+}
+
+function isToday(ts){ const d=new Date(ts),n=new Date(); return d.getDate()===n.getDate()&&d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear(); }
+function isThisWeek(ts){ const d=new Date(ts),n=new Date(),s=new Date(n); s.setDate(n.getDate()-n.getDay()); return d>=s; }
+function toast(msg,type='info'){
+  const ic={success:'check_circle',error:'error',info:'info'};
+  const b=document.createElement('div'); b.className=`toast ${type}`;
+  b.innerHTML=`<span class="material-icons-round">${ic[type]||'info'}</span><span>${msg}</span>`;
+  g('toastWrap').appendChild(b);
+  setTimeout(()=>{ b.style.animation='tOut .32s forwards'; setTimeout(()=>b.remove(),340); },3600);
+}
 </script>
 </body>
 </html>
