@@ -657,14 +657,14 @@ let selectedStars = 0;
   applyStoredTheme();
 
   const uid = localStorage.getItem('infocity_uid');
-  if (!uid) { redirect('../authentication.html'); return; }
+  if (!uid) { redirect('../authentication'); return; }
 
   try {
     const { data, error } = await sb.from('Users').select('*').eq('id', uid).maybeSingle();
-    if (error || !data) { clearAuth(); redirect('../authentication.html'); return; }
+    if (error || !data) { clearAuth(); redirect('../authentication'); return; }
     if (data.type !== 'customer') {
-      const map = { restaurant: '../restaurant/cart.html', foodcourt: '../register_foodcourt.html' };
-      redirect(map[data.type] || '../authentication.html'); return;
+      const map = { restaurant: '../restaurant/cart', foodcourt: '../register_foodcourt' };
+      redirect(map[data.type] || '../authentication'); return;
     }
     currentUser = data;
     populateUserUI();
@@ -804,7 +804,7 @@ function renderOrders() {
       <p>${noOrders
         ? 'Your complete order history will appear once you place your first order.'
         : 'No orders match this filter. Try a different tab.'}</p>
-      ${noOrders ? '<a href="index.html" class="empty-browse"><span class="material-icons">restaurant_menu</span>Explore Restaurants</a>' : ''}
+      ${noOrders ? '<a href="index" class="empty-browse"><span class="material-icons">restaurant_menu</span>Explore Restaurants</a>' : ''}
     </div>`;
     return;
   }
@@ -1169,9 +1169,9 @@ function applyStoredTheme() {
 ════════════════════════════════════ */
 function doLogout() {
   if (!confirm('Log out of your account?')) return;
-  clearAuth(); redirect('../authentication.html');
+  clearAuth(); redirect('../authentication');
 }
-function goHome()        { window.location.href = 'index.html'; }
+function goHome()        { window.location.href = 'index'; }
 function clearAuth()     { ['infocity_uid','infocity_type','infocity_name'].forEach(k => localStorage.removeItem(k)); }
 function redirect(url)   { window.location.href = url; }
 

@@ -122,12 +122,12 @@
 </div>
 
 <nav class="navbar" id="navbar">
-  <div class="nav-left"><a href="index.html" class="nav-brand"><span class="material-icons">restaurant</span><span>Infocity Court</span></a></div>
+  <div class="nav-left"><a href="index" class="nav-brand"><span class="material-icons">restaurant</span><span>Infocity Court</span></a></div>
   <div class="nav-right">
     <button class="theme-toggle" onclick="toggleTheme()"><span class="material-icons" id="themeIcon">dark_mode</span></button>
-    <a href="index.html" class="nav-btn"><span class="material-icons">home</span><span class="btn-label">Home</span></a>
-    <a href="cart.html" class="nav-btn"><span class="material-icons">shopping_cart</span><span class="btn-label">Cart</span><span class="badge" id="cartBadge" style="display:none">0</span></a>
-    <a href="orders.html" class="nav-btn"><span class="material-icons">receipt_long</span><span class="btn-label">Orders</span></a>
+    <a href="index" class="nav-btn"><span class="material-icons">home</span><span class="btn-label">Home</span></a>
+    <a href="cart" class="nav-btn"><span class="material-icons">shopping_cart</span><span class="btn-label">Cart</span><span class="badge" id="cartBadge" style="display:none">0</span></a>
+    <a href="orders" class="nav-btn"><span class="material-icons">receipt_long</span><span class="btn-label">Orders</span></a>
   </div>
 </nav>
 
@@ -138,14 +138,14 @@
   <div class="section-card"><div class="sc-header"><div class="sc-title"><span class="material-icons">edit</span> Edit Profile</div><button class="sc-edit" id="toggleEditBtn" onclick="toggleEdit()"><span class="material-icons">edit</span> Edit</button></div><form id="profileForm" onsubmit="saveProfile(event)"><div class="form-grid"><div class="form-group"><label>Full Name</label><input type="text" id="editName" disabled/></div><div class="form-group"><label>Phone Number</label><input type="tel" id="editPhone" disabled/></div><div class="form-group"><label>Email Address</label><input type="email" id="editEmail" disabled/></div><div class="form-group"><label>Account Type</label><input type="text" id="editType" disabled style="text-transform:capitalize"/></div></div><div class="btn-row" id="editBtnRow" style="display:none;margin-top:20px"><button type="submit" class="btn-primary" id="saveBtn"><span class="material-icons">save</span> Save</button><button type="button" class="btn-secondary" onclick="cancelEdit()"><span class="material-icons">close</span> Cancel</button></div></form></div>
   <div class="section-card"><div class="sc-header"><div class="sc-title"><span class="material-icons">lock</span> Change Password</div></div><form id="passwordForm" onsubmit="changePassword(event)"><div class="form-grid"><div class="form-group"><label>Current Password</label><input type="password" id="currentPass" placeholder="Current password"/></div><div class="form-group"><label>New Password</label><input type="password" id="newPass" placeholder="Min 6 characters"/></div></div><div class="btn-row" style="margin-top:20px"><button type="submit" class="btn-primary" id="passBtn"><span class="material-icons">lock_reset</span> Update</button></div></form></div>
   <div class="section-card"><div class="sc-header"><div class="sc-title"><span class="material-icons">menu</span> Quick Links</div></div><div class="menu-list">
-    <a href="orders.html" class="menu-item"><div class="mi-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"><span class="material-icons">receipt_long</span></div><div class="mi-text"><div class="mi-title">My Orders</div><div class="mi-sub">Track and manage your orders</div></div><span class="material-icons mi-arrow">chevron_right</span></a>
-    <a href="cart.html" class="menu-item"><div class="mi-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-dark))"><span class="material-icons">shopping_cart</span></div><div class="mi-text"><div class="mi-title">My Cart</div><div class="mi-sub">Review items before checkout</div></div><span class="material-icons mi-arrow">chevron_right</span></a>
-    <a href="index.html" class="menu-item"><div class="mi-icon" style="background:linear-gradient(135deg,var(--green),#16a34a)"><span class="material-icons">explore</span></div><div class="mi-text"><div class="mi-title">Explore Food</div><div class="mi-sub">Discover new restaurants and dishes</div></div><span class="material-icons mi-arrow">chevron_right</span></a>
+    <a href="orders" class="menu-item"><div class="mi-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)"><span class="material-icons">receipt_long</span></div><div class="mi-text"><div class="mi-title">My Orders</div><div class="mi-sub">Track and manage your orders</div></div><span class="material-icons mi-arrow">chevron_right</span></a>
+    <a href="cart" class="menu-item"><div class="mi-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-dark))"><span class="material-icons">shopping_cart</span></div><div class="mi-text"><div class="mi-title">My Cart</div><div class="mi-sub">Review items before checkout</div></div><span class="material-icons mi-arrow">chevron_right</span></a>
+    <a href="index" class="menu-item"><div class="mi-icon" style="background:linear-gradient(135deg,var(--green),#16a34a)"><span class="material-icons">explore</span></div><div class="mi-text"><div class="mi-title">Explore Food</div><div class="mi-sub">Discover new restaurants and dishes</div></div><span class="material-icons mi-arrow">chevron_right</span></a>
     <div class="menu-item" onclick="openConfirm()"><div class="mi-icon" style="background:linear-gradient(135deg,var(--red),#dc2626)"><span class="material-icons">logout</span></div><div class="mi-text"><div class="mi-title" style="color:var(--red)">Logout</div><div class="mi-sub">Sign out of your account</div></div><span class="material-icons mi-arrow">chevron_right</span></div>
   </div></div>
 </main>
 
-<div class="mobile-bottom-nav"><a href="index.html" class="mob-nav-item"><span class="material-icons">home</span><span>Home</span></a><a href="cart.html" class="mob-nav-item"><span class="material-icons">shopping_cart</span><span>Cart</span></a><a href="orders.html" class="mob-nav-item"><span class="material-icons">receipt_long</span><span>Orders</span></a><a href="account.html" class="mob-nav-item active"><span class="material-icons">person</span><span>Account</span></a></div>
+<div class="mobile-bottom-nav"><a href="index" class="mob-nav-item"><span class="material-icons">home</span><span>Home</span></a><a href="cart" class="mob-nav-item"><span class="material-icons">shopping_cart</span><span>Cart</span></a><a href="orders" class="mob-nav-item"><span class="material-icons">receipt_long</span><span>Orders</span></a><a href="account" class="mob-nav-item active"><span class="material-icons">person</span><span>Account</span></a></div>
 
 <script>
 const SUPABASE_URL  = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
@@ -156,13 +156,13 @@ let currentUser=null; let isEditing=false; let originalData={};
 
 (async function(){
   const uid=localStorage.getItem('infocity_uid');
-  if(!uid){window.location.href='../authentication.html';return}
+  if(!uid){window.location.href='../authentication';return}
   try{
     const{data,error}=await sb.from('Users').select('*').eq('id',uid).maybeSingle();
-    if(error||!data){localStorage.clear();window.location.href='../authentication.html';return}
+    if(error||!data){localStorage.clear();window.location.href='../authentication';return}
     if(data.type!=='customer'){
-      const r={restaurant:'../restaurant/index.html',foodcourt:'../register_foodcourt.html'};
-      window.location.href=r[data.type]||'../authentication.html';return;
+      const r={restaurant:'../restaurant/index',foodcourt:'../register_foodcourt'};
+      window.location.href=r[data.type]||'../authentication';return;
     }
     currentUser=data; populateProfile(data); await loadStats();
   }catch(e){toast('Connection error','error')}
@@ -231,7 +231,7 @@ function openConfirm(){document.getElementById('confirmOverlay').classList.add('
 function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('active')}
 function performLogout(){
   localStorage.removeItem('infocity_uid');localStorage.removeItem('infocity_type');
-  window.location.href='../authentication.html';
+  window.location.href='../authentication';
 }
 function updateCartBadge(){const count=JSON.parse(localStorage.getItem('infocity_cart')||'[]').reduce((s,c)=>s+c.qty,0);const b=document.getElementById('cartBadge');if(count>0){b.style.display='flex';b.textContent=count}else b.style.display='none'}
 function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('infocity_theme',n);document.getElementById('themeIcon').textContent=n==='dark'?'dark_mode':'light_mode'}

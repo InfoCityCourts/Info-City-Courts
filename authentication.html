@@ -979,8 +979,8 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
 const ROUTES = {
-  customer   : 'customer/index.html',
-  restaurant : 'restaurant/index.html',
+  customer   : 'customer/index',
+  restaurant : 'restaurant/index',
 };
 
 /* ════════════════════════════════════════════
@@ -1262,7 +1262,7 @@ async function doSignup(e) {
    RESTAURANT LOGIN
    Checks DB for a row with type='restaurant'
    matching the provided email + password.
-   Redirects to /restaurant/index.html on success.
+   Redirects to /restaurant/index on success.
 ════════════════════════════════════════════ */
 async function doRestaurantLogin(e) {
   e.preventDefault();

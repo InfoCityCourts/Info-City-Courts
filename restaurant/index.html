@@ -840,12 +840,12 @@ const STEPS = [
 (async () => {
   applyTheme();
   const uid = localStorage.getItem('infocity_uid');
-  if (!uid) { location.href = '../authentication.html'; return; }
+  if (!uid) { location.href = '../authentication'; return; }
   try {
     const { data, error } = await sb.from('Users').select('*').eq('id', uid).maybeSingle();
-    if (error || !data) { clearLS(); location.href = '../authentication.html'; return; }
+    if (error || !data) { clearLS(); location.href = '../authentication'; return; }
     if (data.type !== 'restaurant') {
-      location.href = data.type === 'customer' ? '../customer/index.html' : '../authentication.html';
+      location.href = data.type === 'customer' ? '../customer/index' : '../authentication';
       return;
     }
     user = data;
@@ -1568,7 +1568,7 @@ setInterval(() => { if (user) loadOrders(); }, 30000);
 ═══════════════════════════════════════════ */
 function doLogout() {
   if (!confirm('Sign out?')) return;
-  clearLS(); location.href = '../authentication.html';
+  clearLS(); location.href = '../authentication';
 }
 function clearLS() {
   ['infocity_uid', 'infocity_type', 'infocity_name'].forEach(k => localStorage.removeItem(k));

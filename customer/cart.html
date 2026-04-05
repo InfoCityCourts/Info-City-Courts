@@ -467,8 +467,8 @@
       </div>
     </div>
     <div class="success-btns">
-      <a href="orders.html" class="primary"><span class="material-icons">receipt_long</span>Track Order</a>
-      <a href="index.html" class="secondary"><span class="material-icons">restaurant_menu</span>More Food</a>
+      <a href="orders" class="primary"><span class="material-icons">receipt_long</span>Track Order</a>
+      <a href="index" class="secondary"><span class="material-icons">restaurant_menu</span>More Food</a>
     </div>
   </div>
 </div>
@@ -478,7 +478,7 @@
 
 <!-- NAVBAR -->
 <nav class="navbar">
-  <a href="index.html" class="nav-brand">
+  <a href="index" class="nav-brand">
     <div class="nb-icon"><span class="material-icons">restaurant</span></div>
     <span class="nb-name">Infocity Court</span>
   </a>
@@ -486,9 +486,9 @@
   <span class="nav-title">My Cart</span>
   <div class="nav-right">
     <button class="ni-btn" onclick="toggleTheme()" title="Toggle theme"><span class="material-icons" id="themeIcon">dark_mode</span></button>
-    <a href="index.html" class="nav-text-btn"><span class="material-icons">home</span><span class="btn-lbl">Home</span></a>
-    <a href="orders.html" class="nav-text-btn"><span class="material-icons">receipt_long</span><span class="btn-lbl">Orders</span></a>
-    <a href="account.html" class="nav-text-btn"><span class="material-icons">person</span><span class="btn-lbl">Account</span></a>
+    <a href="index" class="nav-text-btn"><span class="material-icons">home</span><span class="btn-lbl">Home</span></a>
+    <a href="orders" class="nav-text-btn"><span class="material-icons">receipt_long</span><span class="btn-lbl">Orders</span></a>
+    <a href="account" class="nav-text-btn"><span class="material-icons">person</span><span class="btn-lbl">Account</span></a>
   </div>
 </nav>
 
@@ -508,7 +508,7 @@
     <div class="empty-icon"><span class="material-icons">remove_shopping_cart</span></div>
     <h2>Nothing here yet</h2>
     <p>Looks like you haven't added anything to your cart.<br/>Let's change that — explore our menu!</p>
-    <a href="index.html" class="btn-browse"><span class="material-icons">restaurant_menu</span>Browse Menu</a>
+    <a href="index" class="btn-browse"><span class="material-icons">restaurant_menu</span>Browse Menu</a>
   </div>
 
   <!-- CART CONTENT -->
@@ -534,7 +534,7 @@
           <strong>Add ₹<span id="upsellTarget">0</span> more for free delivery!</strong>
           <p>Orders above ₹500 get free delivery 🎁</p>
         </div>
-        <a href="index.html" class="upsell-btn">Add More</a>
+        <a href="index" class="upsell-btn">Add More</a>
       </div>
     </div>
 
@@ -624,10 +624,10 @@
 
 <!-- MOBILE BOTTOM NAV -->
 <div class="bot-nav">
-  <a href="index.html" class="bn-item"><span class="material-icons">home</span><span>Home</span></a>
-  <a href="cart.html" class="bn-item active"><span class="material-icons">shopping_cart</span><span>Cart</span></a>
-  <a href="orders.html" class="bn-item"><span class="material-icons">receipt_long</span><span>Orders</span></a>
-  <a href="account.html" class="bn-item"><span class="material-icons">person</span><span>Account</span></a>
+  <a href="index" class="bn-item"><span class="material-icons">home</span><span>Home</span></a>
+  <a href="cart" class="bn-item active"><span class="material-icons">shopping_cart</span><span>Cart</span></a>
+  <a href="orders" class="bn-item"><span class="material-icons">receipt_long</span><span>Orders</span></a>
+  <a href="account" class="bn-item"><span class="material-icons">person</span><span>Account</span></a>
 </div>
 
 <script>
@@ -657,10 +657,10 @@ function toggleTheme() {
 // ── AUTH ──
 (async function init() {
   const uid = localStorage.getItem('infocity_uid');
-  if (!uid) { window.location.href = '../authentication.html'; return; }
+  if (!uid) { window.location.href = '../authentication'; return; }
   try {
     const { data } = await sb.from('Users').select('*').eq('id', uid).maybeSingle();
-    if (!data) { localStorage.clear(); window.location.href = '../authentication.html'; return; }
+    if (!data) { localStorage.clear(); window.location.href = '../authentication'; return; }
     currentUser = data;
     // Pre-fill name/phone from user account
     if (data.name) document.getElementById('delName').value = data.name;
