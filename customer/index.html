@@ -958,7 +958,93 @@ input,select,textarea{font-family:var(--ff-ui)}
 const SUPABASE_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+async function loadMessages() {
+  try {
+    const { data, error } = await supabase
+      .from("messages")   // 🔥 make sure this table name is correct
+      .select("*")
+      .order("created_at", { ascending: true });
 
+    if (error) {
+      console.error("Error fetching messages:", error);
+      return;
+    }
+
+    console.log("MESSAGES FROM DB:", data); // ✅ DEBUG LINE
+
+    renderMessages(data);
+
+  } catch (err) {
+    console.error("Unexpected error:", err);
+  }
+}
+
+// ==========================
+// RENDER MESSAGES
+// ==========================
+function renderMessages(messages) {
+  const container = document.getElementById("messages-container");
+
+  if (!container) {
+    console.error("Container not found!");
+    return;
+  }
+
+  container.innerHTML = ""; // clear old messages
+
+  if (!messages || messages.length === 0) {
+    container.innerHTML = "<p>No messages found</p>";
+    return;
+  }
+
+  messages.forEach(msg => {
+    const div = document.createElement("div");
+    div.classList.add("message");
+
+    // 🔥 Adjust fields based on your DB columns
+    div.innerHTML = `
+      <p><strong>${msg.name || "User"}:</strong> ${msg.message || msg.content}</p>
+      <small>${new Date(msg.created_at).toLocaleString()}</small>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+// ==========================
+// ADD MESSAGE FUNCTION (OPTIONAL)
+// ==========================
+async function addMessage(name, message) {
+  const { error } = await supabase
+    .from("messages")
+    .insert([
+      {
+        name: name,
+        message: message,
+        created_at: new Date()
+      }
+    ]);
+
+  if (error) {
+    console.error("Insert error:", error);
+  } else {
+    loadMessages(); // 🔄 refresh after insert
+  }
+}
+
+// ==========================
+// AUTO LOAD ON PAGE START
+// ==========================
+document.addEventListener("DOMContentLoaded", () => {
+  loadMessages();
+});
+
+// ==========================
+// AUTO REFRESH EVERY 5 SEC
+// ==========================
+setInterval(() => {
+  loadMessages();
+}, 5000);
 // ── STATE ──
 let currentUser=null,allFoods=[],cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]'),
     favourites=JSON.parse(localStorage.getItem('infocity_favs')||'[]'),
@@ -1579,6 +1665,111 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();searchInput.focus();}
   if(e.key==='Escape'){closeQV();searchDrop.classList.remove('open');document.getElementById('mapPopup').classList.remove('open');closeNotifPanel();}
 });
+
+/* ================================
+   🔔 NOTIFICATION SYSTEM (CUSTOMER)
+================================ */
+
+// State
+let notifState = [];
+let notifUnreadCount = 0;
+
+// UI refs (already exists in your UI)
+const notifBtn = document.querySelector('.notif-btn');
+const notifPanel = document.querySelector('.notif-panel');
+const notifList = document.querySelector('.np-list');
+const notifBadge = document.querySelector('.nb-badge');
+
+// Toggle panel
+notifBtn.addEventListener('click', () => {
+  notifPanel.classList.toggle('open');
+});
+
+// Fetch existing notifications
+async function loadNotifications() {
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) return;
+
+  notifications = data;
+  renderNotifications();
+}
+
+// Render notifications
+function renderNotifications() {
+  notifList.innerHTML = '';
+  unreadCount = 0;
+
+  notifications.forEach(n => {
+    if (!n.read) unreadCount++;
+
+    const item = document.createElement('div');
+    item.className = `nitem ${!n.read ? 'unread' : ''}`;
+
+    item.innerHTML = `
+      <div class="ni-icon status-${n.type || 'info'}">
+        <span class="material-icons">notifications</span>
+      </div>
+      <div class="ni-body">
+        <div class="ni-title">${n.title}</div>
+        <div class="ni-text">${n.message}</div>
+        <div class="ni-time">${new Date(n.created_at).toLocaleString()}</div>
+      </div>
+    `;
+
+    item.onclick = async () => {
+      await supabase
+        .from('notifications')
+        .update({ read: true })
+        .eq('id', n.id);
+
+      loadNotifications();
+    };
+
+    notifList.appendChild(item);
+  });
+
+  notifBadge.innerText = unreadCount;
+  notifBtn.classList.toggle('has-unread', unreadCount > 0);
+}
+
+// 🔴 REALTIME LISTENER
+supabase
+  .channel('notifications-channel')
+  .on(
+    'postgres_changes',
+    { event: 'INSERT', schema: 'public', table: 'notifications' },
+    payload => {
+      const newNotif = payload.new;
+      notifications.unshift(newNotif);
+      renderNotifications();
+
+      // 🔔 Browser notification
+      showPushNotification(newNotif);
+    }
+  )
+  .subscribe();
+
+// 🔔 Browser Push Notification
+function showPushNotification(n) {
+  if (Notification.permission === 'granted') {
+    new Notification(n.title, {
+      body: n.message,
+      icon: '/icon.png'
+    });
+  }
+}
+
+// Ask permission
+if (Notification.permission !== 'granted') {
+  Notification.requestPermission();
+}
+
+// Init
+loadNotifications();
 </script>
 </body>
 </html>

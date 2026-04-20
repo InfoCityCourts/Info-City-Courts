@@ -678,6 +678,10 @@ input,select,textarea{font-family:var(--dm)}
         <div class="sb-item" data-v="earnings" onclick="go('earnings',this)"><span class="material-icons-round">payments</span>Earnings</div>
         <div class="sb-item" data-v="menu" onclick="go('menu',this)"><span class="material-icons-round">restaurant_menu</span>Menu</div>
         <div class="sb-item" data-v="reviews" onclick="go('reviews',this)"><span class="material-icons-round">star_rate</span>Reviews</div>
+        <button class="oact oa-ship" onclick="notifyCustomerManually('${order.user_id}')">
+  <span class="material-icons-round">campaign</span>
+  Notify
+</button>
       </nav>
 
       <!-- SIDEBAR MENU ACCORDION -->
@@ -833,7 +837,14 @@ const STEPS = [
   {k:'out_for_delivery',i:'delivery_dining',l:'Delivering'},
   {k:'delivered',i:'done_all',l:'Delivered'}
 ];
-
+async function sendManualNotification(userId, title, message) {
+  await supabase.from('notifications').insert({
+    user_id: userId,
+    title,
+    message,
+    type: 'info'
+  });
+}
 /* ═══════════════════════════════════════════
    BOOT
 ═══════════════════════════════════════════ */
@@ -1641,6 +1652,29 @@ function rebuildUI() {
   renderDashRecent();
   renderEarnings();
   renderReviews();
+}
+async function sendManualNotification(userId, title, message) {
+  const { error } = await supabase.from('notifications').insert({
+    user_id: userId,
+    title,
+    message,
+    type: 'info'
+  });
+
+  if (error) {
+    console.error('Notification error:', error);
+  } else {
+    alert('Notification sent ✅');
+  }
+}
+function notifyCustomerManually(userId) {
+  const title = prompt("Enter notification title:");
+  if (!title) return;
+
+  const message = prompt("Enter message:");
+  if (!message) return;
+
+  sendManualNotification(userId, title, message);
 }
 </script>
 </body>
