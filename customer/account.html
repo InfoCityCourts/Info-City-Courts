@@ -102,6 +102,389 @@
     .confirm-box .cb-btns{display:flex;gap:12px;justify-content:center;margin-top:20px}
     @media(max-width:768px){.mobile-bottom-nav{display:flex}.main{padding-bottom:100px}.profile-hero{flex-direction:column;text-align:center;padding:28px 20px}.profile-info .pi-meta{justify-content:center}.form-grid{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.nav-btn .btn-label{display:none}}
     @media(max-width:480px){.stats-grid{grid-template-columns:1fr 1fr}.footer-grid{grid-template-columns:1fr}.btn-row{flex-direction:column}}
+
+    /* ═══════════════════════════════════════════
+       DANGER ZONE — 3D CREATIVE CARD
+    ═══════════════════════════════════════════ */
+    .danger-zone-wrapper{
+      perspective: 1200px;
+      margin-bottom: 30px;
+    }
+    .danger-zone{
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      animation: dangerFloat 6s ease-in-out infinite;
+      box-shadow:
+        0 0 0 1px rgba(239,68,68,.25),
+        0 8px 32px rgba(239,68,68,.15),
+        0 32px 80px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    @keyframes dangerFloat{
+      0%,100%{ transform: rotateX(1.5deg) rotateY(-1deg) translateZ(0); box-shadow: 0 0 0 1px rgba(239,68,68,.25), 0 8px 32px rgba(239,68,68,.18), 0 32px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06); }
+      33%{ transform: rotateX(-1deg) rotateY(1.5deg) translateZ(6px); box-shadow: 0 0 0 1px rgba(239,68,68,.3), 0 16px 48px rgba(239,68,68,.22), 0 48px 100px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06); }
+      66%{ transform: rotateX(1deg) rotateY(-0.5deg) translateZ(3px); box-shadow: 0 0 0 1px rgba(239,68,68,.2), 0 6px 24px rgba(239,68,68,.12), 0 24px 60px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); }
+    }
+
+    /* Hazard stripe background */
+    .danger-zone::before{
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          -55deg,
+          transparent,
+          transparent 18px,
+          rgba(239,68,68,.055) 18px,
+          rgba(239,68,68,.055) 36px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glow sweep animation */
+    .danger-zone::after{
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 80%;
+      height: 180%;
+      background: linear-gradient(105deg, transparent 30%, rgba(239,68,68,.07) 50%, transparent 70%);
+      animation: dangerSweep 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes dangerSweep{
+      0%,100%{ transform: translateX(-20%); opacity: 0; }
+      40%{ opacity: 1; }
+      60%{ transform: translateX(260%); opacity: 1; }
+      61%{ opacity: 0; }
+    }
+
+    .danger-bg{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a0a0a 0%, #1e0d0d 40%, #160808 100%);
+      z-index: 0;
+    }
+    [data-theme="light"] .danger-bg{
+      background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 40%, #fef2f2 100%);
+    }
+
+    .danger-inner{
+      position: relative;
+      z-index: 2;
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* The 3D icon slab */
+    .danger-icon-slab{
+      flex-shrink: 0;
+      position: relative;
+      width: 88px;
+      height: 88px;
+    }
+    .danger-icon-slab .slab-back{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #7f1d1d, #450a0a);
+      border-radius: 22px;
+      transform: translate(5px, 6px) rotateZ(-3deg);
+    }
+    .danger-icon-slab .slab-mid{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #991b1b, #7f1d1d);
+      border-radius: 20px;
+      transform: translate(2px, 3px);
+    }
+    .danger-icon-slab .slab-front{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(239,68,68,.4), inset 0 1px 0 rgba(255,255,255,.15);
+    }
+    .danger-icon-slab .slab-front .material-icons{
+      font-size: 38px;
+      color: #fff;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+    .skull-pulse{
+      animation: skullPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes skullPulse{
+      0%,100%{ transform: scale(1); }
+      50%{ transform: scale(1.08); }
+    }
+
+    .danger-content{
+      flex: 1;
+    }
+    .danger-eyebrow{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(239,68,68,.15);
+      border: 1px solid rgba(239,68,68,.35);
+      border-radius: 50px;
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #f87171;
+      margin-bottom: 10px;
+    }
+    .danger-eyebrow .dot{
+      width: 6px; height: 6px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .danger-title{
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    [data-theme="light"] .danger-title{ color: #1a1a2e; }
+
+    .danger-desc{
+      font-size: .84rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.6;
+      max-width: 420px;
+    }
+    [data-theme="light"] .danger-desc{ color: rgba(26,26,46,.5); }
+
+    .danger-divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(239,68,68,.4), transparent);
+      margin: 20px 0;
+    }
+
+    .danger-actions{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-delete{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      font-size: .88rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      border: none;
+      box-shadow: 0 6px 24px rgba(239,68,68,.35), inset 0 1px 0 rgba(255,255,255,.12);
+      transition: transform .2s, box-shadow .2s;
+      letter-spacing: .3px;
+    }
+    .btn-delete:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(239,68,68,.5), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .btn-delete .material-icons{ font-size: 18px; }
+
+    .danger-warning-chips{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .danger-chip{
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.2);
+      border-radius: 50px;
+      font-size: .7rem;
+      color: #f87171;
+      font-weight: 500;
+    }
+    .danger-chip .material-icons{ font-size: 13px; }
+
+    /* Corner badge */
+    .danger-corner-badge{
+      position: absolute;
+      top: -1px;
+      right: 28px;
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: #fff;
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px 7px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 4px 16px rgba(239,68,68,.4);
+      z-index: 3;
+    }
+
+    /* DELETE CONFIRM MODAL */
+    .delete-overlay{
+      position: fixed;
+      inset: 0;
+      z-index: 95000;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .delete-overlay.active{ display: flex; animation: fadeIn .3s; }
+
+    .delete-modal{
+      background: var(--bg-card);
+      border-radius: var(--radius-xl);
+      padding: 0;
+      max-width: 460px;
+      width: 92%;
+      overflow: hidden;
+      box-shadow: 0 50px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(239,68,68,.2);
+      animation: modalPop .4s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes modalPop{ from{ transform: scale(.88) translateY(20px); opacity: 0; } to{ transform: scale(1) translateY(0); opacity: 1; } }
+
+    .delete-modal-header{
+      background: linear-gradient(135deg, #7f1d1d 0%, #1a0a0a 100%);
+      padding: 32px 32px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .delete-modal-header::before{
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(-55deg, transparent, transparent 14px, rgba(239,68,68,.06) 14px, rgba(239,68,68,.06) 28px);
+    }
+    .delete-modal-skull{
+      position: relative;
+      z-index: 1;
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #ef4444, #991b1b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 0 8px rgba(239,68,68,.15), 0 0 40px rgba(239,68,68,.3);
+    }
+    .delete-modal-skull .material-icons{ font-size: 34px; color: #fff; }
+    .delete-modal-header h3{
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 4px;
+    }
+    .delete-modal-header p{
+      font-size: .8rem;
+      color: rgba(255,255,255,.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    .delete-modal-body{
+      padding: 28px 32px 32px;
+    }
+    .delete-confirm-label{
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+    .delete-confirm-label span{ color: #f87171; }
+    .delete-confirm-input{
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(239,68,68,.05);
+      border: 1.5px solid rgba(239,68,68,.25);
+      border-radius: var(--radius-sm);
+      font-size: .88rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color .2s;
+      margin-bottom: 20px;
+    }
+    .delete-confirm-input:focus{ border-color: rgba(239,68,68,.6); box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+    .delete-modal-warn{
+      display: flex;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(239,68,68,.07);
+      border: 1px solid rgba(239,68,68,.2);
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
+    }
+    .delete-modal-warn .material-icons{ font-size: 18px; color: #f87171; flex-shrink: 0; margin-top: 1px; }
+    .delete-modal-warn p{ font-size: .78rem; color: #f87171; line-height: 1.5; }
+    .delete-modal-btns{ display: flex; gap: 12px; }
+    .btn-cancel-delete{
+      flex: 1;
+      padding: 13px;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      color: var(--text-primary);
+      font-size: .88rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+    .btn-confirm-delete{
+      flex: 1;
+      padding: 13px;
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: #fff;
+      font-size: .88rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      border: none;
+      box-shadow: 0 6px 20px rgba(239,68,68,.3);
+      transition: var(--transition);
+      opacity: .4;
+      pointer-events: none;
+    }
+    .btn-confirm-delete.ready{
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn-confirm-delete.ready:hover{ transform: translateY(-1px); box-shadow: 0 10px 30px rgba(239,68,68,.45); }
+
+    @media(max-width:640px){
+      .danger-inner{ flex-direction: column; text-align: center; padding: 28px 22px; }
+      .danger-desc{ max-width: 100%; }
+      .danger-actions{ justify-content: center; }
+      .danger-warning-chips{ justify-content: center; }
+      .danger-divider{ display: none; }
+    }
   </style>
 </head>
 <body>
@@ -109,6 +492,7 @@
 <div id="pageLoader"><div class="loader-ring"></div><div class="loader-brand">Infocity Court</div></div>
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- LOGOUT CONFIRM -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <div class="cb-icon" id="confirmIcon" style="background:rgba(239,68,68,.12)"><span class="material-icons" style="font-size:30px;color:var(--red)">logout</span></div>
@@ -117,6 +501,29 @@
     <div class="cb-btns">
       <button class="btn-secondary" onclick="closeConfirm()">Cancel</button>
       <button class="btn-danger" id="confirmAction" onclick="performLogout()"><span class="material-icons" style="font-size:18px">logout</span> Logout</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE ACCOUNT CONFIRM -->
+<div class="delete-overlay" id="deleteOverlay">
+  <div class="delete-modal">
+    <div class="delete-modal-header">
+      <div class="delete-modal-skull"><span class="material-icons">delete_forever</span></div>
+      <h3>Delete Account</h3>
+      <p>This action cannot be undone. Ever.</p>
+    </div>
+    <div class="delete-modal-body">
+      <div class="delete-modal-warn">
+        <span class="material-icons">warning</span>
+        <p>Your orders, favourites, cart, and all personal data will be permanently erased from our servers.</p>
+      </div>
+      <div class="delete-confirm-label">Type your email to confirm: <span id="confirmEmailHint"></span></div>
+      <input class="delete-confirm-input" type="email" id="deleteConfirmInput" placeholder="your@email.com" oninput="checkDeleteInput()"/>
+      <div class="delete-modal-btns">
+        <button class="btn-cancel-delete" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn-confirm-delete" id="btnConfirmDelete" onclick="performDeleteAccount()">Delete Forever</button>
+      </div>
     </div>
   </div>
 </div>
@@ -133,7 +540,55 @@
 
 <main class="main">
   <div class="page-header"><div class="ph-tag">👤 My Profile</div><h1>Account Settings</h1></div>
+
   <div class="profile-hero"><div class="avatar-large" id="avatarLarge">?</div><div class="profile-info"><h2 id="profileName">Loading…</h2><div class="pi-email"><span class="material-icons">mail</span><span id="profileEmail">—</span></div><div class="pi-meta"><div class="pi-chip"><span class="material-icons">phone</span><span id="profilePhone">—</span></div><div class="pi-chip"><span class="material-icons">badge</span><span id="profileType">—</span></div><div class="pi-chip"><span class="material-icons">calendar_today</span><span id="profileJoined">—</span></div></div></div></div>
+
+  <!-- ══════════════ DANGER ZONE ══════════════ -->
+  <div class="danger-zone-wrapper">
+    <div class="danger-zone">
+      <div class="danger-bg"></div>
+      <div class="danger-corner-badge">⚠ Danger Zone</div>
+
+      <div class="danger-inner">
+        <!-- 3D Icon Slab -->
+        <div class="danger-icon-slab">
+          <div class="slab-back"></div>
+          <div class="slab-mid"></div>
+          <div class="slab-front">
+            <span class="material-icons skull-pulse">delete_forever</span>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="danger-content">
+          <div class="danger-eyebrow">
+            <div class="dot"></div>
+            Irreversible Action
+          </div>
+          <div class="danger-title">Delete Your Account</div>
+          <div class="danger-desc">Once you delete your account, there is no going back. All your data — orders, favourites, profile — will be permanently wiped from our servers.</div>
+
+          <div class="danger-warning-chips">
+            <span class="danger-chip"><span class="material-icons">receipt_long</span> All orders erased</span>
+            <span class="danger-chip"><span class="material-icons">favorite</span> Favourites lost</span>
+            <span class="danger-chip"><span class="material-icons">shopping_cart</span> Cart cleared</span>
+            <span class="danger-chip"><span class="material-icons">lock</span> No recovery</span>
+          </div>
+
+          <div class="danger-divider"></div>
+
+          <div class="danger-actions">
+            <button class="btn-delete" onclick="openDeleteModal()">
+              <span class="material-icons">delete_forever</span>
+              Delete My Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ══════════════════════════════════════════ -->
+
   <div class="section-card"><div class="sc-header"><div class="sc-title"><span class="material-icons">bar_chart</span> Overview</div></div><div class="stats-grid"><div class="stat-card"><span class="material-icons stat-icon">shopping_bag</span><div class="stat-num" id="statOrders">0</div><div class="stat-label">Total Orders</div></div><div class="stat-card"><span class="material-icons stat-icon">favorite</span><div class="stat-num" id="statFavs">0</div><div class="stat-label">Favourites</div></div><div class="stat-card"><span class="material-icons stat-icon">shopping_cart</span><div class="stat-num" id="statCart">0</div><div class="stat-label">In Cart</div></div><div class="stat-card"><span class="material-icons stat-icon">payments</span><div class="stat-num" id="statSpent">₹0</div><div class="stat-label">Total Spent</div></div></div></div>
   <div class="section-card"><div class="sc-header"><div class="sc-title"><span class="material-icons">edit</span> Edit Profile</div><button class="sc-edit" id="toggleEditBtn" onclick="toggleEdit()"><span class="material-icons">edit</span> Edit</button></div><form id="profileForm" onsubmit="saveProfile(event)"><div class="form-grid"><div class="form-group"><label>Full Name</label><input type="text" id="editName" disabled/></div><div class="form-group"><label>Phone Number</label><input type="tel" id="editPhone" disabled/></div><div class="form-group"><label>Email Address</label><input type="email" id="editEmail" disabled/></div><div class="form-group"><label>Account Type</label><input type="text" id="editType" disabled style="text-transform:capitalize"/></div></div><div class="btn-row" id="editBtnRow" style="display:none;margin-top:20px"><button type="submit" class="btn-primary" id="saveBtn"><span class="material-icons">save</span> Save</button><button type="button" class="btn-secondary" onclick="cancelEdit()"><span class="material-icons">close</span> Cancel</button></div></form></div>
   <div class="section-card"><div class="sc-header"><div class="sc-title"><span class="material-icons">lock</span> Change Password</div></div><form id="passwordForm" onsubmit="changePassword(event)"><div class="form-grid"><div class="form-group"><label>Current Password</label><input type="password" id="currentPass" placeholder="Current password"/></div><div class="form-group"><label>New Password</label><input type="password" id="newPass" placeholder="Min 6 characters"/></div></div><div class="btn-row" style="margin-top:20px"><button type="submit" class="btn-primary" id="passBtn"><span class="material-icons">lock_reset</span> Update</button></div></form></div>
@@ -149,7 +604,7 @@
 
 <script>
 const SUPABASE_URL  = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
-  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';   // ← paste your anon/public key
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
 
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null; let isEditing=false; let originalData={};
@@ -180,6 +635,7 @@ function populateProfile(u){
   document.getElementById('editPhone').value=u.phone||'';
   document.getElementById('editEmail').value=u.email;
   originalData={name:u.name,phone:u.phone||'',email:u.email};
+  document.getElementById('confirmEmailHint').textContent=u.email;
 }
 
 async function loadStats(){
@@ -227,16 +683,64 @@ async function saveProfile(e){
     populateProfile(currentUser); cancelEdit(); toast('Updated successfully!','success');
   }catch(err){toast('Failed to update','error')}
 }
+
+/* ── Logout ── */
 function openConfirm(){document.getElementById('confirmOverlay').classList.add('active')}
 function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('active')}
 function performLogout(){
   localStorage.removeItem('infocity_uid');localStorage.removeItem('infocity_type');
   window.location.href='../authentication';
 }
+
+/* ── Delete Account ── */
+function openDeleteModal(){
+  document.getElementById('deleteConfirmInput').value='';
+  document.getElementById('btnConfirmDelete').classList.remove('ready');
+  document.getElementById('deleteOverlay').classList.add('active');
+}
+function closeDeleteModal(){
+  document.getElementById('deleteOverlay').classList.remove('active');
+}
+function checkDeleteInput(){
+  const val=document.getElementById('deleteConfirmInput').value.trim();
+  const btn=document.getElementById('btnConfirmDelete');
+  if(currentUser && val===currentUser.email){
+    btn.classList.add('ready');
+  } else {
+    btn.classList.remove('ready');
+  }
+}
+async function performDeleteAccount(){
+  if(!currentUser)return;
+  const btn=document.getElementById('btnConfirmDelete');
+  btn.textContent='Deleting…';
+  btn.style.pointerEvents='none';
+  try{
+    /* Delete from orders table */
+    await sb.from('orders').delete().eq('user_id',currentUser.id);
+    /* Delete from Users table */
+    const{error}=await sb.from('Users').delete().eq('id',currentUser.id);
+    if(error)throw error;
+    /* Clear local storage */
+    localStorage.clear();
+    toast('Account deleted. Goodbye!','success');
+    setTimeout(()=>{ window.location.href='../authentication'; },1800);
+  }catch(err){
+    toast('Failed to delete account. Try again.','error');
+    btn.textContent='Delete Forever';
+    btn.style.pointerEvents='auto';
+  }
+}
+
+/* ── Utilities ── */
 function updateCartBadge(){const count=JSON.parse(localStorage.getItem('infocity_cart')||'[]').reduce((s,c)=>s+c.qty,0);const b=document.getElementById('cartBadge');if(count>0){b.style.display='flex';b.textContent=count}else b.style.display='none'}
 function toggleTheme(){const h=document.documentElement;const c=h.getAttribute('data-theme');const n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('infocity_theme',n);document.getElementById('themeIcon').textContent=n==='dark'?'dark_mode':'light_mode'}
 (function(){const s=localStorage.getItem('infocity_theme');if(s){document.documentElement.setAttribute('data-theme',s);document.getElementById('themeIcon').textContent=s==='dark'?'dark_mode':'light_mode'}})();
 function toast(msg,type='info'){const icons={success:'check_circle',error:'error',info:'info'};const box=document.createElement('div');box.className='toast '+type;box.innerHTML=`<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;document.getElementById('toastContainer').appendChild(box);setTimeout(()=>{box.style.animation='slideOut .35s forwards';setTimeout(()=>box.remove(),350)},3500)}
+
+/* Close modals on backdrop click */
+document.getElementById('deleteOverlay').addEventListener('click',function(e){if(e.target===this)closeDeleteModal();});
+document.getElementById('confirmOverlay').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 </script>
 </body>
 </html>
