@@ -683,6 +683,165 @@ input,select,textarea{font-family:var(--ff-ui)}
       </div>
     </div>
   </section>
+  <!-- ══════════════════════════════════════
+     🎉  PARTY HALL SECTION — Add this block
+     PASTE after </section> closing tag of the
+     contact section, before </main>
+══════════════════════════════════════ -->
+
+<style>
+/* Party Hall Banner */
+.party-banner{
+  margin:0 clamp(16px,4vw,72px) clamp(40px,5vw,72px);
+  position:relative;overflow:hidden;border-radius:28px;
+  background:linear-gradient(135deg,#0a060f 0%,#160c25 45%,#1e0a1a 100%);
+  border:1px solid rgba(201,147,58,.18);
+  display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:clamp(20px,4vw,56px);
+  padding:clamp(36px,5vw,64px) clamp(28px,5vw,64px);
+}
+.party-banner::before{
+  content:'';position:absolute;top:-60%;right:-5%;
+  width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,147,58,.12) 0%,rgba(184,50,50,.06) 40%,transparent 70%);
+  pointer-events:none
+}
+.party-banner::after{
+  content:'';position:absolute;bottom:-40%;left:20%;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(90,50,200,.07),transparent 65%);
+  pointer-events:none
+}
+.pb-grid-line{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+  background-size:44px 44px
+}
+.pb-content{position:relative;z-index:2}
+.pb-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:0;
+  background:rgba(201,147,58,.1);border:1px solid rgba(201,147,58,.25);
+  font-size:.62rem;font-weight:700;letter-spacing:.25em;
+  color:var(--gold2,#e8ae5c);text-transform:uppercase;margin-bottom:18px;
+  font-family:var(--ff-royal,'Georgia',serif)
+}
+.pb-tag .material-icons{font-size:13px}
+.pb-title{
+  font-family:var(--ff-display,'Georgia',serif);
+  font-size:clamp(1.8rem,4vw,3.2rem);font-weight:400;
+  line-height:1.1;color:#fff;letter-spacing:-.02em;margin-bottom:12px
+}
+.pb-title strong{
+  font-weight:700;font-style:italic;
+  background:linear-gradient(135deg,#c9933a,#f5cc80);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.pb-sub{
+  font-size:.9rem;color:rgba(255,255,255,.45);line-height:1.75;
+  max-width:520px;margin-bottom:28px;
+  font-family:var(--ff-editorial,'Georgia',serif);font-style:italic
+}
+.pb-features{display:flex;gap:clamp(14px,3vw,36px);margin-bottom:32px;flex-wrap:wrap}
+.pb-feat{display:flex;align-items:center;gap:7px;font-size:.78rem;color:rgba(255,255,255,.5)}
+.pb-feat .material-icons{font-size:15px;color:#c9933a}
+.pb-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pb-btn-main{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 36px;
+  background:linear-gradient(135deg,#c9933a,#e8ae5c);
+  color:#0a060f;font-weight:800;font-size:.88rem;
+  letter-spacing:.05em;border:none;cursor:pointer;
+  font-family:var(--ff-royal,'Georgia',serif);
+  box-shadow:0 10px 36px rgba(201,147,58,.35);
+  transition:all .35s cubic-bezier(.16,1,.3,1);
+  text-decoration:none;border-radius:0
+}
+.pb-btn-main:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 18px 52px rgba(201,147,58,.45)}
+.pb-btn-main .material-icons{font-size:19px}
+.pb-btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 26px;border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.6);font-size:.82rem;font-weight:500;
+  transition:all .25s;text-decoration:none;border-radius:0
+}
+.pb-btn-ghost:hover{border-color:#c9933a;color:#c9933a}
+.pb-btn-ghost .material-icons{font-size:16px}
+.pb-visual{
+  position:relative;z-index:2;flex-shrink:0;
+  display:flex;flex-direction:column;gap:12px;align-items:flex-end
+}
+.pb-img-wrap{
+  width:clamp(180px,22vw,300px);height:clamp(180px,22vw,300px);
+  border-radius:50%;overflow:hidden;border:2px solid rgba(201,147,58,.2);
+  position:relative;animation:pbFloat 7s ease-in-out infinite;
+  box-shadow:0 0 60px rgba(201,147,58,.15),0 28px 60px rgba(0,0,0,.5)
+}
+.pb-img-wrap img{width:100%;height:100%;object-fit:cover}
+.pb-img-ring{
+  position:absolute;inset:-8px;border-radius:50%;
+  border:1px dashed rgba(201,147,58,.22);
+  animation:pbFloat 7s ease-in-out infinite reverse
+}
+.pb-badge{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 18px;background:rgba(0,0,0,.65);
+  backdrop-filter:blur(16px);border:1px solid rgba(201,147,58,.18);
+  border-radius:50px;white-space:nowrap
+}
+.pb-badge .material-icons{font-size:16px;color:#c9933a}
+.pb-badge span{font-size:.76rem;font-weight:600;color:#fff}
+@keyframes pbFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-16px) rotate(1.5deg)}}
+@media(max-width:768px){
+  .party-banner{grid-template-columns:1fr}
+  .pb-visual{align-items:flex-start;flex-direction:row;align-items:center}
+  .pb-img-wrap{width:120px;height:120px}
+}
+@media(max-width:480px){
+  .party-banner{padding:28px 22px}
+  .pb-visual{display:none}
+}
+</style>
+
+<!-- Party Hall Banner Section — paste right before </main> -->
+<section class="reveal" style="margin-top:8px">
+  <div class="party-banner">
+    <div class="pb-grid-line"></div>
+    <div class="pb-content">
+      <div class="pb-tag">
+        <span class="material-icons">celebration</span>
+        Premium Venue
+      </div>
+      <h2 class="pb-title">Host Your Next<br/><strong>Grand Celebration</strong></h2>
+      <p class="pb-sub">Reserve Infocity Court's stunning Party Hall for birthdays, corporate galas, weddings & more. Premium menus, curated in bulk — just for your guests.</p>
+      <div class="pb-features">
+        <div class="pb-feat"><span class="material-icons">groups</span>Up to 300 guests</div>
+        <div class="pb-feat"><span class="material-icons">restaurant_menu</span>Bulk food ordering</div>
+        <div class="pb-feat"><span class="material-icons">payments</span>Only ₹1,000 booking fee</div>
+        <div class="pb-feat"><span class="material-icons">verified_user</span>UPI secured</div>
+      </div>
+      <div class="pb-cta">
+        <a href="PARTY-HALL.HTML" class="pb-btn-main">
+          <span class="material-icons">event_available</span>Book the Hall
+        </a>
+        <a href="PARTY-HALL.HTML#features" class="pb-btn-ghost">
+          <span class="material-icons">info</span>View Amenities
+        </a>
+      </div>
+    </div>
+    <div class="pb-visual">
+      <div class="pb-img-wrap">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=600&q=80" alt="Party Hall"/>
+        <div class="pb-img-ring"></div>
+      </div>
+      <div class="pb-badge">
+        <span class="material-icons">star</span>
+        <span>500+ events hosted</span>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer class="footer">
@@ -704,7 +863,7 @@ input,select,textarea{font-family:var(--ff-ui)}
   <a href="#" class="bn-item" onclick="document.getElementById('searchInput').focus();return false;"><span class="material-icons">search</span><span>Search</span></a>
   <a href="cart" class="bn-item"><span class="material-icons">shopping_cart</span><span>Cart</span><span class="bn-badge" id="mobCartBadge" style="display:none">0</span></a>
   <a href="orders" class="bn-item"><span class="material-icons">receipt_long</span><span>Orders</span></a>
-  <a href="account" class="bn-item"><span class="material-icons">person</span><span>Account</span></a>
+  <a href="account.html" class="bn-item"><span class="material-icons">person</span><span>Account</span></a>
 </div>
 
 <script>
@@ -825,7 +984,6 @@ ${message}
       method:'POST', body:fd, headers:{'Accept':'application/json'}
     });
     const result=await res.json();
-
     if(result.success==='true'||result.success===true){
       document.getElementById('cfBody').style.display='none';
       document.getElementById('cfSuccess').style.display='block';

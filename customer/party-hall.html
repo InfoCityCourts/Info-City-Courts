@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#060408"/>
+<title>Infocity Court — Party Hall Booking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --gold:#c9933a;--gold2:#e8ae5c;--gold3:#f5cc80;--gold-glow:rgba(201,147,58,.22);
+  --crimson:#b83232;--jade:#00c896;--ice:#5adfff;
+  --bg:#060408;--bg2:#0c0810;--bg3:#110d16;--bg4:#1a1422;
+  --glass:rgba(11,8,16,.75);--glass2:rgba(255,255,255,.03);
+  --text:#f0ecff;--text2:rgba(240,236,255,.6);--text3:rgba(240,236,255,.3);
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.11);
+  --shadow:0 8px 40px rgba(0,0,0,.55);--shadow-xl:0 28px 80px rgba(0,0,0,.65);
+  --ff-display:'Cormorant Garamond',Georgia,serif;--ff-ui:'DM Sans',sans-serif;--ff-royal:'Cinzel',serif;
+  --ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.16,1,.3,1);--bounce:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--ff-ui);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+button{font-family:var(--ff-ui);cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:var(--ff-ui)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .7s}
+#loader.out{opacity:0;pointer-events:none}
+.ldr-gem{width:72px;height:72px;border-radius:22px;background:linear-gradient(145deg,var(--gold),var(--gold2),var(--gold3));display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(201,147,58,.4);animation:ldrPulse 1.8s ease-in-out infinite}
+.ldr-gem .material-icons{font-size:36px;color:#0c0810}
+@keyframes ldrPulse{0%,100%{box-shadow:0 0 40px rgba(201,147,58,.35)}50%{box-shadow:0 0 80px rgba(201,147,58,.65)}}
+.ldr-name{font-family:var(--ff-royal);font-size:1.2rem;letter-spacing:.3em;color:rgba(201,147,58,.7);text-transform:uppercase}
+.ldr-bar{width:100px;height:1px;background:rgba(255,255,255,.06);border-radius:1px;overflow:hidden}
+.ldr-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold3));animation:sweep 1.2s ease-in-out infinite}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+
+/* ── PARTICLES ── */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:pFloat var(--d) ease-in-out infinite;animation-delay:var(--dl)}
+@keyframes pFloat{0%{opacity:0;transform:translateY(10px) scale(.5)}20%{opacity:.8}80%{opacity:.2}100%{opacity:0;transform:translateY(-100vh) scale(1.4)}}
+
+/* ── AMBIENT ── */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 80%,rgba(201,147,58,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 10%,rgba(184,50,50,.05) 0%,transparent 55%),
+    radial-gradient(ellipse 80% 60% at 50% 50%,rgba(90,100,160,.04) 0%,transparent 70%)}
+.noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px}
+
+/* ── NAV ── */
+.navbar{position:fixed;top:0;left:0;right:0;height:72px;background:var(--glass);backdrop-filter:blur(32px) saturate(1.8);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;padding:0 clamp(16px,4vw,56px);justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:12px}
+.brand-gem{width:40px;height:40px;background:linear-gradient(145deg,var(--gold),var(--gold2));border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px var(--gold-glow)}
+.brand-gem .material-icons{font-size:20px;color:#0c0810}
+.brand-title{display:flex;flex-direction:column}
+.brand-name{font-family:var(--ff-royal);font-size:.9rem;letter-spacing:.12em;background:linear-gradient(135deg,var(--gold),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{font-size:.58rem;color:var(--text3);letter-spacing:.25em;text-transform:uppercase;margin-top:1px}
+.nav-back{display:flex;align-items:center;gap:7px;padding:8px 18px;border:1px solid var(--border2);border-radius:50px;font-size:.78rem;font-weight:500;color:var(--text2);transition:all .25s}
+.nav-back:hover{border-color:var(--gold);color:var(--gold)}
+.nav-back .material-icons{font-size:16px}
+
+/* ── HERO ── */
+.hero{position:relative;height:100vh;min-height:600px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s var(--ease);transform:scale(1.05);transition:opacity 2s var(--ease),transform 10s linear}
+.hero-slides img.active{opacity:.35;transform:scale(1)}
+.hero-overlay{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(6,4,8,.7) 0%,rgba(6,4,8,.3) 30%,rgba(6,4,8,.5) 65%,rgba(6,4,8,.98) 100%),
+  linear-gradient(90deg,rgba(6,4,8,.6) 0%,transparent 60%)}
+.hero-deco{position:absolute;inset:0;z-index:1;pointer-events:none}
+.deco-line{position:absolute;background:linear-gradient(90deg,transparent,rgba(201,147,58,.25),transparent);height:1px}
+.deco-line:nth-child(1){top:35%;left:0;right:0}
+.deco-line:nth-child(2){top:65%;left:10%;right:10%;background:linear-gradient(90deg,transparent,rgba(201,147,58,.12),transparent)}
+.deco-corner{position:absolute;width:80px;height:80px;border-color:rgba(201,147,58,.2);border-style:solid}
+.deco-corner.tl{top:90px;left:40px;border-width:1px 0 0 1px}
+.deco-corner.tr{top:90px;right:40px;border-width:1px 1px 0 0}
+.deco-corner.bl{bottom:80px;left:40px;border-width:0 0 1px 1px}
+.deco-corner.br{bottom:80px;right:40px;border-width:0 1px 1px 0}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:820px;padding:0 24px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 22px;background:rgba(201,147,58,.08);border:1px solid rgba(201,147,58,.22);border-radius:0;font-family:var(--ff-royal);font-size:.65rem;font-weight:400;letter-spacing:.3em;color:var(--gold2);margin-bottom:28px;text-transform:uppercase}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'◆';font-size:.45rem;opacity:.7}
+.hero-title{font-family:var(--ff-display);font-size:clamp(3rem,8vw,7rem);font-weight:300;line-height:1;color:#fff;letter-spacing:-.02em;margin-bottom:8px}
+.hero-title strong{font-weight:600;background:linear-gradient(135deg,var(--gold),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:italic}
+.hero-sub{font-size:clamp(.9rem,1.6vw,1.15rem);color:rgba(255,255,255,.45);line-height:1.8;font-family:var(--ff-display);font-style:italic;margin-bottom:48px;max-width:560px;margin-left:auto;margin-right:auto}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,72px);margin-bottom:52px}
+.hstat{text-align:center}
+.hstat-num{font-family:var(--ff-display);font-size:2.4rem;font-weight:600;background:linear-gradient(135deg,var(--gold2),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.hstat-label{font-size:.65rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.18em;margin-top:4px;font-family:var(--ff-royal)}
+.hstat-sep{width:1px;height:48px;background:linear-gradient(180deg,transparent,rgba(201,147,58,.3),transparent)}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:17px 44px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0c0810;font-weight:700;font-size:.9rem;letter-spacing:.05em;border-radius:0;box-shadow:0 12px 40px rgba(201,147,58,.35);transition:all .35s var(--spring);cursor:pointer;font-family:var(--ff-royal)}
+.btn-primary:hover{transform:translateY(-4px);box-shadow:0 20px 56px rgba(201,147,58,.45)}
+.btn-primary .material-icons{font-size:18px}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.65);font-size:.85rem;font-weight:500;letter-spacing:.04em;border-radius:0;transition:all .3s}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;animation:scrollBounce 2s ease-in-out infinite}
+.hero-scroll span{font-family:var(--ff-royal);font-size:.58rem;letter-spacing:.28em;color:rgba(255,255,255,.25);text-transform:uppercase}
+.hero-scroll .material-icons{font-size:20px;color:rgba(201,147,58,.5)}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ── SECTION ── */
+.section{position:relative;z-index:1;padding:clamp(60px,8vw,120px) clamp(16px,5vw,80px)}
+.sec-eyebrow{font-family:var(--ff-royal);font-size:.6rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.sec-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);opacity:.6}
+.sec-title{font-family:var(--ff-display);font-size:clamp(2.2rem,5vw,4rem);font-weight:300;line-height:1.1;letter-spacing:-.02em;margin-bottom:16px}
+.sec-title em{font-style:italic;background:linear-gradient(135deg,var(--gold),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sec-sub{font-size:.92rem;color:var(--text2);line-height:1.75;font-family:var(--ff-display);font-style:italic;max-width:540px}
+.sec-divider{width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:28px 0}
+
+/* ── FEATURES ── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px}
+.feature-card{background:var(--bg2);padding:48px 40px;position:relative;overflow:hidden;transition:background .3s}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .35s}
+.feature-card:hover{background:var(--bg3)}
+.feature-card:hover::before{opacity:1}
+.fc-num{font-family:var(--ff-display);font-size:4rem;font-weight:300;color:rgba(201,147,58,.08);line-height:1;margin-bottom:16px}
+.fc-icon{width:52px;height:52px;border:1px solid rgba(201,147,58,.2);display:flex;align-items:center;justify-content:center;margin-bottom:22px}
+.fc-icon .material-icons{font-size:24px;color:var(--gold)}
+.fc-title{font-family:var(--ff-display);font-size:1.4rem;font-weight:500;margin-bottom:10px}
+.fc-text{font-size:.84rem;color:var(--text3);line-height:1.75}
+
+/* ── MULTI-STEP FORM ── */
+.booking-section{position:relative;z-index:1}
+.booking-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:start}
+.booking-sidebar{position:sticky;top:100px}
+.sidebar-card{background:var(--bg3);border:1px solid var(--border2);padding:36px 32px;position:relative;overflow:hidden}
+.sidebar-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold3),var(--gold))}
+.sidebar-title{font-family:var(--ff-display);font-size:1.5rem;font-weight:500;margin-bottom:6px}
+.sidebar-sub{font-size:.78rem;color:var(--text3);margin-bottom:28px;font-style:italic}
+.step-list{display:flex;flex-direction:column;gap:0}
+.step-item{display:flex;align-items:flex-start;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.step-item:last-child{border-bottom:none}
+.step-num{width:32px;height:32px;border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ff-royal);font-size:.72rem;color:var(--text3);flex-shrink:0;transition:all .3s}
+.step-item.active .step-num{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:#0c0810;font-weight:700}
+.step-item.done .step-num{background:rgba(0,200,150,.12);border-color:rgba(0,200,150,.25);color:var(--jade)}
+.step-info{flex:1}
+.step-label{font-size:.78rem;font-weight:600;color:var(--text);transition:color .3s}
+.step-item.active .step-label{color:var(--gold)}
+.step-item.done .step-label{color:var(--jade)}
+.step-desc{font-size:.68rem;color:var(--text3);margin-top:2px}
+.sidebar-summary{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.summary-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.8rem;color:var(--text2)}
+.summary-row.total{font-size:.96rem;font-weight:700;color:var(--text);border-top:1px solid var(--border);padding-top:12px;margin-top:8px}
+.summary-val{font-weight:700;color:var(--gold)}
+.sidebar-badge{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(201,147,58,.05);border:1px solid rgba(201,147,58,.15);margin-top:20px}
+.sidebar-badge .material-icons{font-size:18px;color:var(--gold);flex-shrink:0}
+.sidebar-badge p{font-size:.72rem;color:var(--text2);line-height:1.55}
+
+/* ── FORM PANEL ── */
+.form-panel{background:var(--bg3);border:1px solid var(--border2);position:relative;overflow:hidden}
+.form-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold3),var(--gold));animation:shimmerLine 3s linear infinite;background-size:200%}
+@keyframes shimmerLine{0%{background-position:0%}100%{background-position:200%}}
+.form-step{display:none;padding:48px 44px 52px;animation:stepIn .4s var(--spring)}
+.form-step.active{display:block}
+@keyframes stepIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.step-header{margin-bottom:36px}
+.step-eyebrow{font-family:var(--ff-royal);font-size:.58rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.step-title{font-family:var(--ff-display);font-size:2rem;font-weight:400;margin-bottom:6px}
+.step-sub{font-size:.82rem;color:var(--text3);font-style:italic}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-full{grid-column:1/-1}
+.field{position:relative}
+.field-label{display:block;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;transition:color .2s}
+.field:focus-within .field-label{color:var(--gold)}
+.field-wrap{position:relative}
+.field-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--text3);pointer-events:none;transition:color .2s}
+.field:focus-within .field-icon{color:var(--gold)}
+.field-icon.top{top:18px;transform:none}
+.field input,.field select,.field textarea{width:100%;padding:14px 16px 14px 46px;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:0;font-size:.86rem;color:var(--text);outline:none;transition:all .25s;font-family:var(--ff-ui);appearance:none;-webkit-appearance:none}
+.field textarea{padding-left:46px}
+.field.no-icon input,.field.no-icon select,.field.no-icon textarea{padding-left:16px}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(201,147,58,.45);background:rgba(201,147,58,.04);box-shadow:0 0 0 3px rgba(201,147,58,.07)}
+.field input.err,.field select.err,.field textarea.err{border-color:rgba(184,50,50,.5);background:rgba(184,50,50,.04)}
+.field-err{font-size:.67rem;color:#f87171;margin-top:5px;display:none;padding-left:2px}
+.field.has-err .field-err{display:block}
+.field select{cursor:pointer;color:var(--text)}
+.field select option{background:var(--bg3);color:var(--text)}
+/* Progress bar */
+.form-progress{height:3px;background:var(--border);position:absolute;top:0;left:0;right:0}
+.form-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold3));transition:width .6s var(--spring)}
+/* Form navigation */
+.form-nav{display:flex;align-items:center;justify-content:space-between;margin-top:36px;padding-top:28px;border-top:1px solid var(--border)}
+.btn-prev{display:flex;align-items:center;gap:7px;padding:12px 24px;border:1px solid var(--border2);color:var(--text2);font-size:.82rem;font-weight:500;transition:all .25s;border-radius:0}
+.btn-prev:hover{border-color:var(--gold);color:var(--gold)}
+.btn-next,.btn-book{display:flex;align-items:center;gap:9px;padding:14px 38px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0c0810;font-size:.88rem;font-weight:700;letter-spacing:.04em;transition:all .3s var(--spring);border-radius:0;font-family:var(--ff-royal);box-shadow:0 8px 28px rgba(201,147,58,.28)}
+.btn-next:hover,.btn-book:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(201,147,58,.38)}
+.btn-next .material-icons,.btn-book .material-icons{font-size:18px}
+
+/* ── DESIGNATION PILLS ── */
+.desig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin-top:4px}
+.desig-chip{padding:10px 16px;border:1px solid var(--border);background:var(--glass2);font-size:.78rem;color:var(--text3);cursor:pointer;transition:all .22s;text-align:center;display:flex;align-items:center;gap:7px;justify-content:center}
+.desig-chip:hover{border-color:rgba(201,147,58,.3);color:var(--gold2)}
+.desig-chip.active{background:rgba(201,147,58,.08);border-color:rgba(201,147,58,.35);color:var(--gold);box-shadow:0 0 0 3px rgba(201,147,58,.07)}
+.desig-chip .material-icons{font-size:16px}
+
+/* ── PARTY TYPE ── */
+.party-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.party-card{padding:18px 16px;border:1px solid var(--border);background:var(--glass2);cursor:pointer;transition:all .25s;text-align:center;position:relative;overflow:hidden}
+.party-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,147,58,.06),transparent);opacity:0;transition:opacity .25s}
+.party-card:hover::before,.party-card.active::before{opacity:1}
+.party-card:hover,.party-card.active{border-color:rgba(201,147,58,.35)}
+.party-card.active{box-shadow:0 0 0 3px rgba(201,147,58,.1)}
+.party-card .material-icons{font-size:28px;color:var(--text3);margin-bottom:8px;transition:color .25s}
+.party-card.active .material-icons,.party-card:hover .material-icons{color:var(--gold)}
+.party-card-name{font-size:.78rem;font-weight:600;color:var(--text2);transition:color .25s}
+.party-card.active .party-card-name{color:var(--gold)}
+.party-card-desc{font-size:.65rem;color:var(--text3);margin-top:3px}
+
+/* ── FOOD SECTION ── */
+.food-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.food-section-title{font-family:var(--ff-display);font-size:1.3rem;font-weight:500}
+.food-search{display:flex;align-items:center;gap:10px;padding:10px 18px;background:rgba(255,255,255,.03);border:1px solid var(--border)}
+.food-search input{background:none;border:none;outline:none;font-size:.85rem;color:var(--text);width:200px}
+.food-search input::placeholder{color:var(--text3)}
+.food-search .material-icons{font-size:18px;color:var(--text3)}
+.cat-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);margin-bottom:28px}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:10px 22px;font-size:.78rem;font-weight:500;color:var(--text3);white-space:nowrap;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;position:relative;top:1px}
+.cat-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.food-card{background:var(--bg2);border:1px solid var(--border);transition:all .3s;position:relative;overflow:hidden}
+.food-card:hover{border-color:rgba(201,147,58,.25);transform:translateY(-2px)}
+.fc-img{position:relative;width:100%;height:180px;overflow:hidden;background:var(--bg)}
+.fc-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.food-card:hover .fc-img img{transform:scale(1.07)}
+.fc-badge-royal{position:absolute;top:10px;left:10px;padding:4px 11px;background:rgba(201,147,58,.88);color:#0c0810;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:var(--ff-royal)}
+.fc-body{padding:16px 18px 20px}
+.fc-name{font-size:.9rem;font-weight:600;margin-bottom:3px}
+.fc-seller{font-size:.7rem;color:var(--text3);display:flex;align-items:center;gap:4px;margin-bottom:8px}
+.fc-seller .material-icons{font-size:12px}
+.fc-price{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:14px}
+.fc-rating{display:flex;align-items:center;gap:4px;font-size:.72rem;color:var(--text3);margin-bottom:12px}
+.fc-rating .material-icons{font-size:12px;color:#f0a500}
+/* Quantity control */
+.qty-ctrl{display:flex;align-items:center;gap:0;border:1px solid var(--border)}
+.qty-btn{width:36px;height:36px;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.qty-btn:hover{background:rgba(201,147,58,.1);color:var(--gold)}
+.qty-btn .material-icons{font-size:17px;color:var(--text2)}
+.qty-num{flex:1;text-align:center;font-size:.88rem;font-weight:700;height:36px;line-height:36px;background:rgba(255,255,255,.02);border-left:1px solid var(--border);border-right:1px solid var(--border);min-width:52px;color:var(--text)}
+.fc-footer{display:flex;align-items:center;justify-content:space-between}
+.fc-subtotal{font-size:.72rem;color:var(--text3)}
+.fc-subtotal span{font-weight:700;color:var(--gold2);font-size:.82rem}
+.cart-summary-bar{position:sticky;bottom:0;background:var(--bg3);border-top:1px solid rgba(201,147,58,.2);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-top:24px;z-index:10}
+.csb-info{display:flex;align-items:center;gap:16px}
+.csb-count{font-size:.78rem;color:var(--text3)}
+.csb-count span{font-weight:700;color:var(--text)}
+.csb-total{font-family:var(--ff-display);font-size:1.4rem;font-weight:500;color:var(--gold)}
+.csb-btn{display:flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0c0810;font-weight:700;font-size:.82rem;cursor:pointer;letter-spacing:.04em;transition:all .25s;border-radius:0;font-family:var(--ff-royal)}
+.csb-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(201,147,58,.35)}
+
+/* ── PAYMENT STEP ── */
+.payment-section{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.payment-card{background:var(--bg2);border:1px solid var(--border);padding:28px}
+.payment-card-title{font-family:var(--ff-display);font-size:1.2rem;font-weight:500;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.payment-card-title .material-icons{font-size:22px;color:var(--gold)}
+.order-review-list{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;padding-right:4px}
+.orl-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.orl-item:last-child{border-bottom:none}
+.orl-img{width:44px;height:44px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)}
+.orl-name{font-size:.82rem;font-weight:600;flex:1}
+.orl-qty{font-size:.72rem;color:var(--text3)}
+.orl-price{font-size:.88rem;font-weight:700;color:var(--gold);flex-shrink:0}
+.billing-table{width:100%;border-collapse:collapse}
+.billing-table tr td{padding:8px 0;font-size:.82rem;border-bottom:1px solid var(--border)}
+.billing-table tr:last-child td{border-bottom:none;font-size:.96rem;font-weight:700;padding-top:14px}
+.billing-table td:last-child{text-align:right;font-weight:600;color:var(--gold)}
+.billing-table tr:last-child td:last-child{font-size:1.1rem;color:var(--gold)}
+.billing-hall-fee{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(201,147,58,.06);border:1px solid rgba(201,147,58,.15);margin-bottom:16px}
+.billing-hall-fee .material-icons{font-size:18px;color:var(--gold)}
+.billing-hall-fee span{font-size:.8rem;color:var(--text2);flex:1}
+.billing-hall-fee strong{color:var(--gold)}
+/* UPI Payment buttons */
+.upi-title{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:14px;margin-top:24px}
+.upi-buttons{display:flex;flex-direction:column;gap:10px}
+.upi-btn{display:flex;align-items:center;gap:14px;padding:15px 20px;border:1px solid var(--border);background:var(--glass2);cursor:pointer;transition:all .28s var(--spring);position:relative;overflow:hidden}
+.upi-btn::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s}
+.upi-btn.phonepe::before{background:linear-gradient(135deg,rgba(99,53,208,.07),rgba(99,53,208,.02))}
+.upi-btn.gpay::before{background:linear-gradient(135deg,rgba(66,133,244,.07),rgba(66,133,244,.02))}
+.upi-btn.upi::before{background:linear-gradient(135deg,rgba(201,147,58,.07),rgba(201,147,58,.02))}
+.upi-btn:hover{transform:translateX(4px)}
+.upi-btn.phonepe:hover{border-color:rgba(99,53,208,.4)}
+.upi-btn.gpay:hover{border-color:rgba(66,133,244,.4)}
+.upi-btn.upi:hover{border-color:rgba(201,147,58,.4)}
+.upi-btn:hover::before{opacity:1}
+.upi-btn-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;position:relative;z-index:1}
+.phonepe .upi-btn-icon{background:linear-gradient(135deg,#6335d0,#9b59f5);color:#fff}
+.gpay .upi-btn-icon{background:linear-gradient(135deg,#4285f4,#34a853);color:#fff}
+.upi .upi-btn-icon{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0c0810}
+.upi-btn-text{flex:1;position:relative;z-index:1}
+.upi-btn-name{font-size:.88rem;font-weight:700}
+.upi-btn-sub{font-size:.7rem;color:var(--text3);margin-top:1px}
+.upi-btn-amount{font-family:var(--ff-display);font-size:1.1rem;font-weight:600;color:var(--gold);position:relative;z-index:1}
+.upi-btn-arrow{font-size:18px;color:var(--text3);position:relative;z-index:1}
+.security-strip{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(0,200,150,.04);border:1px solid rgba(0,200,150,.12);margin-top:16px}
+.security-strip .material-icons{font-size:16px;color:var(--jade)}
+.security-strip p{font-size:.68rem;color:rgba(0,200,150,.7);line-height:1.5}
+/* Success */
+.booking-success{display:none;text-align:center;padding:64px 40px;animation:stepIn .5s var(--spring)}
+.success-icon{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--jade),#008060);display:flex;align-items:center;justify-content:center;margin:0 auto 28px;box-shadow:0 16px 48px rgba(0,200,150,.3);animation:successPop .6s .1s var(--bounce) both}
+@keyframes successPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.success-icon .material-icons{font-size:48px;color:#fff}
+.success-title{font-family:var(--ff-display);font-size:2.5rem;font-weight:400;margin-bottom:12px}
+.success-sub{font-size:.9rem;color:var(--text2);line-height:1.75;max-width:440px;margin:0 auto;font-style:italic;font-family:var(--ff-display)}
+.success-ref{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(201,147,58,.08);border:1px solid rgba(201,147,58,.2);margin:24px auto;font-family:var(--ff-royal);font-size:.8rem;letter-spacing:.12em;color:var(--gold)}
+.success-actions{display:flex;gap:14px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+
+/* ── TOAST ── */
+.toast-dock{position:fixed;top:90px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:12px;padding:13px 18px;font-size:.82rem;font-weight:500;backdrop-filter:blur(24px);max-width:360px;pointer-events:all;animation:tIn .4s var(--spring);border-left:3px solid}
+.toast.ok{background:rgba(16,26,16,.96);border-color:#22c55e;color:#4ade80}
+.toast.bad{background:rgba(26,14,14,.96);border-color:var(--crimson);color:#f87171}
+.toast.inf{background:rgba(14,18,28,.96);border-color:var(--gold);color:var(--gold2)}
+.toast .material-icons{font-size:19px;flex-shrink:0}
+@keyframes tIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes tOut{from{transform:translateX(0);opacity:1}to{transform:translateX(110%);opacity:0}}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── FOOTER ── */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px clamp(16px,5vw,80px) 32px;text-align:center;position:relative;z-index:1}
+.footer-brand{font-family:var(--ff-royal);font-size:.8rem;letter-spacing:.3em;background:linear-gradient(135deg,var(--gold),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.footer-sub{font-size:.75rem;color:var(--text3)}
+
+@media(max-width:900px){.booking-inner{grid-template-columns:1fr}.booking-sidebar{position:static}}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr}.form-step{padding:30px 20px 36px}.party-grid{grid-template-columns:repeat(2,1fr)}.payment-section{grid-template-columns:1fr}.food-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.hero-stats{flex-direction:column;gap:18px}.hstat-sep{display:none}.desig-grid{grid-template-columns:1fr 1fr}.party-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ldr-gem"><span class="material-icons">celebration</span></div>
+  <div class="ldr-name">Party Hall</div>
+  <div class="ldr-bar"><div class="ldr-fill"></div></div>
+</div>
+
+<!-- ATMOSPHERE -->
+<div class="ambient"></div>
+<div class="noise"></div>
+<div class="particles" id="particles"></div>
+<div class="toast-dock" id="toastDock"></div>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="brand-gem"><span class="material-icons">celebration</span></div>
+    <div class="brand-title">
+      <div class="brand-name">Infocity Court</div>
+      <div class="brand-sub">Party Hall Booking</div>
+    </div>
+  </div>
+  <a href="index" class="nav-back"><span class="material-icons">arrow_back</span>Back to Menu</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-slides">
+      <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=80" alt="" class="active"/>
+      <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1600&q=80" alt=""/>
+      <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1600&q=80" alt=""/>
+      <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1600&q=80" alt=""/>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-deco">
+      <div class="deco-line"></div>
+      <div class="deco-line"></div>
+      <div class="deco-corner tl"></div>
+      <div class="deco-corner tr"></div>
+      <div class="deco-corner bl"></div>
+      <div class="deco-corner br"></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span>◆</span>Infocity Court<span>◆</span></div>
+    <h1 class="hero-title">Your Perfect<br/><strong>Party Hall</strong></h1>
+    <p class="hero-sub">An extraordinary venue for extraordinary celebrations — curated menus, premium service, and moments that last a lifetime.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">500+</div><div class="hstat-label">Events Hosted</div></div>
+      <div class="hstat-sep"></div>
+      <div class="hstat"><div class="hstat-num">₹1000</div><div class="hstat-label">Booking Fee</div></div>
+      <div class="hstat-sep"></div>
+      <div class="hstat"><div class="hstat-num">300+</div><div class="hstat-label">Capacity</div></div>
+    </div>
+    <div class="hero-cta">
+      <a href="#booking" class="btn-primary"><span class="material-icons">event_available</span>Reserve Your Hall</a>
+      <a href="#features" class="btn-outline"><span class="material-icons">info</span>Learn More</a>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+    <span>Scroll</span>
+    <span class="material-icons">keyboard_arrow_down</span>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section reveal" id="features">
+  <div style="text-align:center;max-width:640px;margin:0 auto 0">
+    <div class="sec-eyebrow" style="justify-content:center">World-Class Amenities</div>
+    <h2 class="sec-title">A Venue as <em>Grand</em> as Your Vision</h2>
+    <p class="sec-sub" style="margin:0 auto">Every celebration deserves an extraordinary backdrop. Infocity Court Party Hall sets the stage for memories that endure.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="fc-num">01</div>
+      <div class="fc-icon"><span class="material-icons">restaurant_menu</span></div>
+      <div class="fc-title">Curated Menus</div>
+      <div class="fc-text">Bulk-order from our entire restaurant network. From lavish spreads to intimate bites — crafted exactly how you envision.</div>
+    </div>
+    <div class="feature-card">
+      <div class="fc-num">02</div>
+      <div class="fc-icon"><span class="material-icons">speaker</span></div>
+      <div class="fc-title">AV & Sound</div>
+      <div class="fc-text">State-of-the-art audio-visual systems, professional lighting rigs, and dedicated tech support for flawless productions.</div>
+    </div>
+    <div class="feature-card">
+      <div class="fc-num">03</div>
+      <div class="fc-icon"><span class="material-icons">support_agent</span></div>
+      <div class="fc-title">Dedicated Host</div>
+      <div class="fc-text">A personal event coordinator assigned from booking through completion. Your vision, professionally executed.</div>
+    </div>
+    <div class="feature-card">
+      <div class="fc-num">04</div>
+      <div class="fc-icon"><span class="material-icons">local_parking</span></div>
+      <div class="fc-title">Premium Parking</div>
+      <div class="fc-text">Ample secured parking for 150+ vehicles with valet options. Your guests arrive in comfort and leave impressed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING FORM -->
+<section class="section" id="booking" style="background:var(--bg2);padding-top:80px">
+  <div style="max-width:1140px;margin:0 auto 48px">
+    <div class="sec-eyebrow">Book Your Experience</div>
+    <h2 class="sec-title">Reserve the <em>Hall</em></h2>
+    <div class="sec-divider"></div>
+    <p class="sec-sub">Complete your registration and customise your event. Hall booking fee is just <strong style="color:var(--gold)">₹1,000</strong>, payable securely via UPI.</p>
+  </div>
+  <div class="booking-inner">
+    <!-- Sidebar -->
+    <div class="booking-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Your Booking</div>
+        <div class="sidebar-sub">Step-by-step reservation</div>
+        <div class="step-list">
+          <div class="step-item active" id="sideStep1">
+            <div class="step-num">1</div>
+            <div class="step-info"><div class="step-label">Registration</div><div class="step-desc">Your personal details</div></div>
+          </div>
+          <div class="step-item" id="sideStep2">
+            <div class="step-num">2</div>
+            <div class="step-info"><div class="step-label">Event Details</div><div class="step-desc">Date, type & capacity</div></div>
+          </div>
+          <div class="step-item" id="sideStep3">
+            <div class="step-num">3</div>
+            <div class="step-info"><div class="step-label">Food & Menu</div><div class="step-desc">Bulk order for your guests</div></div>
+          </div>
+          <div class="step-item" id="sideStep4">
+            <div class="step-num">4</div>
+            <div class="step-info"><div class="step-label">Confirm & Pay</div><div class="step-desc">Review & secure booking</div></div>
+          </div>
+        </div>
+        <div class="sidebar-summary">
+          <div class="summary-row"><span>Hall Booking Fee</span><span class="summary-val">₹1,000</span></div>
+          <div class="summary-row" id="sumFoodRow" style="display:none"><span>Food Total</span><span class="summary-val" id="sumFood">₹0</span></div>
+          <div class="summary-row total"><span>Total</span><span class="summary-val" id="sumTotal">₹1,000</span></div>
+        </div>
+        <div class="sidebar-badge">
+          <span class="material-icons">verified_user</span>
+          <p>Secure UPI payment · No card details required · Instant confirmation</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Panel -->
+    <div class="form-panel" id="formPanel">
+      <div class="form-progress"><div class="form-progress-fill" id="progressFill" style="width:25%"></div></div>
+
+      <!-- STEP 1: Registration -->
+      <div class="form-step active" id="step1">
+        <div class="step-header">
+          <div class="step-eyebrow">Step 1 of 4</div>
+          <div class="step-title">Tell us about you</div>
+          <div class="step-sub">We keep your details private and use them only for booking coordination.</div>
+        </div>
+        <div class="form-grid">
+          <div class="field" id="fName">
+            <label class="field-label">Full Name *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">person</span><input type="text" id="inName" placeholder="Your full name"/></div>
+            <div class="field-err">Full name is required</div>
+          </div>
+          <div class="field" id="fEmail">
+            <label class="field-label">Email Address *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">email</span><input type="email" id="inEmail" placeholder="you@example.com"/></div>
+            <div class="field-err">Enter a valid email</div>
+          </div>
+          <div class="field" id="fPhone">
+            <label class="field-label">Phone Number *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">phone</span><input type="tel" id="inPhone" placeholder="+91 98765 43210" maxlength="13"/></div>
+            <div class="field-err">Enter a valid phone number</div>
+          </div>
+          <div class="field" id="fCompany">
+            <label class="field-label">Company / Organisation</label>
+            <div class="field-wrap"><span class="material-icons field-icon">business</span><input type="text" id="inCompany" placeholder="Optional"/></div>
+          </div>
+          <div class="field form-full" id="fPassword">
+            <label class="field-label">Create Password *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">lock</span><input type="password" id="inPassword" placeholder="Minimum 6 characters"/></div>
+            <div class="field-err">Minimum 6 characters required</div>
+          </div>
+        </div>
+
+        <!-- Designation -->
+        <div style="margin-top:24px">
+          <div class="field-label" style="margin-bottom:12px">Your Designation</div>
+          <div class="desig-grid" id="desigGrid">
+            <div class="desig-chip active" data-val="Professional"><span class="material-icons">work</span>Professional</div>
+            <div class="desig-chip" data-val="Manager"><span class="material-icons">manage_accounts</span>Manager</div>
+            <div class="desig-chip" data-val="Director"><span class="material-icons">star</span>Director</div>
+            <div class="desig-chip" data-val="CEO / Founder"><span class="material-icons">emoji_events</span>CEO / Founder</div>
+            <div class="desig-chip" data-val="Student"><span class="material-icons">school</span>Student</div>
+            <div class="desig-chip" data-val="Freelancer"><span class="material-icons">laptop</span>Freelancer</div>
+            <div class="desig-chip" data-val="Government"><span class="material-icons">account_balance</span>Government</div>
+            <div class="desig-chip" data-val="Other"><span class="material-icons">more_horiz</span>Other</div>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <div></div>
+          <button class="btn-next" onclick="goStep(2)"><span class="material-icons">arrow_forward</span>Continue</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Event Details -->
+      <div class="form-step" id="step2">
+        <div class="step-header">
+          <div class="step-eyebrow">Step 2 of 4</div>
+          <div class="step-title">Your Event</div>
+          <div class="step-sub">Help us prepare the perfect setup for your celebration.</div>
+        </div>
+        <div class="form-grid">
+          <div class="field" id="fDate">
+            <label class="field-label">Event Date *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">event</span><input type="date" id="inDate"/></div>
+            <div class="field-err">Please select an event date</div>
+          </div>
+          <div class="field" id="fTime">
+            <label class="field-label">Start Time *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">schedule</span><input type="time" id="inTime"/></div>
+            <div class="field-err">Please select a start time</div>
+          </div>
+          <div class="field" id="fGuests">
+            <label class="field-label">Expected Guests *</label>
+            <div class="field-wrap"><span class="material-icons field-icon">groups</span><input type="number" id="inGuests" placeholder="e.g. 80" min="10" max="300"/></div>
+            <div class="field-err">Enter guest count (10–300)</div>
+          </div>
+          <div class="field" id="fDuration">
+            <label class="field-label">Duration</label>
+            <div class="field-wrap"><span class="material-icons field-icon">hourglass_top</span>
+              <select id="inDuration">
+                <option value="2h">2 Hours</option>
+                <option value="4h" selected>4 Hours</option>
+                <option value="6h">6 Hours</option>
+                <option value="8h">8 Hours (Full Day)</option>
+                <option value="custom">Custom (discuss with team)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Party Type -->
+        <div style="margin-top:24px">
+          <div class="field-label" style="margin-bottom:12px">Party Type *</div>
+          <div class="party-grid" id="partyTypeGrid">
+            <div class="party-card active" data-val="Birthday Party"><span class="material-icons">cake</span><div class="party-card-name">Birthday</div><div class="party-card-desc">Personal celebration</div></div>
+            <div class="party-card" data-val="Corporate Event"><span class="material-icons">business_center</span><div class="party-card-name">Corporate</div><div class="party-card-desc">Business & team events</div></div>
+            <div class="party-card" data-val="Wedding Reception"><span class="material-icons">favorite</span><div class="party-card-name">Wedding</div><div class="party-card-desc">Reception & ceremonies</div></div>
+            <div class="party-card" data-val="Anniversary"><span class="material-icons">local_florist</span><div class="party-card-name">Anniversary</div><div class="party-card-desc">Special milestones</div></div>
+            <div class="party-card" data-val="Farewell"><span class="material-icons">waving_hand</span><div class="party-card-name">Farewell</div><div class="party-card-desc">Send-off celebrations</div></div>
+            <div class="party-card" data-val="Other / Custom"><span class="material-icons">auto_awesome</span><div class="party-card-name">Custom</div><div class="party-card-desc">Your unique event</div></div>
+          </div>
+        </div>
+
+        <div class="field form-full" style="margin-top:20px">
+          <label class="field-label">Special Requirements</label>
+          <div class="field-wrap"><span class="material-icons field-icon top">notes</span><textarea id="inRequirements" rows="3" placeholder="Dietary needs, décor preferences, accessibility requirements…" style="resize:vertical"></textarea></div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-prev" onclick="goStep(1)"><span class="material-icons">arrow_back</span>Back</button>
+          <button class="btn-next" onclick="goStep(3)"><span class="material-icons">restaurant_menu</span>Choose Food</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Food Selection -->
+      <div class="form-step" id="step3">
+        <div class="step-header">
+          <div class="step-eyebrow">Step 3 of 4</div>
+          <div class="step-title">Curate Your Menu</div>
+          <div class="step-sub">Order in bulk for all your guests — every dish prepared fresh from our partner restaurants.</div>
+        </div>
+        <div class="food-section-header">
+          <div class="food-section-title" id="menuTitle">Browse Dishes</div>
+          <div class="food-search">
+            <span class="material-icons">search</span>
+            <input type="text" id="foodSearch" placeholder="Search dishes…" oninput="filterFoods()"/>
+          </div>
+        </div>
+        <div class="cat-tabs" id="catTabs">
+          <div class="cat-tab active" data-cat="all" onclick="selectCat(this)">All</div>
+          <div class="cat-tab" data-cat="biryani" onclick="selectCat(this)">Biryani</div>
+          <div class="cat-tab" data-cat="pizza" onclick="selectCat(this)">Pizza</div>
+          <div class="cat-tab" data-cat="burger" onclick="selectCat(this)">Burgers</div>
+          <div class="cat-tab" data-cat="dessert" onclick="selectCat(this)">Desserts</div>
+          <div class="cat-tab" data-cat="chinese" onclick="selectCat(this)">Chinese</div>
+          <div class="cat-tab" data-cat="sushi" onclick="selectCat(this)">Sushi</div>
+          <div class="cat-tab" data-cat="salad" onclick="selectCat(this)">Healthy</div>
+        </div>
+        <div class="food-grid" id="foodGrid"></div>
+        <div id="noFoodMsg" style="display:none;text-align:center;padding:48px 20px;color:var(--text3)">
+          <span class="material-icons" style="font-size:56px;display:block;margin:0 auto 14px;opacity:.25">search_off</span>
+          <div>No dishes found. Try a different search.</div>
+        </div>
+        <div class="cart-summary-bar" id="cartBar" style="display:none">
+          <div class="csb-info">
+            <div class="csb-count"><span id="cartCount">0</span> items selected</div>
+            <div class="csb-total" id="cartTotal">₹0</div>
+          </div>
+          <button class="csb-btn" onclick="goStep(4)"><span class="material-icons">arrow_forward</span>Review & Pay</button>
+        </div>
+        <div class="form-nav" id="step3Nav">
+          <button class="btn-prev" onclick="goStep(2)"><span class="material-icons">arrow_back</span>Back</button>
+          <button class="btn-next" onclick="goStep(4)"><span class="material-icons">arrow_forward</span>Skip & Continue</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Review & Pay -->
+      <div class="form-step" id="step4">
+        <div class="step-header">
+          <div class="step-eyebrow">Step 4 of 4</div>
+          <div class="step-title">Confirm & Pay</div>
+          <div class="step-sub">Review your order, then pay the ₹1,000 hall booking fee via UPI to confirm your reservation instantly.</div>
+        </div>
+        <div class="payment-section">
+          <!-- Order Review -->
+          <div>
+            <div class="payment-card">
+              <div class="payment-card-title"><span class="material-icons">receipt_long</span>Booking Summary</div>
+              <div id="bookingSummaryDetails"></div>
+            </div>
+            <div class="payment-card" style="margin-top:16px" id="foodReviewCard">
+              <div class="payment-card-title"><span class="material-icons">restaurant</span>Food Order</div>
+              <div class="order-review-list" id="orderReviewList"></div>
+            </div>
+          </div>
+          <!-- Payment -->
+          <div>
+            <div class="payment-card">
+              <div class="payment-card-title"><span class="material-icons">payments</span>Billing</div>
+              <div class="billing-hall-fee">
+                <span class="material-icons">home</span>
+                <span>Party Hall Booking Fee (refundable against event spend)</span>
+                <strong>₹1,000</strong>
+              </div>
+              <table class="billing-table">
+                <tr><td>Hall Booking Fee</td><td>₹1,000</td></tr>
+                <tr id="foodBillRow" style="display:none"><td>Food Subtotal</td><td id="foodBillAmt">₹0</td></tr>
+                <tr><td><strong>Total Payable Now</strong></td><td id="totalBillAmt"><strong>₹1,000</strong></td></tr>
+              </table>
+
+              <div class="upi-title">Select Payment Method</div>
+              <div class="upi-buttons">
+                <button class="upi-btn phonepe" onclick="payWithUPI('phonepe')">
+                  <div class="upi-btn-icon">Pe</div>
+                  <div class="upi-btn-text"><div class="upi-btn-name">PhonePe</div><div class="upi-btn-sub">Pay via PhonePe UPI</div></div>
+                  <div class="upi-btn-amount" id="ppAmt">₹1,000</div>
+                  <span class="material-icons upi-btn-arrow">arrow_forward_ios</span>
+                </button>
+                <button class="upi-btn gpay" onclick="payWithUPI('gpay')">
+                  <div class="upi-btn-icon">G</div>
+                  <div class="upi-btn-text"><div class="upi-btn-name">Google Pay</div><div class="upi-btn-sub">Pay via Google Pay UPI</div></div>
+                  <div class="upi-btn-amount" id="gpAmt">₹1,000</div>
+                  <span class="material-icons upi-btn-arrow">arrow_forward_ios</span>
+                </button>
+                <button class="upi-btn upi" onclick="payWithUPI('upi')">
+                  <div class="upi-btn-icon">↗</div>
+                  <div class="upi-btn-text"><div class="upi-btn-name">Any UPI App</div><div class="upi-btn-sub">Paytm, BHIM, or any UPI app</div></div>
+                  <div class="upi-btn-amount" id="upiAmt">₹1,000</div>
+                  <span class="material-icons upi-btn-arrow">arrow_forward_ios</span>
+                </button>
+              </div>
+
+              <div class="security-strip">
+                <span class="material-icons">verified_user</span>
+                <p>100% secure · UPI powered by NPCI · No card details required · Instant confirmation to your email</p>
+              </div>
+
+              <div style="margin-top:20px;text-align:center;font-size:.72rem;color:var(--text3)">
+                After payment, tap <strong style="color:var(--gold)">Confirm Booking</strong> below
+              </div>
+              <button class="btn-book" style="width:100%;margin-top:14px;justify-content:center" onclick="confirmBooking()">
+                <span class="material-icons">check_circle</span>Confirm Booking
+              </button>
+            </div>
+
+            <div class="form-nav" style="border-top:none;padding-top:16px">
+              <button class="btn-prev" onclick="goStep(3)"><span class="material-icons">arrow_back</span>Back</button>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="booking-success" id="bookingSuccess">
+        <div class="success-icon"><span class="material-icons">celebration</span></div>
+        <div class="success-title">Hall Reserved!</div>
+        <p class="success-sub">Your party hall booking is confirmed. A detailed confirmation has been sent to your email. Our event coordinator will contact you within 2 hours.</p>
+        <div class="success-ref" id="successRef">Booking ID: INFOCITY-XXXX</div>
+        <div class="success-actions">
+          <a href="index" class="btn-next"><span class="material-icons">home</span>Back to Menu</a>
+          <button class="btn-prev" onclick="window.print()"><span class="material-icons">print</span>Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">INFOCITY COURT · PARTY HALL</div>
+  <div class="footer-sub">Infocity, Gandhinagar, Gujarat 382007 · infotech.officials2067@gmail.com</div>
+  <div style="margin-top:16px;font-size:.7rem;color:var(--text3)">© 2026 Infocity Court. All rights reserved.</div>
+</footer>
+
+<script>
+const SB_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
+/* ─── STATE ─── */
+let allFoods=[], foodCart={}, currentStep=1, selectedDesig='Professional', selectedParty='Birthday Party', activeCat='all';
+const HALL_FEE=1000;
+const UPI_ID='7319749216@ybl'; // PhonePe default VPA
+const UPI_NAME='Infocity+Court+Party+Hall';
+const UPI_PHONE='7319749216';
+const FB='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80';
+
+/* ─── INIT ─── */
+(async function init(){
+  // Particles
+  const pw=document.getElementById('particles');
+  ['201,147,58','232,174,92','245,204,128','184,50,50','90,223,255'].forEach((c,i)=>{
+    for(let j=0;j<4;j++){const p=document.createElement('div');p.className='particle';const s=Math.random()*4+2;p.style.cssText=`width:${s}px;height:${s}px;background:rgba(${c},.45);left:${Math.random()*100}%;bottom:0;--d:${10+Math.random()*14}s;--dl:${Math.random()*12}s`;pw.appendChild(p);}
+  });
+  // Loader
+  setTimeout(()=>document.getElementById('loader').classList.add('out'),600);
+  // Date min
+  const dateEl=document.getElementById('inDate');
+  const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+  dateEl.min=tomorrow.toISOString().split('T')[0];
+  // Foods
+  await loadFoods();
+  // Designation
+  document.getElementById('desigGrid').addEventListener('click',e=>{
+    const chip=e.target.closest('.desig-chip');if(!chip)return;
+    document.querySelectorAll('.desig-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');selectedDesig=chip.dataset.val;
+  });
+  // Party type
+  document.getElementById('partyTypeGrid').addEventListener('click',e=>{
+    const card=e.target.closest('.party-card');if(!card)return;
+    document.querySelectorAll('.party-card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');selectedParty=card.dataset.val;
+  });
+})();
+
+/* ─── FOOD ─── */
+async function loadFoods(){
+  try{
+    const{data,error}=await sb.from('foods').select('*').order('rating',{ascending:false});
+    if(error)throw error;allFoods=data||[];renderFoods(allFoods);
+  }catch(e){console.error(e);toast('Failed to load menu. Please refresh.','bad');}
+}
+function getImg(images){
+  if(!images)return FB;
+  if(Array.isArray(images))return(images[0]||'').trim()||FB;
+  if(typeof images==='string'){const s=images.trim();if(s.startsWith('[')){try{const a=JSON.parse(s);return(a[0]||'').trim()||FB;}catch{}}return s.split(',').map(x=>x.trim()).filter(Boolean)[0]||FB;}
+  return FB;
+}
+function renderFoods(list){
+  const grid=document.getElementById('foodGrid');
+  const msg=document.getElementById('noFoodMsg');
+  if(!list.length){grid.innerHTML='';msg.style.display='block';return;}
+  msg.style.display='none';
+  grid.innerHTML=list.map(f=>`
+    <div class="food-card">
+      <div class="fc-img">
+        <img src="${esc(getImg(f.images))}" alt="${esc(f.food_name)}" loading="lazy" onerror="this.src='${FB}'"/>
+        ${f.rating>=4.5?'<div class="fc-badge-royal">⭐ Premium</div>':''}
+      </div>
+      <div class="fc-body">
+        <div class="fc-name">${esc(f.food_name)}</div>
+        <div class="fc-seller"><span class="material-icons">storefront</span>${esc(f.seller_name||'Infocity Court')}</div>
+        <div class="fc-rating"><span class="material-icons">star</span>${(f.rating||0).toFixed(1)} · Serves 1 person</div>
+        <div class="fc-price">₹${f.price||0} <span style="font-size:.68rem;color:var(--text3);font-weight:400">per portion</span></div>
+        <div class="fc-footer">
+          <div class="qty-ctrl">
+            <div class="qty-btn" onclick="changeQty('${f.id}','${esc(f.food_name)}',${f.price},this,-1,'${esc(getImg(f.images))}','${esc(f.seller_name||'Infocity Court')}')"><span class="material-icons">remove</span></div>
+            <div class="qty-num" id="qty_${f.id}">${foodCart[f.id]?.qty||0}</div>
+            <div class="qty-btn" onclick="changeQty('${f.id}','${esc(f.food_name)}',${f.price},this,1,'${esc(getImg(f.images))}','${esc(f.seller_name||'Infocity Court')}')"><span class="material-icons">add</span></div>
+          </div>
+          <div class="fc-subtotal">Total: <span id="sub_${f.id}">₹${(foodCart[f.id]?.qty||0)*(f.price||0)||0}</span></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function changeQty(id,name,price,btn,delta,img,seller){
+  if(!foodCart[id])foodCart[id]={name,price,qty:0,img,seller};
+  foodCart[id].qty=Math.max(0,foodCart[id].qty+delta);
+  if(foodCart[id].qty===0)delete foodCart[id];
+  const qEl=document.getElementById('qty_'+id);
+  const sEl=document.getElementById('sub_'+id);
+  if(qEl)qEl.textContent=foodCart[id]?.qty||0;
+  if(sEl)sEl.textContent='₹'+((foodCart[id]?.qty||0)*price);
+  updateCartBar();updateSummary();
+}
+function updateCartBar(){
+  const bar=document.getElementById('cartBar');const nav=document.getElementById('step3Nav');
+  const items=Object.values(foodCart);const count=items.reduce((s,x)=>s+x.qty,0);
+  const total=items.reduce((s,x)=>s+x.qty*x.price,0);
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartTotal').textContent='₹'+total.toLocaleString('en-IN');
+  bar.style.display=count>0?'flex':'none';
+}
+function updateSummary(){
+  const items=Object.values(foodCart);const foodTotal=items.reduce((s,x)=>s+x.qty*x.price,0);
+  const grandTotal=HALL_FEE+foodTotal;
+  const hasFoods=foodTotal>0;
+  document.getElementById('sumFoodRow').style.display=hasFoods?'flex':'none';
+  document.getElementById('sumFood').textContent='₹'+foodTotal.toLocaleString('en-IN');
+  document.getElementById('sumTotal').textContent='₹'+grandTotal.toLocaleString('en-IN');
+  // Update payment amounts
+  ['ppAmt','gpAmt','upiAmt'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.textContent='₹'+HALL_FEE.toLocaleString('en-IN');
+  });
+  // Billing
+  const fRow=document.getElementById('foodBillRow');const fAmt=document.getElementById('foodBillAmt');const tAmt=document.getElementById('totalBillAmt');
+  if(fRow&&fAmt&&tAmt){fRow.style.display=hasFoods?'table-row':'none';fAmt.textContent='₹'+foodTotal.toLocaleString('en-IN');tAmt.innerHTML=`<strong>₹${grandTotal.toLocaleString('en-IN')}</strong>`;}
+}
+function filterFoods(){
+  const q=document.getElementById('foodSearch').value.trim().toLowerCase();
+  let f=[...allFoods];
+  if(activeCat!=='all')f=f.filter(x=>(x.food_name||'').toLowerCase().includes(activeCat)||(x.description||'').toLowerCase().includes(activeCat)||(x.category||'').toLowerCase().includes(activeCat));
+  if(q)f=f.filter(x=>(x.food_name||'').toLowerCase().includes(q)||(x.seller_name||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q));
+  renderFoods(f);
+}
+function selectCat(el){
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');activeCat=el.dataset.cat;filterFoods();
+}
+
+/* ─── STEP NAV ─── */
+const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRe=/^\+?\d[\d\s\-]{8,}$/;
+function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
+function setErr(id,on){document.getElementById(id)?.classList.toggle('has-err',on);}
+function clearErrs(){document.querySelectorAll('.field').forEach(f=>f.classList.remove('has-err'));}
+function goStep(n){
+  if(n>currentStep){
+    if(!validateStep(currentStep))return;
+  }
+  document.getElementById('step'+currentStep).classList.remove('active');
+  currentStep=n;
+  document.getElementById('step'+n).classList.add('active');
+  // Update sidebar
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('sideStep'+i);
+    el.classList.toggle('active',i===n);el.classList.toggle('done',i<n);
+  }
+  // Progress
+  document.getElementById('progressFill').style.width=(n/4*100)+'%';
+  // Scroll
+  document.getElementById('booking').scrollIntoView({behavior:'smooth',block:'start'});
+  if(n===4)buildReview();
+  updateSummary();
+}
+function validateStep(s){
+  clearErrs();let ok=true;
+  if(s===1){
+    if(!document.getElementById('inName').value.trim()){setErr('fName',true);ok=false;}
+    if(!emailRe.test(document.getElementById('inEmail').value.trim())){setErr('fEmail',true);ok=false;}
+    const ph=document.getElementById('inPhone').value.trim().replace(/[\s\-()]/g,'');
+    if(!phoneRe.test(document.getElementById('inPhone').value.trim())||ph.replace(/\D/g,'').length<10){setErr('fPhone',true);ok=false;}
+    if(document.getElementById('inPassword').value.length<6){setErr('fPassword',true);ok=false;}
+  }
+  if(s===2){
+    if(!document.getElementById('inDate').value){setErr('fDate',true);ok=false;}
+    if(!document.getElementById('inTime').value){setErr('fTime',true);ok=false;}
+    const g=parseInt(document.getElementById('inGuests').value);
+    if(!g||g<10||g>300){setErr('fGuests',true);ok=false;}
+  }
+  if(!ok)toast('Please fill in all required fields correctly.','bad');
+  return ok;
+}
+
+/* ─── BUILD REVIEW ─── */
+function buildReview(){
+  const name=document.getElementById('inName').value.trim();
+  const email=document.getElementById('inEmail').value.trim();
+  const phone=document.getElementById('inPhone').value.trim();
+  const company=document.getElementById('inCompany').value.trim();
+  const date=document.getElementById('inDate').value;
+  const time=document.getElementById('inTime').value;
+  const guests=document.getElementById('inGuests').value;
+  const duration=document.getElementById('inDuration').value;
+  const req=document.getElementById('inRequirements').value.trim();
+  const d=document.getElementById('bookingSummaryDetails');
+  d.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.8rem">
+      ${[['Name',name],['Email',email],['Phone',phone],['Designation',selectedDesig],company?['Organisation',company]:[],['Event Date',date],['Time',time],['Guests',guests+' people'],['Duration',duration],['Party Type',selectedParty],req?['Requirements',req]:[]].filter(x=>x&&x.length).map(([l,v])=>`<div style="color:var(--text3)">${l}</div><div style="font-weight:600">${v}</div>`).join('')}
+    </div>`;
+  // Food review
+  const items=Object.values(foodCart);
+  const fc=document.getElementById('foodReviewCard');
+  const orl=document.getElementById('orderReviewList');
+  if(!items.length){fc.style.display='none';}else{
+    fc.style.display='block';
+    orl.innerHTML=items.map(x=>`<div class="orl-item"><img class="orl-img" src="${x.img}" onerror="this.src='${FB}'"/><div><div class="orl-name">${esc(x.name)}</div><div class="orl-qty">×${x.qty}</div></div><div class="orl-price">₹${(x.qty*x.price).toLocaleString('en-IN')}</div></div>`).join('');
+  }
+}
+
+/* ─── PAYMENT ─── */
+function payWithUPI(method){
+  const foodTotal=Object.values(foodCart).reduce((s,x)=>s+x.qty*x.price,0);
+  const amount=HALL_FEE; // Only collect hall fee via UPI; food is paid on event day
+  const note=encodeURIComponent('Infocity Court Party Hall Booking');
+  const pa=encodeURIComponent(UPI_ID);
+  const pn=encodeURIComponent('Infocity Court');
+  const am=amount;
+  const cu='INR';
+  const tn=note;
+  let url;
+  if(method==='phonepe'){
+    url=`phonepe://pay?transactionId=PHALL${Date.now()}&merchantId=&hostFlow=true&pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;
+  }else if(method==='gpay'){
+    url=`tez://upi/pay?pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;
+  }else{
+    url=`upi://pay?pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;
+  }
+  // Try deep link; fallback to intent URL for Android
+  const a=document.createElement('a');a.href=url;a.style.display='none';document.body.appendChild(a);
+  try{a.click();}catch(e){}
+  setTimeout(()=>{document.body.removeChild(a);},300);
+  // Also try window.open for wider compat
+  setTimeout(()=>{
+    try{window.open(url,'_blank');}catch(e){}
+  },100);
+  toast(`Opening ${method==='phonepe'?'PhonePe':method==='gpay'?'Google Pay':'UPI app'} — ₹${amount.toLocaleString('en-IN')} to ${UPI_PHONE}`,'inf');
+}
+
+/* ─── CONFIRM BOOKING ─── */
+async function confirmBooking(){
+  const name=document.getElementById('inName').value.trim();
+  const email=document.getElementById('inEmail').value.trim();
+  const phone=document.getElementById('inPhone').value.trim();
+  const pw=document.getElementById('inPassword').value;
+  const company=document.getElementById('inCompany').value.trim();
+  const date=document.getElementById('inDate').value;
+  const time=document.getElementById('inTime').value;
+  const guests=document.getElementById('inGuests').value;
+  const duration=document.getElementById('inDuration').value;
+  const req=document.getElementById('inRequirements').value.trim();
+  const items=Object.values(foodCart);
+  const foodTotal=items.reduce((s,x)=>s+x.qty*x.price,0);
+  const refId='INFOCITY-'+Math.random().toString(36).substr(2,8).toUpperCase();
+
+  // Save user to Supabase
+  try{
+    const phoneInt=parseInt(phone.replace(/\D/g,''),10);
+    // Check duplicate
+    const{data:ex}=await sb.from('Users').select('id').eq('email',email).maybeSingle();
+    if(!ex){
+      await sb.from('Users').insert([{name,phone:isNaN(phoneInt)?null:phoneInt,email,password:pw,type:'customer'}]);
+    }
+  }catch(e){console.warn('User save warn:',e);}
+
+  // Email via FormSubmit
+  const body=`
+╔═══════════════════════════════════════╗
+║   🎉  PARTY HALL BOOKING — INFOCITY  ║
+╚═══════════════════════════════════════╝
+Booking ID:    ${refId}
+Date/Time:     ${date} at ${time}
+
+──────────────────────────────────────
+👤  GUEST DETAILS
+──────────────────────────────────────
+Name:         ${name}
+Email:        ${email}
+Phone:        ${phone}
+Designation:  ${selectedDesig}
+Organisation: ${company||'N/A'}
+
+──────────────────────────────────────
+🎊  EVENT DETAILS
+──────────────────────────────────────
+Party Type:   ${selectedParty}
+Guests:       ${guests} people
+Duration:     ${duration}
+Special Req:  ${req||'None'}
+
+──────────────────────────────────────
+🍽️  FOOD ORDER
+──────────────────────────────────────
+${items.length?items.map(x=>`${x.name} ×${x.qty} = ₹${(x.qty*x.price).toLocaleString('en-IN')}`).join('\n'):'No food pre-ordered'}
+Food Total:   ₹${foodTotal.toLocaleString('en-IN')}
+
+──────────────────────────────────────
+💳  PAYMENT
+──────────────────────────────────────
+Hall Fee:     ₹1,000 (via UPI to ${UPI_PHONE})
+Food Payment: On event day
+Grand Total:  ₹${(HALL_FEE+foodTotal).toLocaleString('en-IN')}
+──────────────────────────────────────
+  `.trim();
+
+  try{
+    const fd=new FormData();
+    fd.append('name',name);fd.append('email',email);
+    fd.append('_subject',`[Party Hall Booking] ${refId} — ${name}`);
+    fd.append('message',body);fd.append('_cc',email);
+    fd.append('_captcha','false');fd.append('_template','table');
+    await fetch('https://formsubmit.co/ajax/infotech.officials2067@gmail.com',{method:'POST',body:fd,headers:{'Accept':'application/json'}});
+  }catch(e){console.warn('Email warn:',e);}
+
+  // Show success
+  document.getElementById('step4').style.display='none';
+  const suc=document.getElementById('bookingSuccess');suc.style.display='block';
+  document.getElementById('successRef').textContent='Booking ID: '+refId;
+  // Update sidesteps
+  for(let i=1;i<=4;i++){const el=document.getElementById('sideStep'+i);el.classList.remove('active');el.classList.add('done');}
+  toast('Booking confirmed! Check your email. 🎉','ok');
+}
+
+/* ─── SLIDESHOW ─── */
+(function(){const imgs=document.querySelectorAll('.hero-slides img');let i=0;setInterval(()=>{imgs[i].classList.remove('active');i=(i+1)%imgs.length;imgs[i].classList.add('active');},5500);})();
+
+/* ─── REVEAL ─── */
+const revObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.07,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ─── TOAST ─── */
+function toast(msg,kind='inf'){
+  const icons={ok:'check_circle',bad:'error',inf:'info'};
+  const el=document.createElement('div');el.className='toast '+kind;
+  el.innerHTML=`<span class="material-icons">${icons[kind]||'info'}</span><span>${msg}</span>`;
+  document.getElementById('toastDock').appendChild(el);
+  setTimeout(()=>{el.style.animation='tOut .35s forwards';setTimeout(()=>el.remove(),350);},4000);
+}
+</script>
+</body>
+</html>
