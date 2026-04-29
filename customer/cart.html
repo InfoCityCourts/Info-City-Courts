@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <meta name="theme-color" content="#080810"/>
-  <title>Infocity Court — My Cart</title>
+  <title>Fusion — My Cart</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&display=swap" rel="stylesheet"/>
@@ -419,7 +419,7 @@
 <div id="pageLoader">
   <div class="pl-logo">
     <div class="pl-icon"><span class="material-icons">restaurant</span></div>
-    <span class="pl-name">Infocity Court</span>
+    <span class="pl-name">Fusion</span>
   </div>
   <div class="pl-track"><div class="pl-fill"></div></div>
 </div>
@@ -464,7 +464,7 @@
 <nav class="navbar">
   <a href="index" class="nav-brand">
     <div class="nb-icon"><span class="material-icons">restaurant</span></div>
-    <span class="nb-name">Infocity Court</span>
+    <span class="nb-name">Fusion</span>
   </a>
   <div class="nav-sep"></div>
   <span class="nav-title">My Cart</span>
@@ -654,7 +654,7 @@ function renderCart() {
         <div class="ci-top">
           <div class="ci-info">
             <div class="ci-name">${item.food_name || ''}</div>
-            <div class="ci-seller"><span class="material-icons">storefront</span>${item.seller_name || 'Infocity Court'}</div>
+            <div class="ci-seller"><span class="material-icons">storefront</span>${item.seller_name || 'Fusion'}</div>
             <div class="ci-meta">${spiceTag}${ratingTag}</div>
           </div>
           <button class="ci-remove" onclick="removeItem(${i})" title="Remove"><span class="material-icons">close</span></button>
@@ -761,7 +761,7 @@ async function placeOrder() {
     subtotal: parseFloat(subtotal.toFixed(2)), delivery_fee: parseFloat(delivery_fee.toFixed(2)),
     tax: parseFloat(tax.toFixed(2)), discount: 0, total: parseFloat(total.toFixed(2)),
     savings: parseFloat(savings.toFixed(2)), estimated_delivery_mins: etaMins,
-    item_count: cart.reduce((s, c) => s + c.qty, 0), seller_name: cart[0]?.seller_name || 'Infocity Court',
+    item_count: cart.reduce((s, c) => s + c.qty, 0), seller_name: cart[0]?.seller_name || 'Fusion',
   };
 
   try {
@@ -769,7 +769,7 @@ async function placeOrder() {
     if (oErr) throw oErr;
     const items = cart.map(c => ({
       order_id: order.id, food_id: c.id, food_name: c.food_name,
-      seller_name: c.seller_name || 'Infocity Court', category: c.category || null,
+      seller_name: c.seller_name || 'Fusion', category: c.category || null,
       unit_price: parseFloat(c.price), original_price: parseFloat(c.original_price || c.price),
       quantity: c.qty, line_total: parseFloat((c.price * c.qty).toFixed(2)),
       food_image: c.image || null, food_rating: c.rating ? parseFloat(c.rating) : null,
@@ -837,7 +837,7 @@ function downloadBill() {
       <td class="td-num">${i + 1}</td>
       <td class="td-name">
         <div class="item-name">${item.food_name}</div>
-        <div class="item-seller">${item.seller_name || 'Infocity Court'}</div>
+        <div class="item-seller">${item.seller_name || 'Fusion'}</div>
       </td>
       <td class="td-qty">${item.qty}</td>
       <td class="td-price">₹${parseFloat(item.price).toFixed(2)}</td>
@@ -849,7 +849,7 @@ function downloadBill() {
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Invoice #${d.orderId} — Infocity Court</title>
+<title>Invoice #${d.orderId} — Fusion</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -1117,7 +1117,7 @@ function downloadBill() {
 </head>
 <body>
 
-<div class="wm">INFOCITY COURT</div>
+<div class="wm">Fusion</div>
 
 <div class="dl-bar no-print">
   <p>📄 Your invoice is ready — save a copy for your records.</p>
@@ -1131,7 +1131,7 @@ function downloadBill() {
     <div class="hdr-top">
       <div class="brand-block">
         <div class="brand-icon">🍽️</div>
-        <div class="brand-name">Infocity Court</div>
+        <div class="brand-name">Fusion</div>
         <div class="brand-tagline">Premium Food Delivery Platform</div>
       </div>
       <div class="invoice-block">
@@ -1221,13 +1221,13 @@ function downloadBill() {
     <div class="footer-brand">"Every Flavor, Delivered Fresh."</div>
     <div class="footer-divider"></div>
     <div class="footer-addr">
-      Infocity Court Food Hub · Infocity, Gandhinagar, Gujarat 382007<br/>
+      Fusion Food Hub · Infocity, Gandhinagar, Gujarat 382007<br/>
       Email: infotech.officials2067@gmail.com · Support: +91 XXXXX XXXXX
     </div>
     <div class="footer-divider"></div>
     <div class="footer-note">
       This is a computer-generated invoice and does not require a physical signature.<br/>
-      Thank you for choosing Infocity Court · GSTIN: XXXXXXXXXXXXXXXXX
+      Thank you for choosing Fusion · GSTIN: XXXXXXXXXXXXXXXXX
     </div>
   </div>
 </div>
@@ -1243,7 +1243,7 @@ function downloadBill() {
 
   const win = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
   if (!win) { toast('Please allow popups to download your bill', 'error'); return; }
-  win.document.write(billHTML);
+  win.document.write(billHTML); 
   win.document.close();
   win.focus();
   toast('Your bill is ready! Use Print → Save as PDF 🧾', 'success');
