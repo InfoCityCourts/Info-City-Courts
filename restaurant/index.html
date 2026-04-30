@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Kitchen Dashboard — Fusion</title>
+<title>Kitchen Dashboard — InfoCity Courts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -1093,7 +1093,7 @@ input, select, textarea { font-family:var(--sf) }
       <div class="ld-cube-face bottom"></div>
     </div>
   </div>
-  <div class="ld-title">Fusion</div>
+  <div class="ld-title">InfoCity Courts</div>
   <div class="ld-sub">Kitchen Portal</div>
   <div class="ld-bar"><div class="ld-fill"></div></div>
 </div>
@@ -1209,7 +1209,7 @@ input, select, textarea { font-family:var(--sf) }
         <div class="sb-icon-shadow"></div>
       </div>
       <div class="sb-words">
-        <div class="sb-name">Fusion</div>
+        <div class="sb-name">InfoCity Courts</div>
         <div class="sb-tagline">Kitchen Portal</div>
       </div>
     </div>
@@ -1270,7 +1270,7 @@ input, select, textarea { font-family:var(--sf) }
       <button class="tb-burger" onclick="openSb()"><span class="material-icons-round">menu</span></button>
       <div class="tb-h">
         <div class="tb-title" id="tbTitle">Dashboard</div>
-        <div class="tb-sub" id="tbSub">Fusion Kitchen</div>
+        <div class="tb-sub" id="tbSub">InfoCity Courts Kitchen</div>
       </div>
       <!-- Search -->
       <div class="tb-search">
@@ -1993,7 +1993,7 @@ function printTicket(oid) {
       .total{font-weight:bold;font-size:15px}
       .footer{text-align:center;margin-top:12px;font-size:11px;color:#999}
     </style></head><body>
-    <h2>🍽 Fusion</h2>
+    <h2>🍽 InfoCity Courts</h2>
     <div class="sub">Kitchen Ticket · #${oid}</div>
     <div class="sub">${d.toLocaleString('en-IN')}</div>
     <hr class="divider"/>
@@ -2006,7 +2006,7 @@ function printTicket(oid) {
     <div class="row total"><span>TOTAL</span><span>₹${fmt(o.total)}</span></div>
     <div class="row"><span>Payment:</span><span>${(o.payment_method||'COD').toUpperCase()}</span></div>
     ${o.delivery_instructions?`<div style="margin-top:8px;padding:6px;border:1px solid #ccc;border-radius:4px;font-size:11px">📝 ${esc(o.delivery_instructions)}</div>`:''}
-    <div class="footer">Thank you! · Fusion Kitchen</div>
+    <div class="footer">Thank you! · InfoCity Courts Kitchen</div>
     </body></html>`);
   win.document.close();
   setTimeout(() => win.print(), 400);

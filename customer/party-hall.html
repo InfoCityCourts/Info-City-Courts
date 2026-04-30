@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <meta name="theme-color" content="#060408"/>
-<title>Fusion — Party Hall Booking</title>
+<title>InfoCity Courts — Party Hall Booking</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -359,7 +359,7 @@ input,select,textarea{font-family:var(--ff-ui)}
   <div class="nav-brand">
     <div class="brand-gem"><span class="material-icons">celebration</span></div>
     <div class="brand-title">
-      <div class="brand-name">Fusion</div>
+      <div class="brand-name">InfoCity Courts</div>
       <div class="brand-sub">Party Hall Booking</div>
     </div>
   </div>
@@ -386,7 +386,7 @@ input,select,textarea{font-family:var(--ff-ui)}
     </div>
   </div>
   <div class="hero-content">
-    <div class="hero-eyebrow"><span>◆</span>Fusion<span>◆</span></div>
+    <div class="hero-eyebrow"><span>◆</span>InfoCity Courts<span>◆</span></div>
     <h1 class="hero-title">Your Perfect<br/><strong>Party Hall</strong></h1>
     <p class="hero-sub">An extraordinary venue for extraordinary celebrations — curated menus, premium service, and moments that last a lifetime.</p>
     <div class="hero-stats">
@@ -412,7 +412,7 @@ input,select,textarea{font-family:var(--ff-ui)}
   <div style="text-align:center;max-width:640px;margin:0 auto 0">
     <div class="sec-eyebrow" style="justify-content:center">World-Class Amenities</div>
     <h2 class="sec-title">A Venue as <em>Grand</em> as Your Vision</h2>
-    <p class="sec-sub" style="margin:0 auto">Every celebration deserves an extraordinary backdrop. Fusion Party Hall sets the stage for memories that endure.</p>
+    <p class="sec-sub" style="margin:0 auto">Every celebration deserves an extraordinary backdrop. InfoCity Courts Party Hall sets the stage for memories that endure.</p>
   </div>
   <div class="features-grid">
     <div class="feature-card">
@@ -742,9 +742,9 @@ input,select,textarea{font-family:var(--ff-ui)}
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-brand">Fusion · PARTY HALL</div>
+  <div class="footer-brand">InfoCity Courts · PARTY HALL</div>
   <div class="footer-sub">Infocity, Gandhinagar, Gujarat 382007 · infotech.officials2067@gmail.com</div>
-  <div style="margin-top:16px;font-size:.7rem;color:var(--text3)">© 2026 Fusion. All rights reserved.</div>
+  <div style="margin-top:16px;font-size:.7rem;color:var(--text3)">© 2026 InfoCity Courts. All rights reserved.</div>
 </footer>
 
 <script>
@@ -815,14 +815,14 @@ function renderFoods(list){
       </div>
       <div class="fc-body">
         <div class="fc-name">${esc(f.food_name)}</div>
-        <div class="fc-seller"><span class="material-icons">storefront</span>${esc(f.seller_name||'Fusion')}</div>
+        <div class="fc-seller"><span class="material-icons">storefront</span>${esc(f.seller_name||'InfoCity Courts')}</div>
         <div class="fc-rating"><span class="material-icons">star</span>${(f.rating||0).toFixed(1)} · Serves 1 person</div>
         <div class="fc-price">₹${f.price||0} <span style="font-size:.68rem;color:var(--text3);font-weight:400">per portion</span></div>
         <div class="fc-footer">
           <div class="qty-ctrl">
-            <div class="qty-btn" onclick="changeQty('${f.id}','${esc(f.food_name)}',${f.price},this,-1,'${esc(getImg(f.images))}','${esc(f.seller_name||'Fusion')}')"><span class="material-icons">remove</span></div>
+            <div class="qty-btn" onclick="changeQty('${f.id}','${esc(f.food_name)}',${f.price},this,-1,'${esc(getImg(f.images))}','${esc(f.seller_name||'InfoCity Courts')}')"><span class="material-icons">remove</span></div>
             <div class="qty-num" id="qty_${f.id}">${foodCart[f.id]?.qty||0}</div>
-            <div class="qty-btn" onclick="changeQty('${f.id}','${esc(f.food_name)}',${f.price},this,1,'${esc(getImg(f.images))}','${esc(f.seller_name||'Fusion')}')"><span class="material-icons">add</span></div>
+            <div class="qty-btn" onclick="changeQty('${f.id}','${esc(f.food_name)}',${f.price},this,1,'${esc(getImg(f.images))}','${esc(f.seller_name||'InfoCity Courts')}')"><span class="material-icons">add</span></div>
           </div>
           <div class="fc-subtotal">Total: <span id="sub_${f.id}">₹${(foodCart[f.id]?.qty||0)*(f.price||0)||0}</span></div>
         </div>
@@ -949,9 +949,9 @@ function buildReview(){
 function payWithUPI(method){
   const foodTotal=Object.values(foodCart).reduce((s,x)=>s+x.qty*x.price,0);
   const amount=HALL_FEE; // Only collect hall fee via UPI; food is paid on event day
-  const note=encodeURIComponent('Fusion Party Hall Booking');
+  const note=encodeURIComponent('InfoCity Courts Party Hall Booking');
   const pa=encodeURIComponent(UPI_ID);
-  const pn=encodeURIComponent('Fusion');
+  const pn=encodeURIComponent('InfoCity Courts');
   const am=amount;
   const cu='INR';
   const tn=note;
