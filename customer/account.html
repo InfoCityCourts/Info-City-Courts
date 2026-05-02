@@ -67,7 +67,6 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 
 /* SIDEBAR */
 .sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:calc(var(--nav-h)+20px);height:fit-content}
-
 .avatar-card{background:var(--bg2);border:1px solid var(--border);border-radius:28px;padding:28px 20px;text-align:center;overflow:hidden;position:relative;box-shadow:var(--shadow)}
 .avatar-card::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:180px;height:180px;background:radial-gradient(circle,rgba(255,69,0,.15),transparent 65%);pointer-events:none}
 .av-wrap{perspective:600px;width:90px;height:90px;margin:0 auto 16px}
@@ -81,7 +80,6 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 .xp-row{display:flex;justify-content:space-between;font-size:.68rem;color:var(--t3);font-weight:600;margin-bottom:5px}
 .xp-bar{height:5px;background:var(--surface);border-radius:5px;overflow:hidden}
 .xp-fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--gold));border-radius:5px;width:0;transition:width 1.6s var(--ease)}
-
 .sidebar-nav{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:10px;box-shadow:var(--shadow)}
 .sn-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:16px;font-size:.81rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .25s}
 .sn-item:hover{background:var(--surface-h);color:var(--t1)}
@@ -92,7 +90,6 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 .sn-item:not(.active) .sn-icon{background:var(--surface)}
 .sn-icon .material-icons{font-size:17px}
 .sn-div{height:1px;background:var(--border);margin:6px 12px}
-
 .streak-card{background:linear-gradient(135deg,rgba(240,165,0,.1),rgba(255,69,0,.07));border:1px solid rgba(240,165,0,.18);border-radius:22px;padding:18px}
 .sc-top{display:flex;align-items:center;gap:12px}
 .sc-fire{font-size:2.2rem;animation:firePop 2s ease-in-out infinite}
@@ -269,16 +266,26 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 .addr-type-badge.work{background:rgba(0,200,150,.1);color:var(--green)}
 .addr-type-badge.other{background:rgba(191,90,242,.1);color:var(--purple)}
 .addr-text{font-size:.8rem;color:var(--t2);line-height:1.6}
-.addr-actions{display:flex;gap:7px;margin-top:12px}
-.addr-btn{display:inline-flex;align-items:center;gap:3px;padding:5px 11px;border-radius:9px;font-size:.65rem;font-weight:700;transition:.22s}
+.addr-actions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.addr-btn{display:inline-flex;align-items:center;gap:3px;padding:5px 11px;border-radius:9px;font-size:.65rem;font-weight:700;transition:.22s;cursor:pointer;border:none}
 .addr-btn.edit{background:var(--surface);color:var(--t2);border:1px solid var(--border)}
 .addr-btn.edit:hover{border-color:var(--brand);color:var(--brand)}
 .addr-btn.del{background:rgba(255,45,85,.08);color:var(--red);border:1px solid rgba(255,45,85,.18)}
+.addr-btn.del:hover{background:rgba(255,45,85,.18)}
+.addr-btn.setpri{background:rgba(255,69,0,.08);color:var(--brand2);border:1px solid rgba(255,69,0,.2)}
+.addr-btn.setpri:hover{background:rgba(255,69,0,.18)}
 .addr-btn .material-icons{font-size:12px}
 .addr-add{background:transparent;border:2px dashed var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .25s;min-height:130px;color:var(--t4)}
 .addr-add:hover{border-color:var(--brand);color:var(--brand);background:rgba(255,69,0,.03)}
 .addr-add .material-icons{font-size:26px}
 .addr-add span{font-size:.76rem;font-weight:600}
+
+/* ADDRESS TYPE SELECTOR */
+.addr-type-sel{display:flex;gap:8px;margin-bottom:4px}
+.addr-type-opt{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .22s;font-size:.7rem;font-weight:600;color:var(--t3)}
+.addr-type-opt:hover{border-color:var(--border2);color:var(--t1)}
+.addr-type-opt.sel{border-color:rgba(255,69,0,.4);background:rgba(255,69,0,.08);color:var(--brand2)}
+.addr-type-opt .material-icons{font-size:18px}
 
 /* WALLET */
 .wallet-hero{border-radius:22px;padding:28px;position:relative;overflow:hidden;background:linear-gradient(135deg,#180d00,#0a0a18)}
@@ -307,6 +314,54 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 .txn-date{font-size:.68rem;color:var(--t4);margin-top:1px}
 .txn-amt{font-size:.88rem;font-weight:800}
 .txn-amt.cr{color:var(--green)}.txn-amt.dr{color:var(--red)}
+
+/* COIN DENOMINATION CARDS */
+.coin-denom-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0}
+.coin-denom{border:2px solid var(--border);border-radius:16px;padding:16px;text-align:center;cursor:pointer;transition:all .25s;background:var(--surface);position:relative;overflow:hidden}
+.coin-denom:hover{border-color:rgba(240,165,0,.4);background:rgba(240,165,0,.05)}
+.coin-denom.sel{border-color:var(--gold);background:linear-gradient(135deg,rgba(240,165,0,.12),rgba(255,69,0,.06));box-shadow:0 0 0 3px rgba(240,165,0,.15)}
+.coin-denom .cd-coins{font-size:1.4rem;font-weight:800;color:var(--gold2);font-family:'Playfair Display',serif}
+.coin-denom .cd-label{font-size:.62rem;color:var(--t3);margin-top:1px}
+.coin-denom .cd-price{font-size:.75rem;font-weight:700;color:var(--brand);margin-top:5px}
+.coin-denom .cd-badge{position:absolute;top:8px;right:8px;font-size:.56rem;font-weight:800;padding:2px 7px;border-radius:50px;background:rgba(0,200,150,.16);color:var(--green)}
+
+/* PAYMENT METHOD */
+.pay-method-wrap{display:flex;gap:8px;margin-bottom:16px}
+.pay-method{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:.22s;font-size:.7rem;font-weight:600;color:var(--t3)}
+.pay-method:hover{border-color:var(--border2);color:var(--t1)}
+.pay-method.sel{border-color:rgba(255,69,0,.4);background:rgba(255,69,0,.07);color:var(--brand2)}
+.pay-method .material-icons{font-size:20px}
+.pay-fields{animation:panelIn .3s var(--ease)}
+.pay-processing{display:none;flex-direction:column;align-items:center;gap:14px;padding:28px 0;text-align:center}
+.pay-processing.show{display:flex}
+.pay-success{display:none;flex-direction:column;align-items:center;gap:12px;padding:24px 0;text-align:center}
+.pay-success.show{display:flex}
+.pay-success-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--green),#00a87a);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 10px rgba(0,200,150,.1);animation:successPop .5s var(--ease)}
+@keyframes successPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* HISTORY MODAL */
+.hist-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.hist-filter{padding:6px 14px;border-radius:50px;font-size:.72rem;font-weight:600;border:1.5px solid var(--border);color:var(--t3);cursor:pointer;transition:.2s}
+.hist-filter.active{background:rgba(255,69,0,.1);border-color:rgba(255,69,0,.3);color:var(--brand2)}
+.hist-txn-list{max-height:360px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+
+/* 2FA WIZARD */
+.tfa-steps{display:flex;align-items:center;gap:0;margin-bottom:24px}
+.tfa-step{display:flex;align-items:center;gap:7px;font-size:.72rem;font-weight:600;color:var(--t4)}
+.tfa-step.done{color:var(--green)}
+.tfa-step.active{color:var(--t1)}
+.tfa-step-num{width:24px;height:24px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;flex-shrink:0}
+.tfa-step.done .tfa-step-num{background:var(--green);border-color:var(--green);color:#fff}
+.tfa-step.active .tfa-step-num{background:var(--brand);border-color:var(--brand);color:#fff}
+.tfa-connector{flex:1;height:1px;background:var(--border);margin:0 8px}
+.tfa-qr-wrap{display:flex;justify-content:center;margin:16px 0}
+.tfa-qr{width:160px;height:160px;border-radius:12px;overflow:hidden;border:3px solid var(--border);padding:8px;background:#fff}
+.tfa-secret{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;font-family:monospace;font-size:.82rem;color:var(--gold2);letter-spacing:2px;margin-bottom:8px}
+.tfa-secret button{margin-left:auto;color:var(--brand);font-size:.7rem;font-weight:700}
+.otp-inputs{display:flex;gap:8px;justify-content:center;margin:20px 0}
+.otp-input{width:46px;height:52px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--t1);font-size:1.2rem;font-weight:800;text-align:center;outline:none;transition:.25s}
+.otp-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(255,69,0,.15)}
+.otp-input.filled{border-color:rgba(255,69,0,.4);background:rgba(255,69,0,.06)}
 
 /* SECURITY */
 .sec-score-wrap{display:flex;align-items:center;gap:20px;padding:20px;background:var(--surface);border-radius:16px;margin-bottom:18px}
@@ -384,13 +439,20 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 .modal-overlay.open{display:flex;animation:mFadeIn .28s}
 @keyframes mFadeIn{from{opacity:0}to{opacity:1}}
 .modal{background:var(--bg2);border:1px solid var(--border);border-radius:28px;max-width:460px;width:100%;overflow:hidden;box-shadow:0 60px 120px rgba(0,0,0,.65);animation:mPop .38s var(--ease)}
+.modal.modal-wide{max-width:560px}
 @keyframes mPop{from{transform:scale(.86) translateY(22px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal-head{padding:22px 26px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-head-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.92rem}
+.modal-head-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.modal-head-icon .material-icons{font-size:17px}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;color:var(--t3)}
+.modal-close:hover{background:var(--surface-h);color:var(--t1)}
+.modal-body{padding:22px 26px 26px;max-height:70vh;overflow-y:auto}
 .modal-logout-head{padding:30px;background:linear-gradient(135deg,rgba(255,45,85,.07),transparent);text-align:center;border-bottom:1px solid var(--border)}
 .mli-icon{width:62px;height:62px;border-radius:50%;background:rgba(255,45,85,.12);border:2px solid rgba(255,45,85,.24);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
 .mli-icon .material-icons{font-size:26px;color:var(--red)}
 .modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:5px}
 .modal-desc{font-size:.8rem;color:var(--t3)}
-.modal-body{padding:22px 26px 26px}
 .modal-btns{display:flex;gap:11px}
 .modal-btns button{flex:1;padding:13px;border-radius:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;font-weight:700;transition:.25s;cursor:pointer}
 .del-modal-head{background:linear-gradient(155deg,#250808,#0c0c18);padding:32px 28px 24px;text-align:center;position:relative;overflow:hidden}
@@ -440,9 +502,14 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 /* CANVAS BG */
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6}
 
+/* DELETE CONFIRM ADDR */
+.addr-del-confirm{background:rgba(255,45,85,.05);border:1.5px solid rgba(255,45,85,.2);border-radius:16px;padding:16px;margin-top:14px}
+.addr-del-confirm p{font-size:.8rem;color:var(--t2);margin-bottom:12px}
+.addr-del-btns{display:flex;gap:8px}
+
 @media(max-width:1024px){.layout{grid-template-columns:240px 1fr}.stats-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:768px){.layout{grid-template-columns:1fr;padding-bottom:84px}.sidebar{position:static;display:grid;grid-template-columns:1fr}.avatar-card,.sidebar-nav,.streak-card{display:none}.mob-nav{display:flex}.nl-wrap{display:none}.stats-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.addr-grid{grid-template-columns:1fr}.d-inner{grid-template-columns:1fr;text-align:center}.d-chips{justify-content:center}.d-slab-wrap{margin:0 auto}}
-@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.ach-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.layout{grid-template-columns:1fr;padding-bottom:84px}.sidebar{position:static;display:grid;grid-template-columns:1fr}.avatar-card,.sidebar-nav,.streak-card{display:none}.mob-nav{display:flex}.nl-wrap{display:none}.stats-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.addr-grid{grid-template-columns:1fr}.d-inner{grid-template-columns:1fr;text-align:center}.d-chips{justify-content:center}.d-slab-wrap{margin:0 auto}.tfa-steps{flex-wrap:wrap;gap:6px}.modal.modal-wide{max-width:98vw}}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.ach-grid{grid-template-columns:repeat(3,1fr)}.coin-denom-grid{grid-template-columns:1fr 1fr}.pay-method-wrap{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -493,6 +560,295 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
   </div>
 </div>
 
+<!-- ============ ADDRESS MODAL ============ -->
+<div class="modal-overlay" id="addressModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <div class="modal-head-title">
+        <div class="modal-head-icon" style="background:linear-gradient(135deg,var(--brand),var(--gold))"><span class="material-icons" style="color:#fff;font-size:17px">location_on</span></div>
+        <span id="addrModalTitle">Add New Address</span>
+      </div>
+      <div class="modal-close" onclick="closeModal('addressModal')"><span class="material-icons" style="font-size:18px">close</span></div>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title" style="margin-bottom:10px">Address Type</div>
+      <div class="addr-type-sel" id="addrTypeSel">
+        <div class="addr-type-opt sel" data-type="home" onclick="selectAddrType('home',this)"><span class="material-icons">home</span>Home</div>
+        <div class="addr-type-opt" data-type="work" onclick="selectAddrType('work',this)"><span class="material-icons">work</span>Work</div>
+        <div class="addr-type-opt" data-type="other" onclick="selectAddrType('other',this)"><span class="material-icons">location_on</span>Other</div>
+      </div>
+      <div class="form-grid" style="margin-top:16px">
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Address Line 1 *</label>
+          <div class="form-input-wrap"><span class="material-icons fi-icon">apartment</span><input class="form-input" type="text" id="addrLine1" placeholder="Flat / Building / Street"/></div>
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Address Line 2</label>
+          <div class="form-input-wrap"><span class="material-icons fi-icon">near_me</span><input class="form-input" type="text" id="addrLine2" placeholder="Area / Locality (optional)"/></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">City *</label>
+          <div class="form-input-wrap"><span class="material-icons fi-icon">location_city</span><input class="form-input" type="text" id="addrCity" placeholder="City"/></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">State *</label>
+          <div class="form-input-wrap"><span class="material-icons fi-icon">map</span>
+            <select class="form-input" id="addrState" style="cursor:pointer">
+              <option value="">Select State</option>
+              <option>Gujarat</option><option>Maharashtra</option><option>Rajasthan</option>
+              <option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option>
+              <option>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option>
+              <option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pincode *</label>
+          <div class="form-input-wrap"><span class="material-icons fi-icon">pin</span><input class="form-input" type="text" id="addrPincode" placeholder="6-digit pincode" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')"/></div>
+        </div>
+        <div class="form-group" style="justify-content:flex-end;padding-top:22px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.78rem;color:var(--t2)"><input type="checkbox" id="addrSetPrimary" style="accent-color:var(--brand);width:16px;height:16px"/>Set as default address</label>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-brand" onclick="saveAddress()"><span class="material-icons">save</span>Save Address</button>
+        <button class="btn btn-ghost" onclick="closeModal('addressModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADD COINS MODAL ============ -->
+<div class="modal-overlay" id="coinsModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <div class="modal-head-title">
+        <div class="modal-head-icon" style="background:linear-gradient(135deg,var(--gold),#c78c00)"><span class="material-icons" style="color:#000;font-size:17px">account_balance_wallet</span></div>
+        Top Up Infocity Coins
+      </div>
+      <div class="modal-close" onclick="closeCoinsModal()"><span class="material-icons" style="font-size:18px">close</span></div>
+    </div>
+    <div class="modal-body">
+      <!-- Step 0: Pick denomination -->
+      <div id="coinsStep0">
+        <div class="form-section-title">Select Coin Pack</div>
+        <div class="coin-denom-grid">
+          <div class="coin-denom sel" data-coins="100" data-price="10" onclick="selectDenom(this)">
+            <div class="cd-coins">100</div>
+            <div class="cd-label">Coins</div>
+            <div class="cd-price">₹10</div>
+          </div>
+          <div class="coin-denom" data-coins="250" data-price="25" onclick="selectDenom(this)">
+            <div class="cd-coins">250</div>
+            <div class="cd-label">Coins</div>
+            <div class="cd-price">₹25</div>
+          </div>
+          <div class="coin-denom" data-coins="500" data-price="50" onclick="selectDenom(this)">
+            <div class="cd-badge">Popular</div>
+            <div class="cd-coins">500</div>
+            <div class="cd-label">Coins</div>
+            <div class="cd-price">₹50</div>
+          </div>
+          <div class="coin-denom" data-coins="1000" data-price="100" onclick="selectDenom(this)">
+            <div class="cd-badge">Best Value</div>
+            <div class="cd-coins">1,000</div>
+            <div class="cd-label">Coins</div>
+            <div class="cd-price">₹100</div>
+          </div>
+        </div>
+        <div class="form-section-title" style="margin-top:16px">Payment Method</div>
+        <div class="pay-method-wrap" id="payMethodWrap">
+          <div class="pay-method sel" data-method="upi" onclick="selectPayMethod('upi',this)"><span class="material-icons">smartphone</span>UPI</div>
+          <div class="pay-method" data-method="card" onclick="selectPayMethod('card',this)"><span class="material-icons">credit_card</span>Card</div>
+          <div class="pay-method" data-method="netbank" onclick="selectPayMethod('netbank',this)"><span class="material-icons">account_balance</span>Net Banking</div>
+        </div>
+        <!-- UPI fields -->
+        <div class="pay-fields" id="payFieldsUpi">
+          <div class="form-group">
+            <label class="form-label">UPI ID</label>
+            <div class="form-input-wrap"><span class="material-icons fi-icon">alternate_email</span><input class="form-input" type="text" id="upiId" placeholder="yourname@upi"/></div>
+          </div>
+        </div>
+        <!-- Card fields -->
+        <div class="pay-fields" id="payFieldsCard" style="display:none">
+          <div class="form-grid">
+            <div class="form-group" style="grid-column:1/-1">
+              <label class="form-label">Card Number</label>
+              <div class="form-input-wrap"><span class="material-icons fi-icon">credit_card</span><input class="form-input" type="text" id="cardNum" placeholder="•••• •••• •••• ••••" maxlength="19" oninput="fmtCard(this)"/></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiry</label>
+              <div class="form-input-wrap"><span class="material-icons fi-icon">calendar_today</span><input class="form-input" type="text" id="cardExp" placeholder="MM/YY" maxlength="5" oninput="fmtExp(this)"/></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CVV</label>
+              <div class="form-input-wrap"><span class="material-icons fi-icon">lock</span><input class="form-input" type="password" id="cardCvv" placeholder="•••" maxlength="3"/></div>
+            </div>
+          </div>
+        </div>
+        <!-- Net Banking -->
+        <div class="pay-fields" id="payFieldsNetbank" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Select Bank</label>
+            <div class="form-input-wrap"><span class="material-icons fi-icon">account_balance</span>
+              <select class="form-input" id="bankSel">
+                <option>State Bank of India</option><option>HDFC Bank</option><option>ICICI Bank</option>
+                <option>Axis Bank</option><option>Kotak Mahindra Bank</option><option>Yes Bank</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:18px;padding:13px 16px;background:linear-gradient(135deg,rgba(240,165,0,.08),rgba(255,69,0,.05));border:1px solid rgba(240,165,0,.2);border-radius:12px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:.8rem;color:var(--t2)">You'll receive</span>
+          <span style="font-size:1.1rem;font-weight:800;color:var(--gold2)" id="coinsPreview">100 Coins</span>
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="btn btn-brand" style="background:linear-gradient(135deg,var(--gold),#c78c00);box-shadow:0 6px 20px rgba(240,165,0,.25)" onclick="processTopUp()"><span class="material-icons">payment</span>Pay <span id="payAmtPreview">₹10</span></button>
+          <button class="btn btn-ghost" onclick="closeCoinsModal()">Cancel</button>
+        </div>
+      </div>
+      <!-- Processing -->
+      <div class="pay-processing" id="coinsProcessing">
+        <div class="ldr-ring" style="width:52px;height:52px;border-top-color:var(--gold)"></div>
+        <div style="font-weight:700;font-size:.95rem">Processing Payment…</div>
+        <div style="font-size:.78rem;color:var(--t3)">Please do not close this window</div>
+      </div>
+      <!-- Success -->
+      <div class="pay-success" id="coinsSuccess">
+        <div class="pay-success-icon"><span class="material-icons" style="font-size:28px;color:#fff">check</span></div>
+        <div style="font-weight:800;font-size:1.1rem">Payment Successful!</div>
+        <div style="font-size:2rem;font-weight:800;color:var(--gold2);font-family:'Playfair Display',serif" id="coinsAdded">+100 Coins</div>
+        <div style="font-size:.8rem;color:var(--t3)">Added to your wallet</div>
+        <button class="btn btn-brand" style="margin-top:10px;background:linear-gradient(135deg,var(--gold),#c78c00)" onclick="closeCoinsModal()"><span class="material-icons">check_circle</span>Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HISTORY MODAL ============ -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <div class="modal-head-title">
+        <div class="modal-head-icon" style="background:linear-gradient(135deg,var(--blue),#0099cc)"><span class="material-icons" style="color:#fff;font-size:17px">history</span></div>
+        Transaction History
+      </div>
+      <div class="modal-close" onclick="closeModal('historyModal')"><span class="material-icons" style="font-size:18px">close</span></div>
+    </div>
+    <div class="modal-body">
+      <div class="hist-filters" id="histFilters">
+        <div class="hist-filter active" onclick="filterHistory('all',this)">All</div>
+        <div class="hist-filter" onclick="filterHistory('cr',this)">Credits</div>
+        <div class="hist-filter" onclick="filterHistory('dr',this)">Debits</div>
+        <div class="hist-filter" onclick="filterHistory('coins',this)">Coins</div>
+      </div>
+      <div class="hist-txn-list" id="histTxnList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2FA MODAL ============ -->
+<div class="modal-overlay" id="twoFAModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <div class="modal-head-title">
+        <div class="modal-head-icon" style="background:linear-gradient(135deg,var(--green),#00a87a)"><span class="material-icons" style="color:#fff;font-size:17px">security</span></div>
+        Set Up Two-Factor Auth
+      </div>
+      <div class="modal-close" onclick="closeTwoFA()"><span class="material-icons" style="font-size:18px">close</span></div>
+    </div>
+    <div class="modal-body">
+      <!-- Step indicator -->
+      <div class="tfa-steps" id="tfaStepsIndicator">
+        <div class="tfa-step active" id="tfaStepInd1"><div class="tfa-step-num">1</div>Scan QR</div>
+        <div class="tfa-connector"></div>
+        <div class="tfa-step" id="tfaStepInd2"><div class="tfa-step-num">2</div>Verify</div>
+        <div class="tfa-connector"></div>
+        <div class="tfa-step" id="tfaStepInd3"><div class="tfa-step-num">3</div>Done</div>
+      </div>
+
+      <!-- Step 1: Scan QR -->
+      <div id="tfaStep1">
+        <div style="font-size:.82rem;color:var(--t2);margin-bottom:14px;line-height:1.6">Scan this QR code with an authenticator app like <strong>Google Authenticator</strong>, <strong>Authy</strong>, or <strong>Microsoft Authenticator</strong>.</div>
+        <div class="tfa-qr-wrap">
+          <div class="tfa-qr">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+              <!-- Fake QR Code SVG -->
+              <rect width="100" height="100" fill="white"/>
+              <!-- Top-left position marker -->
+              <rect x="5" y="5" width="25" height="25" fill="black"/><rect x="8" y="8" width="19" height="19" fill="white"/><rect x="11" y="11" width="13" height="13" fill="black"/>
+              <!-- Top-right position marker -->
+              <rect x="70" y="5" width="25" height="25" fill="black"/><rect x="73" y="8" width="19" height="19" fill="white"/><rect x="76" y="11" width="13" height="13" fill="black"/>
+              <!-- Bottom-left position marker -->
+              <rect x="5" y="70" width="25" height="25" fill="black"/><rect x="8" y="73" width="19" height="19" fill="white"/><rect x="11" y="76" width="13" height="13" fill="black"/>
+              <!-- Data modules (fake pattern) -->
+              <rect x="35" y="5" width="4" height="4" fill="black"/><rect x="43" y="5" width="4" height="4" fill="black"/><rect x="55" y="5" width="8" height="4" fill="black"/>
+              <rect x="35" y="11" width="4" height="4" fill="black"/><rect x="47" y="11" width="4" height="4" fill="black"/><rect x="55" y="11" width="4" height="4" fill="black"/><rect x="63" y="11" width="4" height="4" fill="black"/>
+              <rect x="39" y="17" width="8" height="4" fill="black"/><rect x="51" y="17" width="4" height="4" fill="black"/><rect x="59" y="17" width="8" height="4" fill="black"/>
+              <rect x="35" y="23" width="4" height="4" fill="black"/><rect x="43" y="23" width="4" height="4" fill="black"/><rect x="51" y="23" width="8" height="4" fill="black"/><rect x="63" y="23" width="4" height="4" fill="black"/>
+              <rect x="5" y="35" width="4" height="4" fill="black"/><rect x="13" y="35" width="8" height="4" fill="black"/><rect x="25" y="35" width="4" height="4" fill="black"/><rect x="35" y="35" width="4" height="4" fill="black"/><rect x="43" y="35" width="4" height="4" fill="black"/><rect x="51" y="35" width="4" height="4" fill="black"/><rect x="59" y="35" width="4" height="4" fill="black"/><rect x="67" y="35" width="8" height="4" fill="black"/><rect x="79" y="35" width="4" height="4" fill="black"/><rect x="87" y="35" width="8" height="4" fill="black"/>
+              <rect x="5" y="41" width="4" height="4" fill="black"/><rect x="17" y="41" width="4" height="4" fill="black"/><rect x="27" y="41" width="4" height="4" fill="black"/><rect x="39" y="41" width="4" height="4" fill="black"/><rect x="47" y="41" width="4" height="4" fill="black"/><rect x="55" y="41" width="4" height="4" fill="black"/><rect x="63" y="41" width="4" height="4" fill="black"/><rect x="71" y="41" width="8" height="4" fill="black"/><rect x="83" y="41" width="4" height="4" fill="black"/>
+              <rect x="5" y="47" width="8" height="4" fill="black"/><rect x="17" y="47" width="8" height="4" fill="black"/><rect x="29" y="47" width="4" height="4" fill="black"/><rect x="37" y="47" width="4" height="4" fill="black"/><rect x="45" y="47" width="8" height="4" fill="black"/><rect x="57" y="47" width="4" height="4" fill="black"/><rect x="65" y="47" width="4" height="4" fill="black"/><rect x="75" y="47" width="8" height="4" fill="black"/><rect x="87" y="47" width="4" height="4" fill="black"/>
+              <rect x="5" y="53" width="4" height="4" fill="black"/><rect x="13" y="53" width="4" height="4" fill="black"/><rect x="23" y="53" width="8" height="4" fill="black"/><rect x="35" y="53" width="4" height="4" fill="black"/><rect x="43" y="53" width="4" height="4" fill="black"/><rect x="53" y="53" width="4" height="4" fill="black"/><rect x="61" y="53" width="8" height="4" fill="black"/><rect x="73" y="53" width="4" height="4" fill="black"/><rect x="81" y="53" width="4" height="4" fill="black"/><rect x="89" y="53" width="4" height="4" fill="black"/>
+              <rect x="7" y="59" width="4" height="4" fill="black"/><rect x="15" y="59" width="8" height="4" fill="black"/><rect x="27" y="59" width="4" height="4" fill="black"/><rect x="37" y="59" width="8" height="4" fill="black"/><rect x="49" y="59" width="4" height="4" fill="black"/><rect x="57" y="59" width="4" height="4" fill="black"/><rect x="65" y="59" width="8" height="4" fill="black"/><rect x="77" y="59" width="4" height="4" fill="black"/><rect x="85" y="59" width="8" height="4" fill="black"/>
+              <rect x="35" y="65" width="4" height="4" fill="black"/><rect x="45" y="65" width="4" height="4" fill="black"/><rect x="53" y="65" width="4" height="4" fill="black"/><rect x="61" y="65" width="4" height="4" fill="black"/><rect x="69" y="65" width="4" height="4" fill="black"/><rect x="79" y="65" width="4" height="4" fill="black"/><rect x="87" y="65" width="4" height="4" fill="black"/>
+              <rect x="35" y="71" width="8" height="4" fill="black"/><rect x="47" y="71" width="4" height="4" fill="black"/><rect x="55" y="71" width="8" height="4" fill="black"/><rect x="67" y="71" width="4" height="4" fill="black"/><rect x="75" y="71" width="4" height="4" fill="black"/><rect x="83" y="71" width="4" height="4" fill="black"/>
+              <rect x="35" y="77" width="4" height="4" fill="black"/><rect x="43" y="77" width="4" height="4" fill="black"/><rect x="51" y="77" width="4" height="4" fill="black"/><rect x="59" y="77" width="8" height="4" fill="black"/><rect x="71" y="77" width="8" height="4" fill="black"/><rect x="83" y="77" width="4" height="4" fill="black"/><rect x="91" y="77" width="4" height="4" fill="black"/>
+              <rect x="35" y="83" width="8" height="4" fill="black"/><rect x="47" y="83" width="4" height="4" fill="black"/><rect x="55" y="83" width="4" height="4" fill="black"/><rect x="63" y="83" width="8" height="4" fill="black"/><rect x="75" y="83" width="4" height="4" fill="black"/><rect x="83" y="83" width="8" height="4" fill="black"/>
+              <rect x="35" y="89" width="4" height="4" fill="black"/><rect x="43" y="89" width="8" height="4" fill="black"/><rect x="55" y="89" width="4" height="4" fill="black"/><rect x="63" y="89" width="4" height="4" fill="black"/><rect x="71" y="89" width="4" height="4" fill="black"/><rect x="79" y="89" width="4" height="4" fill="black"/><rect x="87" y="89" width="8" height="4" fill="black"/>
+            </svg>
+          </div>
+        </div>
+        <div class="form-section-title" style="margin-top:4px">Or enter the secret key manually</div>
+        <div class="tfa-secret">
+          <span id="tfaSecret">JBSW Y3DP EHPK 3PXP</span>
+          <button onclick="copyTFASecret()">Copy</button>
+        </div>
+        <div style="font-size:.72rem;color:var(--t4);margin-bottom:16px">Enter this key in your authenticator app if you can't scan the QR code.</div>
+        <div class="btn-row">
+          <button class="btn btn-brand" onclick="goTFAStep2()"><span class="material-icons">arrow_forward</span>I've Scanned It</button>
+          <button class="btn btn-ghost" onclick="closeTwoFA()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Verify OTP -->
+      <div id="tfaStep2" style="display:none">
+        <div style="text-align:center;margin-bottom:16px">
+          <div style="font-size:.9rem;font-weight:700;margin-bottom:6px">Enter the 6-digit code</div>
+          <div style="font-size:.78rem;color:var(--t3)">Enter the code shown in your authenticator app</div>
+        </div>
+        <div class="otp-inputs" id="otpInputs">
+          <input class="otp-input" type="text" maxlength="1" inputmode="numeric" oninput="otpNext(this,0)" onkeydown="otpBack(event,0)"/>
+          <input class="otp-input" type="text" maxlength="1" inputmode="numeric" oninput="otpNext(this,1)" onkeydown="otpBack(event,1)"/>
+          <input class="otp-input" type="text" maxlength="1" inputmode="numeric" oninput="otpNext(this,2)" onkeydown="otpBack(event,2)"/>
+          <input class="otp-input" type="text" maxlength="1" inputmode="numeric" oninput="otpNext(this,3)" onkeydown="otpBack(event,3)"/>
+          <input class="otp-input" type="text" maxlength="1" inputmode="numeric" oninput="otpNext(this,4)" onkeydown="otpBack(event,4)"/>
+          <input class="otp-input" type="text" maxlength="1" inputmode="numeric" oninput="otpNext(this,5)" onkeydown="otpBack(event,5)"/>
+        </div>
+        <div id="otpError" style="text-align:center;font-size:.75rem;color:var(--red);display:none;margin-bottom:10px">Invalid code. Please try again.</div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn btn-brand" onclick="verifyTOTP()"><span class="material-icons">verified</span>Verify & Enable</button>
+          <button class="btn btn-ghost" onclick="goTFAStep1()"><span class="material-icons">arrow_back</span>Back</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Success -->
+      <div id="tfaStep3" style="display:none;text-align:center;padding:16px 0">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--green),#00a87a);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 0 14px rgba(0,200,150,.1),0 0 40px rgba(0,200,150,.2);animation:successPop .5s var(--ease)">
+          <span class="material-icons" style="font-size:34px;color:#fff">shield</span>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:6px">2FA Enabled!</div>
+        <div style="font-size:.82rem;color:var(--t3);margin-bottom:6px;line-height:1.6">Your account is now protected with<br>two-factor authentication.</div>
+        <div style="display:flex;flex-direction:column;gap:7px;padding:14px;background:var(--surface);border-radius:12px;margin:14px 0;text-align:left">
+          <div style="font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;margin-bottom:3px">Backup Codes (save these!)</div>
+          <div id="backupCodes" style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-family:monospace;font-size:.78rem;color:var(--t2)"></div>
+        </div>
+        <button class="btn btn-brand" style="margin-top:8px" onclick="closeTwoFADone()"><span class="material-icons">check_circle</span>All Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
   <a href="index" class="nav-brand">
@@ -528,7 +884,6 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
         <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
       </div>
     </div>
-
     <nav class="sidebar-nav">
       <div class="sn-item active" onclick="switchTab('overview',this)"><div class="sn-icon"><span class="material-icons">dashboard</span></div><span>Overview</span></div>
       <div class="sn-item" onclick="switchTab('profile',this)"><div class="sn-icon"><span class="material-icons">edit</span></div><span>Edit Profile</span></div>
@@ -539,12 +894,8 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
       <div class="sn-div"></div>
       <div class="sn-item" onclick="openModal('logoutModal')" style="color:var(--red)"><div class="sn-icon" style="background:rgba(255,45,85,.1)"><span class="material-icons" style="color:var(--red)">logout</span></div><span>Sign Out</span></div>
     </nav>
-
     <div class="streak-card">
-      <div class="sc-top">
-        <div class="sc-fire">🔥</div>
-        <div><div class="sc-num" id="scNum">0</div><div class="sc-label">Day Streak</div></div>
-      </div>
+      <div class="sc-top"><div class="sc-fire">🔥</div><div><div class="sc-num" id="scNum">0</div><div class="sc-label">Day Streak</div></div></div>
       <div class="sc-days" id="scDays"></div>
     </div>
   </aside>
@@ -558,42 +909,14 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
         <div class="greet-name">Welcome back, <em id="greetName">friend</em> 👋</div>
         <div class="greet-sub">Here's what's happening with your account today</div>
       </div>
-
-      <!-- STATS -->
       <div class="stats-grid">
-        <div class="stat-tile st-brand">
-          <div class="st-icon"><span class="material-icons">shopping_bag</span></div>
-          <div class="st-num" id="statOrders">0</div>
-          <div class="st-label">Total Orders</div>
-          <div class="st-trend trend-up"><span class="material-icons">arrow_upward</span>+12%</div>
-          <div class="sparkline-wrap"><canvas id="spkOrders"></canvas></div>
-        </div>
-        <div class="stat-tile st-gold">
-          <div class="st-icon"><span class="material-icons">payments</span></div>
-          <div class="st-num" id="statSpent">₹0</div>
-          <div class="st-label">Total Spent</div>
-          <div class="st-trend trend-up"><span class="material-icons">arrow_upward</span>+8%</div>
-          <div class="sparkline-wrap"><canvas id="spkSpent"></canvas></div>
-        </div>
-        <div class="stat-tile st-green">
-          <div class="st-icon"><span class="material-icons">favorite</span></div>
-          <div class="st-num" id="statFavs">0</div>
-          <div class="st-label">Favourites</div>
-          <div class="sparkline-wrap"><canvas id="spkFavs"></canvas></div>
-        </div>
-        <div class="stat-tile st-blue">
-          <div class="st-icon"><span class="material-icons">shopping_cart</span></div>
-          <div class="st-num" id="statCart">0</div>
-          <div class="st-label">In Cart</div>
-          <div class="sparkline-wrap"><canvas id="spkCart"></canvas></div>
-        </div>
+        <div class="stat-tile st-brand"><div class="st-icon"><span class="material-icons">shopping_bag</span></div><div class="st-num" id="statOrders">0</div><div class="st-label">Total Orders</div><div class="st-trend trend-up"><span class="material-icons">arrow_upward</span>+12%</div><div class="sparkline-wrap"><canvas id="spkOrders"></canvas></div></div>
+        <div class="stat-tile st-gold"><div class="st-icon"><span class="material-icons">payments</span></div><div class="st-num" id="statSpent">₹0</div><div class="st-label">Total Spent</div><div class="st-trend trend-up"><span class="material-icons">arrow_upward</span>+8%</div><div class="sparkline-wrap"><canvas id="spkSpent"></canvas></div></div>
+        <div class="stat-tile st-green"><div class="st-icon"><span class="material-icons">favorite</span></div><div class="st-num" id="statFavs">0</div><div class="st-label">Favourites</div><div class="sparkline-wrap"><canvas id="spkFavs"></canvas></div></div>
+        <div class="stat-tile st-blue"><div class="st-icon"><span class="material-icons">shopping_cart</span></div><div class="st-num" id="statCart">0</div><div class="st-label">In Cart</div><div class="sparkline-wrap"><canvas id="spkCart"></canvas></div></div>
       </div>
-
-      <!-- LOYALTY TIER -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon"><span class="material-icons">military_tech</span></div>Loyalty Tier</div>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">military_tech</span></div>Loyalty Tier</div></div>
         <div class="tier-wrap">
           <div class="tier-badge-large"><span class="material-icons">workspace_premium</span><span id="tierName">Bronze</span></div>
           <div class="tier-info">
@@ -608,51 +931,27 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
           <div class="tier-perk"><span class="material-icons">star</span>Exclusive Dishes</div>
         </div>
       </div>
-
-      <!-- SPENDING CHART -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon"><span class="material-icons">bar_chart</span></div>Monthly Spending</div>
-          <a href="orders" class="card-link">View All Orders</a>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">bar_chart</span></div>Monthly Spending</div><a href="orders" class="card-link">View All Orders</a></div>
         <div class="chart-area"><canvas id="spendChart"></canvas></div>
-        <div class="chart-legend">
-          <div class="cl-item"><div class="cl-dot" style="background:var(--brand)"></div>Spending</div>
-          <div class="cl-item"><div class="cl-dot" style="background:var(--gold)"></div>Savings</div>
-        </div>
+        <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:var(--brand)"></div>Spending</div><div class="cl-item"><div class="cl-dot" style="background:var(--gold)"></div>Savings</div></div>
       </div>
-
-      <!-- RECENT ACTIVITY -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon"><span class="material-icons">history</span></div>Recent Activity</div>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">history</span></div>Recent Activity</div></div>
         <div class="timeline" id="activityFeed"></div>
       </div>
-
-      <!-- REFERRAL -->
       <div class="card ref-card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon" style="background:linear-gradient(135deg,var(--gold),#c78c00)"><span class="material-icons">group_add</span></div>Referral Program</div>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon" style="background:linear-gradient(135deg,var(--gold),#c78c00)"><span class="material-icons">group_add</span></div>Referral Program</div></div>
         <div style="font-size:.83rem;color:var(--t2);margin-bottom:4px">Invite friends and earn <strong style="color:var(--gold2)">₹50 credits</strong> per successful referral!</div>
-        <div class="ref-code-wrap">
-          <div class="ref-code" id="refCode">IC-XXXX</div>
-          <button class="btn-copy" onclick="copyRef()"><span class="material-icons" style="font-size:13px">content_copy</span>Copy</button>
-        </div>
+        <div class="ref-code-wrap"><div class="ref-code" id="refCode">IC-XXXX</div><button class="btn-copy" onclick="copyRef()"><span class="material-icons" style="font-size:13px">content_copy</span>Copy</button></div>
         <div class="ref-stats">
           <div class="rs-item"><div class="rs-num" id="refSent">0</div><div class="rs-label">Invited</div></div>
           <div class="rs-item"><div class="rs-num" id="refJoined">0</div><div class="rs-label">Joined</div></div>
           <div class="rs-item"><div class="rs-num" id="refEarned">₹0</div><div class="rs-label">Earned</div></div>
         </div>
       </div>
-
-      <!-- ACHIEVEMENTS -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon" style="background:linear-gradient(135deg,#f5c518,#d4940a)"><span class="material-icons">emoji_events</span></div>Achievements</div>
-          <span style="font-size:.73rem;color:var(--t3)">5 / 8 Unlocked</span>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon" style="background:linear-gradient(135deg,#f5c518,#d4940a)"><span class="material-icons">emoji_events</span></div>Achievements</div><span style="font-size:.73rem;color:var(--t3)">5 / 8 Unlocked</span></div>
         <div class="ach-grid" id="achGrid"></div>
       </div>
     </div>
@@ -660,53 +959,20 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
     <!-- PROFILE TAB -->
     <div class="tab-panel" id="tab-profile">
       <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon"><span class="material-icons">person</span></div>Personal Info</div>
-          <button class="card-link btn" id="editToggleBtn" onclick="toggleEdit()" style="background:transparent;padding:8px 15px"><span class="material-icons" style="font-size:14px">edit</span>Edit</button>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">person</span></div>Personal Info</div><button class="card-link btn" id="editToggleBtn" onclick="toggleEdit()" style="background:transparent;padding:8px 15px"><span class="material-icons" style="font-size:14px">edit</span>Edit</button></div>
         <div class="form-section-title">Basic Details</div>
         <form id="profileForm" onsubmit="saveProfile(event)">
           <div class="form-grid" style="margin-bottom:16px">
-            <div class="form-group">
-              <label class="form-label">Full Name</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">badge</span><input class="form-input" type="text" id="editName" disabled/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Phone</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">phone</span><input class="form-input" type="tel" id="editPhone" disabled placeholder="Add phone number"/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">mail</span><input class="form-input" type="email" id="editEmail" disabled/></div>
-              <div class="form-hint">Email cannot be changed here</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Account Type</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">verified_user</span><input class="form-input" type="text" id="editType" disabled style="text-transform:capitalize"/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Date of Birth</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">cake</span><input class="form-input" type="date" id="editDob" disabled/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Gender</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">wc</span><input class="form-input" type="text" id="editGender" disabled placeholder="e.g. Male, Female, Other"/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">City</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">location_city</span><input class="form-input" type="text" id="editCity" disabled placeholder="Your city"/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Bio</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon" style="top:16px;transform:none">notes</span><textarea class="form-input" id="editBio" disabled rows="1" placeholder="Tell us about yourself" style="padding-top:12px;resize:none"></textarea></div>
-            </div>
+            <div class="form-group"><label class="form-label">Full Name</label><div class="form-input-wrap"><span class="material-icons fi-icon">badge</span><input class="form-input" type="text" id="editName" disabled/></div></div>
+            <div class="form-group"><label class="form-label">Phone</label><div class="form-input-wrap"><span class="material-icons fi-icon">phone</span><input class="form-input" type="tel" id="editPhone" disabled placeholder="Add phone number"/></div></div>
+            <div class="form-group"><label class="form-label">Email</label><div class="form-input-wrap"><span class="material-icons fi-icon">mail</span><input class="form-input" type="email" id="editEmail" disabled/></div><div class="form-hint">Email cannot be changed here</div></div>
+            <div class="form-group"><label class="form-label">Account Type</label><div class="form-input-wrap"><span class="material-icons fi-icon">verified_user</span><input class="form-input" type="text" id="editType" disabled style="text-transform:capitalize"/></div></div>
+            <div class="form-group"><label class="form-label">Date of Birth</label><div class="form-input-wrap"><span class="material-icons fi-icon">cake</span><input class="form-input" type="date" id="editDob" disabled/></div></div>
+            <div class="form-group"><label class="form-label">Gender</label><div class="form-input-wrap"><span class="material-icons fi-icon">wc</span><input class="form-input" type="text" id="editGender" disabled placeholder="e.g. Male, Female, Other"/></div></div>
+            <div class="form-group"><label class="form-label">City</label><div class="form-input-wrap"><span class="material-icons fi-icon">location_city</span><input class="form-input" type="text" id="editCity" disabled placeholder="Your city"/></div></div>
+            <div class="form-group"><label class="form-label">Bio</label><div class="form-input-wrap"><span class="material-icons fi-icon" style="top:16px;transform:none">notes</span><textarea class="form-input" id="editBio" disabled rows="1" placeholder="Tell us about yourself" style="padding-top:12px;resize:none"></textarea></div></div>
           </div>
-          <div id="profileBtnRow" style="display:none">
-            <div class="btn-row">
-              <button type="submit" class="btn btn-brand"><span class="material-icons">save</span>Save Changes</button>
-              <button type="button" class="btn btn-ghost" onclick="cancelEdit()"><span class="material-icons">close</span>Cancel</button>
-            </div>
-          </div>
+          <div id="profileBtnRow" style="display:none"><div class="btn-row"><button type="submit" class="btn btn-brand"><span class="material-icons">save</span>Save Changes</button><button type="button" class="btn btn-ghost" onclick="cancelEdit()"><span class="material-icons">close</span>Cancel</button></div></div>
         </form>
         <div class="profile-quick-stats" id="profileQuickStats">
           <div class="pqs-item"><div class="pqs-num" id="pqsOrders">0</div><div class="pqs-label">Orders</div></div>
@@ -714,31 +980,15 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
           <div class="pqs-item"><div class="pqs-num" id="pqsFavs">0</div><div class="pqs-label">Favourites</div></div>
         </div>
       </div>
-
-      <!-- CHANGE PASSWORD -->
       <div class="card">
-        <div class="card-header">
-          <div class="card-title"><div class="ct-icon"><span class="material-icons">lock_reset</span></div>Change Password</div>
-        </div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">lock_reset</span></div>Change Password</div></div>
         <form id="passwordForm" onsubmit="changePassword(event)">
           <div class="form-grid" style="margin-bottom:16px">
-            <div class="form-group">
-              <label class="form-label">Current Password</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">lock_outline</span><input class="form-input" type="password" id="currPass" placeholder="Current password"/></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">New Password</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">lock_reset</span><input class="form-input" type="password" id="newPass" placeholder="Min 8 characters" oninput="checkPwdStrength(this.value)"/></div>
-              <div class="pwd-strength"><div class="pwd-bars"><div class="pwd-bar" id="pb1"></div><div class="pwd-bar" id="pb2"></div><div class="pwd-bar" id="pb3"></div><div class="pwd-bar" id="pb4"></div></div><div class="pwd-label" id="pwdLabel">Enter password</div></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Confirm Password</label>
-              <div class="form-input-wrap"><span class="material-icons fi-icon">check_circle</span><input class="form-input" type="password" id="confPass" placeholder="Repeat new password"/></div>
-            </div>
+            <div class="form-group"><label class="form-label">Current Password</label><div class="form-input-wrap"><span class="material-icons fi-icon">lock_outline</span><input class="form-input" type="password" id="currPass" placeholder="Current password"/></div></div>
+            <div class="form-group"><label class="form-label">New Password</label><div class="form-input-wrap"><span class="material-icons fi-icon">lock_reset</span><input class="form-input" type="password" id="newPass" placeholder="Min 8 characters" oninput="checkPwdStrength(this.value)"/></div><div class="pwd-strength"><div class="pwd-bars"><div class="pwd-bar" id="pb1"></div><div class="pwd-bar" id="pb2"></div><div class="pwd-bar" id="pb3"></div><div class="pwd-bar" id="pb4"></div></div><div class="pwd-label" id="pwdLabel">Enter password</div></div></div>
+            <div class="form-group"><label class="form-label">Confirm Password</label><div class="form-input-wrap"><span class="material-icons fi-icon">check_circle</span><input class="form-input" type="password" id="confPass" placeholder="Repeat new password"/></div></div>
           </div>
-          <div class="btn-row">
-            <button type="submit" class="btn btn-brand"><span class="material-icons">lock</span>Update Password</button>
-          </div>
+          <div class="btn-row"><button type="submit" class="btn btn-brand"><span class="material-icons">lock</span>Update Password</button></div>
         </form>
       </div>
     </div>
@@ -755,37 +1005,26 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
           <div class="pref-row"><div class="pr-left"><div class="pr-icon" style="background:rgba(90,223,255,.1)"><span class="material-icons" style="color:var(--blue)">group_add</span></div><div><div class="pr-title">Referral Alerts</div><div class="pr-sub">When friends join using your code</div></div></div><label class="toggle"><input type="checkbox" id="pNotifRef" checked onchange="savePref('notifRef',this.checked)"><div class="toggle-sl"></div></label></div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">restaurant_menu</span></div>Food Preferences</div></div>
         <div class="form-section-title">Dietary Type</div>
         <div class="pill-group" style="margin-bottom:18px">
-          <div class="pill" onclick="togglePill(this)">🥩 Non-Veg</div>
-          <div class="pill sel" onclick="togglePill(this)">🌿 Vegetarian</div>
-          <div class="pill" onclick="togglePill(this)">🌱 Vegan</div>
-          <div class="pill" onclick="togglePill(this)">🥛 Eggetarian</div>
-          <div class="pill" onclick="togglePill(this)">🌾 Gluten-Free</div>
+          <div class="pill" onclick="togglePill(this)">🥩 Non-Veg</div><div class="pill sel" onclick="togglePill(this)">🌿 Vegetarian</div>
+          <div class="pill" onclick="togglePill(this)">🌱 Vegan</div><div class="pill" onclick="togglePill(this)">🥛 Eggetarian</div><div class="pill" onclick="togglePill(this)">🌾 Gluten-Free</div>
         </div>
         <div class="form-section-title">Spice Level</div>
         <div class="pill-group" style="margin-bottom:18px">
-          <div class="pill" onclick="togglePill(this)">❄️ Mild</div>
-          <div class="pill sel" onclick="togglePill(this)">🌶 Medium</div>
-          <div class="pill" onclick="togglePill(this)">🔥 Spicy</div>
-          <div class="pill" onclick="togglePill(this)">💀 Extra Hot</div>
+          <div class="pill" onclick="togglePill(this)">❄️ Mild</div><div class="pill sel" onclick="togglePill(this)">🌶 Medium</div>
+          <div class="pill" onclick="togglePill(this)">🔥 Spicy</div><div class="pill" onclick="togglePill(this)">💀 Extra Hot</div>
         </div>
         <div class="form-section-title">Favourite Cuisines</div>
         <div class="cuisine-grid">
-          <div class="cuisine-chip sel" onclick="toggleCuisine(this)"><span>🍛</span>Indian</div>
-          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🍕</span>Italian</div>
-          <div class="cuisine-chip sel" onclick="toggleCuisine(this)"><span>🍣</span>Japanese</div>
-          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🌮</span>Mexican</div>
-          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🥘</span>Chinese</div>
-          <div class="cuisine-chip sel" onclick="toggleCuisine(this)"><span>🧆</span>Middle East</div>
-          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🥗</span>Continental</div>
-          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🍔</span>American</div>
+          <div class="cuisine-chip sel" onclick="toggleCuisine(this)"><span>🍛</span>Indian</div><div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🍕</span>Italian</div>
+          <div class="cuisine-chip sel" onclick="toggleCuisine(this)"><span>🍣</span>Japanese</div><div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🌮</span>Mexican</div>
+          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🥘</span>Chinese</div><div class="cuisine-chip sel" onclick="toggleCuisine(this)"><span>🧆</span>Middle East</div>
+          <div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🥗</span>Continental</div><div class="cuisine-chip" onclick="toggleCuisine(this)"><span>🍔</span>American</div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">palette</span></div>Appearance</div></div>
         <div class="pref-list">
@@ -794,10 +1033,7 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
           <div class="pref-row"><div class="pr-left"><div class="pr-icon" style="background:rgba(0,200,150,.1)"><span class="material-icons" style="color:var(--green)">language</span></div><div><div class="pr-title">Language</div><div class="pr-sub">Currently set to English</div></div></div><select class="form-input" style="width:auto;padding:6px 12px;border-radius:8px;font-size:.74rem" onchange="toast('Language preference saved!','success')"><option>English</option><option>Hindi</option><option>Gujarati</option></select></div>
         </div>
       </div>
-
-      <div class="btn-row">
-        <button class="btn btn-brand" onclick="saveAllPreferences()"><span class="material-icons">save</span>Save All Preferences</button>
-      </div>
+      <div class="btn-row"><button class="btn btn-brand" onclick="saveAllPreferences()"><span class="material-icons">save</span>Save All Preferences</button></div>
     </div>
 
     <!-- ADDRESSES TAB -->
@@ -805,30 +1041,9 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
       <div class="card">
         <div class="card-header">
           <div class="card-title"><div class="ct-icon"><span class="material-icons">location_on</span></div>Saved Addresses</div>
-          <button class="card-link btn" style="background:transparent;padding:8px 15px" onclick="toast('Add address feature coming soon!','info')"><span class="material-icons" style="font-size:14px">add</span>Add New</button>
+          <button class="card-link btn" style="background:transparent;padding:8px 15px" onclick="openAddressModal('add')"><span class="material-icons" style="font-size:14px">add</span>Add New</button>
         </div>
-        <div class="addr-grid">
-          <div class="addr-card primary">
-            <div class="addr-primary-tag">Default</div>
-            <div class="addr-type-badge home"><span class="material-icons" style="font-size:11px">home</span>Home</div>
-            <div class="addr-text">A-204, Infocity Towers<br>Sector 30, GIFT City<br>Gandhinagar, Gujarat 382016</div>
-            <div class="addr-actions"><button class="addr-btn edit" onclick="toast('Edit coming soon!','info')"><span class="material-icons">edit</span>Edit</button></div>
-          </div>
-          <div class="addr-card">
-            <div class="addr-type-badge work"><span class="material-icons" style="font-size:11px">work</span>Work</div>
-            <div class="addr-text">Block C, Floor 5<br>Infocity Tech Park<br>Gandhinagar, Gujarat 382007</div>
-            <div class="addr-actions"><button class="addr-btn edit" onclick="toast('Edit coming soon!','info')"><span class="material-icons">edit</span>Edit</button><button class="addr-btn del" onclick="toast('Address deleted','error')"><span class="material-icons">delete</span></button></div>
-          </div>
-          <div class="addr-card">
-            <div class="addr-type-badge other"><span class="material-icons" style="font-size:11px">location_on</span>Other</div>
-            <div class="addr-text">12, Green Avenue<br>Bodakdev, Ahmedabad<br>Gujarat 380054</div>
-            <div class="addr-actions"><button class="addr-btn edit" onclick="toast('Edit coming soon!','info')"><span class="material-icons">edit</span>Edit</button><button class="addr-btn del" onclick="toast('Address deleted','error')"><span class="material-icons">delete</span></button></div>
-          </div>
-          <div class="addr-add" onclick="toast('Add address coming soon!','info')">
-            <span class="material-icons">add_location_alt</span>
-            <span>Add New Address</span>
-          </div>
-        </div>
+        <div class="addr-grid" id="addrGrid"></div>
       </div>
     </div>
 
@@ -838,27 +1053,22 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
         <div class="wallet-hero">
           <div class="coins-row"><div class="coin">IC</div><div class="coin">₹</div><div class="coin">★</div></div>
           <div class="wallet-balance-label">⚡ Infocity Coins</div>
-          <div class="wallet-balance">2,480</div>
-          <div class="wallet-sub">≈ ₹248 credit · Expires Dec 2025</div>
+          <div class="wallet-balance" id="walletBalanceDisplay">2,480</div>
+          <div class="wallet-sub" id="walletSubText">≈ ₹<span id="walletRupee">248</span> credit · Expires Dec 2025</div>
           <div class="wallet-actions">
-            <button class="wallet-btn wb-add" onclick="toast('Top-up coming soon!','info')"><span class="material-icons">add</span>Add Coins</button>
-            <button class="wallet-btn wb-hist" onclick="toast('Full history coming soon!','info')"><span class="material-icons">history</span>History</button>
+            <button class="wallet-btn wb-add" onclick="openCoinsModal()"><span class="material-icons">add</span>Add Coins</button>
+            <button class="wallet-btn wb-hist" onclick="openHistoryModal()"><span class="material-icons">history</span>History</button>
           </div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">receipt</span></div>Recent Transactions</div></div>
+        <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">receipt</span></div>Recent Transactions</div><button class="card-link" onclick="openHistoryModal()" style="cursor:pointer">View All</button></div>
         <div class="txn-list" id="txnList"></div>
       </div>
-
       <div class="card">
         <div class="card-header"><div class="card-title"><div class="ct-icon" style="background:linear-gradient(135deg,var(--gold),#c78c00)"><span class="material-icons">card_giftcard</span></div>Apply Coupon</div></div>
         <div style="display:flex;gap:10px;align-items:flex-end">
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Coupon Code</label>
-            <div class="form-input-wrap"><span class="material-icons fi-icon">confirmation_number</span><input class="form-input" type="text" id="couponInput" placeholder="Enter code e.g. FIRST50"/></div>
-          </div>
+          <div class="form-group" style="flex:1"><label class="form-label">Coupon Code</label><div class="form-input-wrap"><span class="material-icons fi-icon">confirmation_number</span><input class="form-input" type="text" id="couponInput" placeholder="Enter code e.g. FIRST50"/></div></div>
           <button class="btn btn-brand" onclick="applyCoupon()" style="margin-bottom:0;flex-shrink:0"><span class="material-icons">check</span>Apply</button>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px">
@@ -880,26 +1090,25 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
               <circle class="ring-bg" cx="39" cy="39" r="33" stroke-width="6"/>
               <circle class="ring-fill" cx="39" cy="39" r="33" stroke-width="6" stroke="var(--gold)" stroke-dasharray="207.3" stroke-dashoffset="62" id="secRing"/>
             </svg>
-            <div class="ring-label"><div class="ring-num" style="color:var(--gold)">70</div><div class="ring-sub">/100</div></div>
+            <div class="ring-label"><div class="ring-num" style="color:var(--gold)" id="secScore">70</div><div class="ring-sub">/100</div></div>
           </div>
-          <div class="sec-info"><h4>Good — Room to Improve</h4><p>Enable 2FA and verify phone to reach 100</p></div>
+          <div class="sec-info"><h4 id="secScoreLabel">Good — Room to Improve</h4><p id="secScoreDesc">Enable 2FA and verify phone to reach 100</p></div>
         </div>
         <div class="sec-checks">
           <div class="sec-check"><div class="sc-left"><div class="sc-chk-icon" style="background:rgba(0,200,150,.1)"><span class="material-icons" style="color:var(--green)">lock</span></div><div><div class="sc-check-title">Strong Password</div><div class="sc-check-sub">Last changed 12 days ago</div></div></div><span class="status-badge sb-ok">✓ Secure</span></div>
-          <div class="sec-check"><div class="sc-left"><div class="sc-chk-icon" style="background:rgba(255,45,85,.1)"><span class="material-icons" style="color:var(--red)">verified_user</span></div><div><div class="sc-check-title">Two-Factor Auth</div><div class="sc-check-sub">Not enabled — highly recommended</div></div></div><button class="btn btn-brand" style="padding:6px 14px;font-size:.7rem" onclick="toast('2FA setup coming soon!','info')">Enable</button></div>
+          <div class="sec-check" id="tfa2Check"><div class="sc-left"><div class="sc-chk-icon" id="tfaCheckIcon" style="background:rgba(255,45,85,.1)"><span class="material-icons" style="color:var(--red)">verified_user</span></div><div><div class="sc-check-title">Two-Factor Auth</div><div class="sc-check-sub" id="tfaCheckSub">Not enabled — highly recommended</div></div></div><span id="tfa2CheckBadge"><button class="btn btn-brand" style="padding:6px 14px;font-size:.7rem" onclick="openModal('twoFAModal')">Enable</button></span></div>
           <div class="sec-check"><div class="sc-left"><div class="sc-chk-icon" style="background:rgba(0,200,150,.1)"><span class="material-icons" style="color:var(--green)">mark_email_read</span></div><div><div class="sc-check-title">Email Verified</div><div class="sc-check-sub">Account email is verified</div></div></div><span class="status-badge sb-ok">✓ Verified</span></div>
           <div class="sec-check"><div class="sc-left"><div class="sc-chk-icon" style="background:rgba(240,165,0,.12)"><span class="material-icons" style="color:var(--gold)">phone_iphone</span></div><div><div class="sc-check-title">Phone Verified</div><div class="sc-check-sub">Add phone for extra security</div></div></div><span class="status-badge sb-warn">⚠ Pending</span></div>
-          <div class="sec-check"><div class="sc-left"><div class="sc-chk-icon" style="background:rgba(0,200,150,.1)"><span class="material-icons" style="color:var(--green)">devices</span></div><div><div class="sc-check-title">Login Sessions</div><div class="sc-check-sub">2 active sessions</div></div></div><span class="status-badge sb-ok">✓ Safe</span></div>
+          <div class="sec-check"><div class="sc-left"><div class="sc-chk-icon" style="background:rgba(0,200,150,.1)"><span class="material-icons" style="color:var(--green)">devices</span></div><div><div class="sc-check-title">Login Sessions</div><div class="sc-check-sub" id="sessionCountSub">2 active sessions</div></div></div><span class="status-badge sb-ok">✓ Safe</span></div>
         </div>
         <div class="btn-row" style="margin-top:18px">
-          <button class="btn btn-brand" onclick="toast('2FA setup coming soon!','info')"><span class="material-icons">security</span>Enable 2FA</button>
+          <button class="btn btn-brand" id="enable2FABtn" onclick="openModal('twoFAModal')"><span class="material-icons">security</span>Enable 2FA</button>
           <button class="btn btn-ghost" onclick="revokeAllSessions()"><span class="material-icons">logout</span>Logout All Devices</button>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header"><div class="card-title"><div class="ct-icon"><span class="material-icons">devices</span></div>Active Sessions</div></div>
-        <div class="device-list">
+        <div class="device-list" id="deviceList">
           <div class="device-item current">
             <div class="dev-icon"><span class="material-icons">laptop_mac</span></div>
             <div class="dev-info"><div class="dev-name">Chrome on macOS <span class="dev-cur-badge">Current</span></div><div class="dev-meta">Mumbai, IN · Active now</div></div>
@@ -924,12 +1133,7 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
         <div class="d-bg"></div><div class="d-stripes"></div><div class="d-glow"></div><div class="d-sweep"></div>
         <div class="d-badge-top">⚠ DANGER ZONE</div>
         <div class="d-inner">
-          <div class="d-slab-wrap">
-            <div class="d-slab">
-              <div class="ds-l ds-l1"></div><div class="ds-l ds-l2"></div>
-              <div class="ds-l ds-l3"><span class="material-icons">delete_forever</span></div>
-            </div>
-          </div>
+          <div class="d-slab-wrap"><div class="d-slab"><div class="ds-l ds-l1"></div><div class="ds-l ds-l2"></div><div class="ds-l ds-l3"><span class="material-icons">delete_forever</span></div></div></div>
           <div>
             <div class="d-eyebrow"><div class="d-blink"></div>Irreversible Action</div>
             <div class="d-title">Delete Your Account</div>
@@ -963,8 +1167,33 @@ const SB_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 let USER=null,EDITING=false,ORIG={};
+let ADDR_EDIT_IDX=-1,SELECTED_ADDR_TYPE='home';
+let WALLET_BALANCE=parseInt(localStorage.getItem('infocity_wallet')||'2480');
+let ALL_TRANSACTIONS=[];
 
-// CANVAS BG
+// ─── DEFAULT DATA ────────────────────────────────────────────
+const DEFAULT_ADDRESSES=[
+  {id:1,type:'home',line1:'A-204, Infocity Towers',line2:'Sector 30, GIFT City',city:'Gandhinagar',state:'Gujarat',pincode:'382016',primary:true},
+  {id:2,type:'work',line1:'Block C, Floor 5',line2:'Infocity Tech Park',city:'Gandhinagar',state:'Gujarat',pincode:'382007',primary:false},
+  {id:3,type:'other',line1:'12, Green Avenue',line2:'Bodakdev',city:'Ahmedabad',state:'Gujarat',pincode:'380054',primary:false}
+];
+const DEFAULT_TRANSACTIONS=[
+  {id:1,icon:'shopping_bag',bg:'rgba(255,69,0,.12)',ic:'var(--brand)',title:'Spice Garden Order',date:'Today 1:22 PM',amt:'-₹340',t:'dr',cat:'dr'},
+  {id:2,icon:'card_giftcard',bg:'rgba(0,200,150,.1)',ic:'var(--green)',title:'Referral Bonus',date:'Yesterday 9:14 AM',amt:'+200 coins',t:'cr',cat:'coins'},
+  {id:3,icon:'local_offer',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Coupon Cashback — LUCKY20',date:'2 days ago',amt:'+₹50',t:'cr',cat:'cr'},
+  {id:4,icon:'restaurant',bg:'rgba(90,223,255,.1)',ic:'var(--blue)',title:'Pizza Palace',date:'4 days ago 7:40 PM',amt:'-₹560',t:'dr',cat:'dr'},
+  {id:5,icon:'star',bg:'rgba(191,90,242,.1)',ic:'var(--purple)',title:'Login Bonus Coins',date:'5 days ago',amt:'+10 coins',t:'cr',cat:'coins'},
+  {id:6,icon:'account_balance_wallet',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Wallet Top-Up',date:'6 days ago',amt:'+500 coins',t:'cr',cat:'coins'},
+  {id:7,icon:'shopping_bag',bg:'rgba(255,69,0,.12)',ic:'var(--brand)',title:'Biryani Bliss Order',date:'1 week ago',amt:'-₹420',t:'dr',cat:'dr'},
+  {id:8,icon:'card_giftcard',bg:'rgba(0,200,150,.1)',ic:'var(--green)',title:'Sign-up Bonus',date:'2 weeks ago',amt:'+100 coins',t:'cr',cat:'coins'},
+  {id:9,icon:'restaurant',bg:'rgba(90,223,255,.1)',ic:'var(--blue)',title:'Taco Fiesta',date:'2 weeks ago',amt:'-₹280',t:'dr',cat:'dr'},
+  {id:10,icon:'local_offer',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Cashback — FIRST50',date:'3 weeks ago',amt:'+₹80',t:'cr',cat:'cr'},
+];
+
+function getAddresses(){return JSON.parse(localStorage.getItem('infocity_addresses')||'null')||DEFAULT_ADDRESSES}
+function saveAddresses(arr){localStorage.setItem('infocity_addresses',JSON.stringify(arr))}
+
+// ─── CANVAS BG ────────────────────────────────────────────────
 (()=>{
   const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
   let W,H,orbs=[];
@@ -987,9 +1216,10 @@ let USER=null,EDITING=false,ORIG={};
   };draw();
 })();
 
-// BOOT
+// ─── BOOT ────────────────────────────────────────────────────
 (async()=>{
   initTheme();
+  ALL_TRANSACTIONS=[...DEFAULT_TRANSACTIONS,...(JSON.parse(localStorage.getItem('infocity_user_txns')||'[]'))];
   const uid=localStorage.getItem('infocity_uid');
   if(!uid){location.href='../authentication';return}
   try{
@@ -1006,10 +1236,14 @@ let USER=null,EDITING=false,ORIG={};
     buildStreakDays();
     initTier();
     setReferralCode();
+    renderAddresses();
+    updateWalletDisplay();
+    updateSecurityScore();
   }catch(e){toast('Connection error','error')}
   document.getElementById('pageLoader').classList.add('hidden');
 })();
 
+// ─── PROFILE ──────────────────────────────────────────────────
 function fillProfile(u){
   const ini=(u.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   document.getElementById('avRing').textContent=ini;
@@ -1026,13 +1260,11 @@ function fillProfile(u){
   const streak=Math.floor(Math.random()*18)+3;
   document.getElementById('scNum').textContent=streak;
 }
-
 async function loadStats(){
   const cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]');
   const favs=JSON.parse(localStorage.getItem('infocity_favs')||'[]');
   const cartCount=cart.reduce((s,c)=>s+c.qty,0);
-  animNum('statCart',cartCount);
-  animNum('statFavs',favs.length);
+  animNum('statCart',cartCount);animNum('statFavs',favs.length);
   document.getElementById('pqsFavs').textContent=favs.length;
   updateCartBadge();
   try{
@@ -1048,7 +1280,6 @@ async function loadStats(){
     }
   }catch(e){buildActivity([])}
 }
-
 function buildActivity(orders){
   const feed=document.getElementById('activityFeed');
   const demo=[
@@ -1057,36 +1288,24 @@ function buildActivity(orders){
     {icon:'local_offer',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Coupon Applied',desc:'LUCKY20 — saved ₹80',time:'2 days ago',badge:'Saved ₹80',bs:'background:rgba(240,165,0,.12);color:var(--gold2)'},
     {icon:'star',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Achievement Unlocked!',desc:'🔥 Streak Master',time:'5 days ago',badge:'New!',bs:'background:rgba(255,69,0,.14);color:var(--brand)'},
   ];
-  const items=orders.length>0?orders.map(o=>({
-    icon:'receipt_long',bg:'rgba(255,69,0,.12)',ic:'var(--brand)',
-    title:'Order #'+(String(o.id||'').slice(0,8).toUpperCase()||'------'),
-    desc:'Total: ₹'+(o.total||0),
-    time:o.created_at?new Date(o.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'—',
-    badge:o.status,bs:o.status==='delivered'?'background:rgba(0,200,150,.12);color:var(--green)':o.status==='cancelled'?'background:rgba(255,45,85,.1);color:var(--red)':'background:rgba(240,165,0,.12);color:var(--gold2)'
-  })):demo;
-  feed.innerHTML=items.map((it,i)=>`
-    <div class="tl-item" style="animation-delay:${i*.07}s">
-      <div class="tl-dot" style="background:${it.bg}"><span class="material-icons" style="color:${it.ic};font-size:16px">${it.icon}</span></div>
-      <div class="tl-body"><div class="tl-title">${it.title}</div><div class="tl-desc">${it.desc}</div><div class="tl-time">${it.time}</div></div>
-      ${it.badge?`<div class="tl-badge" style="${it.bs}">${it.badge}</div>`:''}
-    </div>`).join('');
+  const items=orders.length>0?orders.map(o=>({icon:'receipt_long',bg:'rgba(255,69,0,.12)',ic:'var(--brand)',title:'Order #'+(String(o.id||'').slice(0,8).toUpperCase()||'------'),desc:'Total: ₹'+(o.total||0),time:o.created_at?new Date(o.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'—',badge:o.status,bs:o.status==='delivered'?'background:rgba(0,200,150,.12);color:var(--green)':o.status==='cancelled'?'background:rgba(255,45,85,.1);color:var(--red)':'background:rgba(240,165,0,.12);color:var(--gold2)'})):demo;
+  feed.innerHTML=items.map((it,i)=>`<div class="tl-item" style="animation-delay:${i*.07}s"><div class="tl-dot" style="background:${it.bg}"><span class="material-icons" style="color:${it.ic};font-size:16px">${it.icon}</span></div><div class="tl-body"><div class="tl-title">${it.title}</div><div class="tl-desc">${it.desc}</div><div class="tl-time">${it.time}</div></div>${it.badge?`<div class="tl-badge" style="${it.bs}">${it.badge}</div>`:''}</div>`).join('');
 }
-
 function initTier(spent){initTierFromSpend(spent||0)}
 function initTierFromSpend(spent){
   const tiers=[{name:'Bronze',max:1000},{name:'Silver',max:3000},{name:'Gold',max:8000},{name:'Platinum',max:Infinity}];
-  let tier=tiers[0],next=tiers[1];
-  for(let i=0;i<tiers.length-1;i++){if(spent>=tiers[i].max){tier=tiers[i+1];next=tiers[i+2]||tiers[i+1]}}
+  let tier=tiers[0];
+  for(let i=0;i<tiers.length-1;i++){if(spent>=tiers[i].max)tier=tiers[i+1]}
   document.getElementById('tierName').textContent=tier.name;
   document.getElementById('avTier').textContent=tier.name+' Member';
-  const prev=tiers[tiers.indexOf(tier)-1]?.max||0;
+  const tIdx=tiers.indexOf(tier);
+  const prev=tIdx>0?tiers[tIdx-1].max:0;
   const pct=tier.max===Infinity?100:Math.min(100,Math.floor(((spent-prev)/(tier.max-prev))*100));
   document.getElementById('tierPct').textContent=pct+'%';
   setTimeout(()=>{document.getElementById('tierFill').style.width=pct+'%'},400);
-  const next2=tiers[tiers.indexOf(tier)+1];
+  const next2=tiers[tIdx+1];
   if(next2)document.querySelector('.tier-progress-label span').textContent=`Progress to ${next2.name}`;
 }
-
 function setReferralCode(){
   const code='IC-'+((USER.name||'USER').toUpperCase().replace(/\s/g,'').slice(0,4))+(Math.floor(1000+Math.random()*9000));
   document.getElementById('refCode').textContent=code;
@@ -1094,45 +1313,24 @@ function setReferralCode(){
   document.getElementById('refJoined').textContent=Math.floor(Math.random()*5);
   document.getElementById('refEarned').textContent='₹'+(Math.floor(Math.random()*5)*50);
 }
-
 function buildStreakDays(){
   const days=['M','T','W','T','F','S','S'],done=[1,1,1,1,0,0,0];
   const c=document.getElementById('scDays');
   days.forEach((d,i)=>{const el=document.createElement('div');el.className='sc-day'+(i===3?' cur':done[i]?' on':'');el.textContent=d;c.appendChild(el)});
 }
-
 const achData=[
   {icon:'🔥',name:'Streak Master',desc:'10-day streak',u:true},{icon:'🏆',name:'First Order',desc:'Welcome!',u:true},{icon:'⭐',name:'Top Reviewer',desc:'10 reviews',u:true},
   {icon:'💰',name:'Big Spender',desc:'₹5000+',u:true},{icon:'🌶',name:'Spice Lover',desc:'10 spicy orders',u:true},{icon:'🍕',name:'Pizza Fanatic',desc:'20 pizzas',u:false},
   {icon:'🌙',name:'Night Owl',desc:'Midnight order',u:false},{icon:'🎯',name:'Perfectionist',desc:'100 orders',u:false}
 ];
 function buildAchievements(){
-  document.getElementById('achGrid').innerHTML=achData.map(a=>`
-    <div class="ach-tile ${a.u?'unlocked':'locked'}" style="position:relative">
-      ${a.u?'<div class="ach-star">★</div>':''}
-      <span class="ach-icon">${a.icon}</span>
-      <div class="ach-name">${a.name}</div>
-      <div class="ach-desc">${a.desc}</div>
-    </div>`).join('');
+  document.getElementById('achGrid').innerHTML=achData.map(a=>`<div class="ach-tile ${a.u?'unlocked':'locked'}" style="position:relative">${a.u?'<div class="ach-star">★</div>':''}<span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>`).join('');
 }
-
-const txData=[
-  {icon:'shopping_bag',bg:'rgba(255,69,0,.12)',ic:'var(--brand)',title:'Spice Garden Order',date:'Today 1:22PM',amt:'-₹340',t:'dr'},
-  {icon:'card_giftcard',bg:'rgba(0,200,150,.1)',ic:'var(--green)',title:'Referral Bonus',date:'Yesterday',amt:'+200 coins',t:'cr'},
-  {icon:'local_offer',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Coupon Cashback',date:'2 days ago',amt:'+₹50',t:'cr'},
-  {icon:'restaurant',bg:'rgba(90,223,255,.1)',ic:'var(--blue)',title:'Pizza Palace',date:'4 days ago',amt:'-₹560',t:'dr'},
-  {icon:'star',bg:'rgba(191,90,242,.1)',ic:'var(--purple)',title:'Login Bonus',date:'5 days ago',amt:'+10 coins',t:'cr'},
-];
 function buildTransactions(){
-  document.getElementById('txnList').innerHTML=txData.map(t=>`
-    <div class="txn-row">
-      <div class="txn-icon" style="background:${t.bg}"><span class="material-icons" style="color:${t.ic}">${t.icon}</span></div>
-      <div class="txn-body"><div class="txn-title">${t.title}</div><div class="txn-date">${t.date}</div></div>
-      <div class="txn-amt ${t.t}">${t.amt}</div>
-    </div>`).join('');
+  document.getElementById('txnList').innerHTML=ALL_TRANSACTIONS.slice(0,5).map(t=>`<div class="txn-row"><div class="txn-icon" style="background:${t.bg}"><span class="material-icons" style="color:${t.ic}">${t.icon}</span></div><div class="txn-body"><div class="txn-title">${t.title}</div><div class="txn-date">${t.date}</div></div><div class="txn-amt ${t.t}">${t.amt}</div></div>`).join('');
 }
 
-// SPARKLINES
+// ─── SPARKLINES ──────────────────────────────────────────────
 function buildSparklines(){
   [{id:'spkOrders',data:[2,5,3,8,6,9,12,8,14,10],c:'#ff4500'},{id:'spkSpent',data:[120,340,280,520,680,820,900,780,1050],c:'#f0a500'},{id:'spkFavs',data:[0,1,2,3,4,5,6,7],c:'#00c896'},{id:'spkCart',data:[1,0,2,3,2,4,3,5],c:'#5adfff'}].forEach(({id,data,c})=>{
     const canvas=document.getElementById(id);if(!canvas)return;
@@ -1146,8 +1344,6 @@ function buildSparklines(){
     ctx.strokeStyle=c;ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
   });
 }
-
-// SPEND CHART
 function buildSpendChart(){
   const canvas=document.getElementById('spendChart');if(!canvas)return;
   const dpr=devicePixelRatio||1;
@@ -1181,21 +1377,19 @@ function buildSpendChart(){
   lpts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle='#f0a500';ctx.fill();});
 }
 
-// TAB SWITCHING
+// ─── TAB SWITCHING ───────────────────────────────────────────
 const TAB_ORDER=['overview','profile','preferences','addresses','wallet','security'];
 function switchTab(name,el){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('.sn-item').forEach((it,i)=>it.classList.toggle('active',TAB_ORDER[i]===name));
-  document.querySelectorAll('.mob-item').forEach(it=>{const tabs=['overview','profile','wallet','security'];it.classList.toggle('active',tabs[document.querySelectorAll('.mob-item').length]===name)});
-  // fix mob nav
   const mobItems=document.querySelectorAll('.mob-item');
   const mobTabs=['overview','profile','wallet','security'];
   mobItems.forEach((it,i)=>it.classList.toggle('active',i<mobTabs.length&&mobTabs[i]===name));
   if(name==='overview')setTimeout(()=>{buildSparklines();buildSpendChart();},50);
 }
 
-// EDIT PROFILE
+// ─── EDIT PROFILE ─────────────────────────────────────────────
 function toggleEdit(){
   EDITING=!EDITING;
   ['editName','editPhone','editDob','editGender','editCity','editBio'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!EDITING});
@@ -1219,7 +1413,7 @@ async function saveProfile(e){
   }catch(err){toast('Save failed — try again','error')}
 }
 
-// PASSWORD
+// ─── PASSWORD ─────────────────────────────────────────────────
 function checkPwdStrength(v){
   const bars=[1,2,3,4].map(i=>document.getElementById('pb'+i));
   const lbl=document.getElementById('pwdLabel');
@@ -1241,28 +1435,303 @@ async function changePassword(e){
   document.getElementById('passwordForm').reset();checkPwdStrength('');
 }
 
-// PREFERENCES
+// ─── PREFERENCES ─────────────────────────────────────────────
 function savePref(k,v){const p=JSON.parse(localStorage.getItem('infocity_prefs')||'{}');p[k]=v;localStorage.setItem('infocity_prefs',JSON.stringify(p));}
 function togglePill(el){el.classList.toggle('sel')}
 function toggleCuisine(el){el.classList.toggle('sel')}
 function saveAllPreferences(){const prefs={};['pNotifEmail','pNotifSms','pNotifPromo','pNotifLoyalty','pNotifRef','pReducedMotion'].forEach(id=>{const el=document.getElementById(id);if(el)prefs[id]=el.checked});localStorage.setItem('infocity_prefs',JSON.stringify(prefs));toast('All preferences saved!','success')}
 
-// WALLET
+// ─══════════════ ADDRESS SYSTEM ══════════════════════════════
+function renderAddresses(){
+  const addresses=getAddresses();
+  const grid=document.getElementById('addrGrid');
+  const typeIcons={home:'home',work:'work',other:'location_on'};
+  const typeColors={home:'var(--blue)',work:'var(--green)',other:'var(--purple)'};
+  const typeBgs={home:'rgba(90,223,255,.1)',work:'rgba(0,200,150,.1)',other:'rgba(191,90,242,.1)'};
+  grid.innerHTML=addresses.map((a,i)=>`
+    <div class="addr-card ${a.primary?'primary':''}" id="addrCard${i}">
+      ${a.primary?'<div class="addr-primary-tag">Default</div>':''}
+      <div class="addr-type-badge ${a.type}" style="background:${typeBgs[a.type]||typeBgs.other};color:${typeColors[a.type]||typeColors.other}">
+        <span class="material-icons" style="font-size:11px">${typeIcons[a.type]||'location_on'}</span>${a.type.charAt(0).toUpperCase()+a.type.slice(1)}
+      </div>
+      <div class="addr-text">${a.line1}<br>${a.line2?a.line2+'<br>':''}${a.city}, ${a.state} ${a.pincode}</div>
+      <div class="addr-actions">
+        <button class="addr-btn edit" onclick="openAddressModal('edit',${i})"><span class="material-icons">edit</span>Edit</button>
+        ${!a.primary?`<button class="addr-btn setpri" onclick="setPrimary(${i})"><span class="material-icons">check_circle</span>Set Default</button>`:''}
+        ${!a.primary?`<button class="addr-btn del" onclick="deleteAddress(${i})"><span class="material-icons">delete</span></button>`:''}
+      </div>
+    </div>`).join('')+`
+    <div class="addr-add" onclick="openAddressModal('add')">
+      <span class="material-icons">add_location_alt</span>
+      <span>Add New Address</span>
+    </div>`;
+}
+
+function openAddressModal(mode,idx=-1){
+  ADDR_EDIT_IDX=idx;SELECTED_ADDR_TYPE='home';
+  document.getElementById('addrModalTitle').textContent=mode==='edit'?'Edit Address':'Add New Address';
+  // Reset
+  ['addrLine1','addrLine2','addrCity','addrPincode'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('addrState').value='';
+  document.getElementById('addrSetPrimary').checked=false;
+  document.querySelectorAll('.addr-type-opt').forEach(o=>o.classList.toggle('sel',o.dataset.type==='home'));
+  SELECTED_ADDR_TYPE='home';
+  if(mode==='edit'&&idx>=0){
+    const a=getAddresses()[idx];
+    SELECTED_ADDR_TYPE=a.type;
+    document.querySelectorAll('.addr-type-opt').forEach(o=>o.classList.toggle('sel',o.dataset.type===a.type));
+    document.getElementById('addrLine1').value=a.line1||'';
+    document.getElementById('addrLine2').value=a.line2||'';
+    document.getElementById('addrCity').value=a.city||'';
+    document.getElementById('addrState').value=a.state||'';
+    document.getElementById('addrPincode').value=a.pincode||'';
+    document.getElementById('addrSetPrimary').checked=a.primary||false;
+  }
+  openModal('addressModal');
+}
+function selectAddrType(type,el){
+  SELECTED_ADDR_TYPE=type;
+  document.querySelectorAll('.addr-type-opt').forEach(o=>o.classList.toggle('sel',o===el));
+}
+function saveAddress(){
+  const line1=document.getElementById('addrLine1').value.trim();
+  const line2=document.getElementById('addrLine2').value.trim();
+  const city=document.getElementById('addrCity').value.trim();
+  const state=document.getElementById('addrState').value;
+  const pincode=document.getElementById('addrPincode').value.trim();
+  const setPrimary=document.getElementById('addrSetPrimary').checked;
+  if(!line1||!city||!state||!pincode){toast('Please fill in all required fields','error');return}
+  if(pincode.length!==6){toast('Enter a valid 6-digit pincode','error');return}
+  let addresses=getAddresses();
+  if(setPrimary)addresses.forEach(a=>a.primary=false);
+  const newAddr={id:Date.now(),type:SELECTED_ADDR_TYPE,line1,line2,city,state,pincode,primary:setPrimary||(ADDR_EDIT_IDX>=0&&addresses[ADDR_EDIT_IDX]?.primary)||false};
+  if(ADDR_EDIT_IDX>=0){addresses[ADDR_EDIT_IDX]={...newAddr,id:addresses[ADDR_EDIT_IDX].id};}
+  else addresses.push(newAddr);
+  saveAddresses(addresses);
+  renderAddresses();
+  closeModal('addressModal');
+  toast(ADDR_EDIT_IDX>=0?'Address updated!':'New address added!','success');
+}
+function deleteAddress(idx){
+  if(!confirm('Delete this address?'))return;
+  let addresses=getAddresses();
+  if(addresses[idx].primary&&addresses.length>1)addresses[0].primary=true;
+  addresses.splice(idx,1);
+  saveAddresses(addresses);
+  const card=document.getElementById('addrCard'+idx);
+  if(card){card.style.transition='all .3s';card.style.opacity='0';card.style.transform='scale(.95)';setTimeout(renderAddresses,300);}
+  else renderAddresses();
+  toast('Address removed','info');
+}
+function setPrimary(idx){
+  let addresses=getAddresses();
+  addresses.forEach((a,i)=>a.primary=i===idx);
+  saveAddresses(addresses);
+  renderAddresses();
+  toast('Default address updated!','success');
+}
+
+// ─══════════════ WALLET / COINS ══════════════════════════════
+let selectedCoins=100,selectedPrice=10,selectedPayMethod='upi';
+
+function updateWalletDisplay(){
+  const bal=WALLET_BALANCE;
+  document.getElementById('walletBalanceDisplay').textContent=bal.toLocaleString('en-IN');
+  document.getElementById('walletRupee').textContent=Math.floor(bal/10).toLocaleString('en-IN');
+}
+
+function openCoinsModal(){
+  document.getElementById('coinsStep0').style.display='block';
+  document.getElementById('coinsProcessing').classList.remove('show');
+  document.getElementById('coinsSuccess').classList.remove('show');
+  selectedCoins=100;selectedPrice=10;
+  document.querySelectorAll('.coin-denom').forEach(d=>d.classList.toggle('sel',d.dataset.coins==='100'));
+  document.getElementById('coinsPreview').textContent='100 Coins';
+  document.getElementById('payAmtPreview').textContent='₹10';
+  selectPayMethod('upi',document.querySelector('.pay-method[data-method="upi"]'));
+  openModal('coinsModal');
+}
+function closeCoinsModal(){
+  document.getElementById('coinsStep0').style.display='block';
+  document.getElementById('coinsProcessing').classList.remove('show');
+  document.getElementById('coinsSuccess').classList.remove('show');
+  closeModal('coinsModal');
+}
+function selectDenom(el){
+  document.querySelectorAll('.coin-denom').forEach(d=>d.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedCoins=parseInt(el.dataset.coins);
+  selectedPrice=parseInt(el.dataset.price);
+  document.getElementById('coinsPreview').textContent=selectedCoins.toLocaleString('en-IN')+' Coins';
+  document.getElementById('payAmtPreview').textContent='₹'+selectedPrice;
+}
+function selectPayMethod(method,el){
+  selectedPayMethod=method;
+  document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('sel'));
+  if(el)el.classList.add('sel');
+  ['payFieldsUpi','payFieldsCard','payFieldsNetbank'].forEach(id=>document.getElementById(id).style.display='none');
+  const map={upi:'payFieldsUpi',card:'payFieldsCard',netbank:'payFieldsNetbank'};
+  if(map[method])document.getElementById(map[method]).style.display='block';
+}
+function fmtCard(el){let v=el.value.replace(/\D/g,'').slice(0,16);el.value=v.match(/.{1,4}/g)?.join(' ')||v}
+function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=3)v=v.slice(0,2)+'/'+v.slice(2,4);el.value=v}
+function processTopUp(){
+  // Validate
+  if(selectedPayMethod==='upi'){const upi=document.getElementById('upiId').value.trim();if(!upi||!upi.includes('@')){toast('Enter a valid UPI ID (e.g. name@upi)','error');return}}
+  if(selectedPayMethod==='card'){const cn=document.getElementById('cardNum').value.replace(/\s/g,'');const exp=document.getElementById('cardExp').value;const cvv=document.getElementById('cardCvv').value;if(cn.length<16){toast('Enter a valid 16-digit card number','error');return}if(exp.length<5){toast('Enter card expiry (MM/YY)','error');return}if(cvv.length<3){toast('Enter 3-digit CVV','error');return}}
+  // Show processing
+  document.getElementById('coinsStep0').style.display='none';
+  document.getElementById('coinsProcessing').classList.add('show');
+  setTimeout(()=>{
+    // Success
+    document.getElementById('coinsProcessing').classList.remove('show');
+    document.getElementById('coinsSuccess').classList.add('show');
+    document.getElementById('coinsAdded').textContent='+'+selectedCoins.toLocaleString('en-IN')+' Coins';
+    WALLET_BALANCE+=selectedCoins;
+    localStorage.setItem('infocity_wallet',WALLET_BALANCE);
+    updateWalletDisplay();
+    // Add transaction
+    const newTxn={id:Date.now(),icon:'account_balance_wallet',bg:'rgba(240,165,0,.12)',ic:'var(--gold)',title:'Wallet Top-Up',date:'Just now',amt:'+'+selectedCoins.toLocaleString('en-IN')+' coins',t:'cr',cat:'coins'};
+    ALL_TRANSACTIONS.unshift(newTxn);
+    const userTxns=JSON.parse(localStorage.getItem('infocity_user_txns')||'[]');
+    userTxns.unshift(newTxn);
+    localStorage.setItem('infocity_user_txns',JSON.stringify(userTxns.slice(0,50)));
+    buildTransactions();
+  },2200);
+}
+
+// ─══════════════ HISTORY MODAL ═══════════════════════════════
+let histFilter='all';
+function openHistoryModal(){
+  renderHistoryList();
+  openModal('historyModal');
+}
+function filterHistory(f,el){
+  histFilter=f;
+  document.querySelectorAll('.hist-filter').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderHistoryList();
+}
+function renderHistoryList(){
+  const list=document.getElementById('histTxnList');
+  let items=ALL_TRANSACTIONS;
+  if(histFilter!=='all')items=items.filter(t=>t.cat===histFilter);
+  if(!items.length){list.innerHTML='<div style="text-align:center;padding:28px;color:var(--t4);font-size:.82rem">No transactions found</div>';return}
+  list.innerHTML=items.map(t=>`<div class="txn-row"><div class="txn-icon" style="background:${t.bg}"><span class="material-icons" style="color:${t.ic}">${t.icon}</span></div><div class="txn-body"><div class="txn-title">${t.title}</div><div class="txn-date">${t.date}</div></div><div class="txn-amt ${t.t}">${t.amt}</div></div>`).join('');
+}
+
+// ─══════════════ 2FA WIZARD ══════════════════════════════════
+function openTwoFAModal(){openModal('twoFAModal')}
+function closeTwoFA(){closeModal('twoFAModal');resetTFASteps()}
+function resetTFASteps(){
+  document.getElementById('tfaStep1').style.display='block';
+  document.getElementById('tfaStep2').style.display='none';
+  document.getElementById('tfaStep3').style.display='none';
+  document.getElementById('tfaStepInd1').className='tfa-step active';
+  document.getElementById('tfaStepInd2').className='tfa-step';
+  document.getElementById('tfaStepInd3').className='tfa-step';
+  document.getElementById('otpError').style.display='none';
+  document.querySelectorAll('.otp-input').forEach(i=>{i.value='';i.classList.remove('filled')});
+}
+function goTFAStep2(){
+  document.getElementById('tfaStep1').style.display='none';
+  document.getElementById('tfaStep2').style.display='block';
+  document.getElementById('tfaStepInd1').className='tfa-step done';
+  document.getElementById('tfaStepInd2').className='tfa-step active';
+  setTimeout(()=>document.querySelector('.otp-input').focus(),100);
+}
+function goTFAStep1(){
+  document.getElementById('tfaStep2').style.display='none';
+  document.getElementById('tfaStep1').style.display='block';
+  document.getElementById('tfaStepInd2').className='tfa-step';
+  document.getElementById('tfaStepInd1').className='tfa-step active';
+}
+function otpNext(el,idx){
+  el.value=el.value.replace(/\D/g,'');
+  el.classList.toggle('filled',el.value.length>0);
+  if(el.value&&idx<5){const inputs=document.querySelectorAll('.otp-input');inputs[idx+1].focus()}
+}
+function otpBack(e,idx){
+  if(e.key==='Backspace'){const inputs=document.querySelectorAll('.otp-input');if(!inputs[idx].value&&idx>0){inputs[idx-1].focus();inputs[idx-1].value='';inputs[idx-1].classList.remove('filled')}}}
+function verifyTOTP(){
+  const inputs=document.querySelectorAll('.otp-input');
+  const code=Array.from(inputs).map(i=>i.value).join('');
+  if(code.length<6){toast('Enter all 6 digits','error');return}
+  // Any 6-digit code is accepted (demo)
+  document.getElementById('tfaStep2').style.display='none';
+  document.getElementById('tfaStep3').style.display='block';
+  document.getElementById('tfaStepInd2').className='tfa-step done';
+  document.getElementById('tfaStepInd3').className='tfa-step active';
+  // Generate backup codes
+  const codes=Array.from({length:8},()=>Math.random().toString(36).slice(2,7).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase());
+  document.getElementById('backupCodes').innerHTML=codes.map(c=>`<div style="padding:3px 6px;background:var(--surface);border-radius:5px;letter-spacing:1px">${c}</div>`).join('');
+  localStorage.setItem('infocity_2fa','enabled');
+  update2FAStatus(true);
+}
+function closeTwoFADone(){closeModal('twoFAModal');resetTFASteps();}
+function copyTFASecret(){navigator.clipboard.writeText(document.getElementById('tfaSecret').textContent.replace(/\s/g,'')).then(()=>toast('Secret key copied!','success')).catch(()=>toast('Copy failed','error'))}
+
+function update2FAStatus(enabled){
+  const icon=document.getElementById('tfaCheckIcon');
+  const sub=document.getElementById('tfaCheckSub');
+  const badge=document.getElementById('tfa2CheckBadge');
+  const btn=document.getElementById('enable2FABtn');
+  if(enabled){
+    icon.style.background='rgba(0,200,150,.1)';
+    icon.querySelector('.material-icons').style.color='var(--green)';
+    sub.textContent='Enabled — your account is protected';
+    badge.innerHTML='<span class="status-badge sb-ok">✓ Enabled</span>';
+    btn.style.display='none';
+    updateSecurityScore();
+    toast('2FA enabled! Account fully secured 🔒','success');
+  }
+}
+function updateSecurityScore(){
+  const has2FA=localStorage.getItem('infocity_2fa')==='enabled';
+  const score=has2FA?95:70;
+  document.getElementById('secScore').textContent=score;
+  const ring=document.getElementById('secRing');
+  const circumference=207.3;
+  ring.style.strokeDashoffset=circumference-(circumference*(score/100));
+  ring.style.stroke=score>=90?'var(--green)':score>=70?'var(--gold)':'var(--red)';
+  document.getElementById('secScoreLabel').textContent=score>=90?'Excellent — Fully Protected':'Good — Room to Improve';
+  document.getElementById('secScoreDesc').textContent=score>=90?'Your account has maximum protection enabled':'Enable 2FA and verify phone to reach 100';
+}
+
+// ─── SECURITY ────────────────────────────────────────────────
+let sessionCount=2;
+function revokeDevice(id,name){
+  const el=document.getElementById(id);if(!el)return;
+  el.style.transition='all .3s';el.style.opacity='0';el.style.transform='translateX(20px)';
+  setTimeout(()=>{el.remove();sessionCount=Math.max(1,sessionCount-1);document.getElementById('sessionCountSub').textContent=sessionCount+' active session'+(sessionCount!==1?'s':'')},300);
+  toast(name+' session revoked','info');
+}
+function revokeAllSessions(){
+  const devices=document.querySelectorAll('#deviceList .device-item:not(.current)');
+  devices.forEach((d,i)=>{setTimeout(()=>{d.style.transition='all .3s';d.style.opacity='0';d.style.transform='translateX(20px)';setTimeout(()=>d.remove(),300)},i*120)});
+  sessionCount=1;
+  setTimeout(()=>document.getElementById('sessionCountSub').textContent='1 active session',devices.length*120+300);
+  toast('All other sessions logged out!','success');
+}
+
+// ─── WALLET COUPON ──────────────────────────────────────────
 function applyCoupon(){
   const code=document.getElementById('couponInput').value.trim().toUpperCase();
   const map={FIRST50:'50% off on your next order!',LUCKY20:'₹20 cashback applied!',GOLD100:'100 bonus coins added!',WELCOME10:'₹10 welcome bonus!'};
-  if(map[code])toast('🎉 '+map[code],'success');else toast('Invalid coupon code','error');
+  if(map[code]){
+    if(code==='GOLD100'){WALLET_BALANCE+=100;localStorage.setItem('infocity_wallet',WALLET_BALANCE);updateWalletDisplay();}
+    toast('🎉 '+map[code],'success');
+  }else toast('Invalid coupon code','error');
 }
 function copyRef(){navigator.clipboard.writeText(document.getElementById('refCode').textContent).then(()=>toast('Code copied!','success')).catch(()=>toast('Copy failed','error'))}
 
-// SECURITY
-function revokeDevice(id,name){const el=document.getElementById(id);if(!el)return;el.style.opacity='0';el.style.transform='translateX(20px)';setTimeout(()=>el.remove(),300);toast(name+' session ended','info')}
-function revokeAllSessions(){toast('All other sessions logged out!','success')}
-
-// LOGOUT & DELETE
+// ─── LOGOUT & DELETE ─────────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
-['logoutModal','deleteModal'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id))closeModal(id)}));
+['logoutModal','deleteModal','addressModal','coinsModal','historyModal','twoFAModal'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('click',e=>{if(e.target===el)closeModal(id)});
+});
 function doLogout(){localStorage.removeItem('infocity_uid');localStorage.removeItem('infocity_type');location.href='../authentication'}
 function openDeleteModal(){document.getElementById('delInput').value='';document.getElementById('btnDelConfirm').classList.remove('ready');openModal('deleteModal')}
 function checkDelInput(){const v=document.getElementById('delInput').value.trim();document.getElementById('btnDelConfirm').classList.toggle('ready',!!(USER&&v===USER.email))}
@@ -1278,7 +1747,7 @@ async function doDelete(){
   }catch(err){toast('Deletion failed','error');btn.textContent='Delete Forever';btn.style.pointerEvents='auto'}
 }
 
-// UTILITIES
+// ─── UTILITIES ───────────────────────────────────────────────
 function animNum(id,target){const el=document.getElementById(id);if(!el)return;const t0=performance.now(),dur=900;const tick=t=>{const p=Math.min((t-t0)/dur,1),ease=1-Math.pow(1-p,3);el.textContent=Math.round(ease*target);if(p<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)}
 function updateCartBadge(){const count=JSON.parse(localStorage.getItem('infocity_cart')||'[]').reduce((s,c)=>s+c.qty,0);const b=document.getElementById('cartBadge');if(count>0){b.style.display='flex';b.textContent=count}else b.style.display='none'}
 function toast(msg,type='info'){const icons={success:'check_circle',error:'error',info:'info'};const el=document.createElement('div');el.className='toast '+type;el.innerHTML=`<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;document.getElementById('toastStack').appendChild(el);setTimeout(()=>{el.style.animation='tOut .32s forwards';setTimeout(()=>el.remove(),320)},3600)}
@@ -1287,6 +1756,9 @@ function initTheme(){const s=localStorage.getItem('infocity_theme')||'dark';docu
 
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>10));
 window.addEventListener('resize',()=>{if(document.getElementById('tab-overview').classList.contains('active')){buildSparklines();buildSpendChart()}});
+
+// Re-check 2FA status on load
+if(localStorage.getItem('infocity_2fa')==='enabled')update2FAStatus(true);
 </script>
 </body>
 </html>
