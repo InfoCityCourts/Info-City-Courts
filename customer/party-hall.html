@@ -755,33 +755,27 @@ const sb=supabase.createClient(SB_URL,SB_KEY);
 /* ─── STATE ─── */
 let allFoods=[], foodCart={}, currentStep=1, selectedDesig='Professional', selectedParty='Birthday Party', activeCat='all';
 const HALL_FEE=1000;
-const UPI_ID='7319749216@ybl'; // PhonePe default VPA
+const UPI_ID='7319749216@ybl';
 const UPI_NAME='Infocity+Court+Party+Hall';
 const UPI_PHONE='7319749216';
 const FB='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80';
 
 /* ─── INIT ─── */
 (async function init(){
-  // Particles
   const pw=document.getElementById('particles');
   ['201,147,58','232,174,92','245,204,128','184,50,50','90,223,255'].forEach((c,i)=>{
     for(let j=0;j<4;j++){const p=document.createElement('div');p.className='particle';const s=Math.random()*4+2;p.style.cssText=`width:${s}px;height:${s}px;background:rgba(${c},.45);left:${Math.random()*100}%;bottom:0;--d:${10+Math.random()*14}s;--dl:${Math.random()*12}s`;pw.appendChild(p);}
   });
-  // Loader
   setTimeout(()=>document.getElementById('loader').classList.add('out'),600);
-  // Date min
   const dateEl=document.getElementById('inDate');
   const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
   dateEl.min=tomorrow.toISOString().split('T')[0];
-  // Foods
   await loadFoods();
-  // Designation
   document.getElementById('desigGrid').addEventListener('click',e=>{
     const chip=e.target.closest('.desig-chip');if(!chip)return;
     document.querySelectorAll('.desig-chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');selectedDesig=chip.dataset.val;
   });
-  // Party type
   document.getElementById('partyTypeGrid').addEventListener('click',e=>{
     const card=e.target.closest('.party-card');if(!card)return;
     document.querySelectorAll('.party-card').forEach(c=>c.classList.remove('active'));
@@ -855,11 +849,9 @@ function updateSummary(){
   document.getElementById('sumFoodRow').style.display=hasFoods?'flex':'none';
   document.getElementById('sumFood').textContent='₹'+foodTotal.toLocaleString('en-IN');
   document.getElementById('sumTotal').textContent='₹'+grandTotal.toLocaleString('en-IN');
-  // Update payment amounts
   ['ppAmt','gpAmt','upiAmt'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.textContent='₹'+HALL_FEE.toLocaleString('en-IN');
   });
-  // Billing
   const fRow=document.getElementById('foodBillRow');const fAmt=document.getElementById('foodBillAmt');const tAmt=document.getElementById('totalBillAmt');
   if(fRow&&fAmt&&tAmt){fRow.style.display=hasFoods?'table-row':'none';fAmt.textContent='₹'+foodTotal.toLocaleString('en-IN');tAmt.innerHTML=`<strong>₹${grandTotal.toLocaleString('en-IN')}</strong>`;}
 }
@@ -882,20 +874,15 @@ function esc(s){if(!s)return'';const d=document.createElement('div');d.textConte
 function setErr(id,on){document.getElementById(id)?.classList.toggle('has-err',on);}
 function clearErrs(){document.querySelectorAll('.field').forEach(f=>f.classList.remove('has-err'));}
 function goStep(n){
-  if(n>currentStep){
-    if(!validateStep(currentStep))return;
-  }
+  if(n>currentStep){if(!validateStep(currentStep))return;}
   document.getElementById('step'+currentStep).classList.remove('active');
   currentStep=n;
   document.getElementById('step'+n).classList.add('active');
-  // Update sidebar
   for(let i=1;i<=4;i++){
     const el=document.getElementById('sideStep'+i);
     el.classList.toggle('active',i===n);el.classList.toggle('done',i<n);
   }
-  // Progress
   document.getElementById('progressFill').style.width=(n/4*100)+'%';
-  // Scroll
   document.getElementById('booking').scrollIntoView({behavior:'smooth',block:'start'});
   if(n===4)buildReview();
   updateSummary();
@@ -935,7 +922,6 @@ function buildReview(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.8rem">
       ${[['Name',name],['Email',email],['Phone',phone],['Designation',selectedDesig],company?['Organisation',company]:[],['Event Date',date],['Time',time],['Guests',guests+' people'],['Duration',duration],['Party Type',selectedParty],req?['Requirements',req]:[]].filter(x=>x&&x.length).map(([l,v])=>`<div style="color:var(--text3)">${l}</div><div style="font-weight:600">${v}</div>`).join('')}
     </div>`;
-  // Food review
   const items=Object.values(foodCart);
   const fc=document.getElementById('foodReviewCard');
   const orl=document.getElementById('orderReviewList');
@@ -947,30 +933,19 @@ function buildReview(){
 
 /* ─── PAYMENT ─── */
 function payWithUPI(method){
-  const foodTotal=Object.values(foodCart).reduce((s,x)=>s+x.qty*x.price,0);
-  const amount=HALL_FEE; // Only collect hall fee via UPI; food is paid on event day
+  const amount=HALL_FEE;
   const note=encodeURIComponent('InfoCity Courts Party Hall Booking');
   const pa=encodeURIComponent(UPI_ID);
   const pn=encodeURIComponent('InfoCity Courts');
-  const am=amount;
-  const cu='INR';
-  const tn=note;
+  const am=amount;const cu='INR';const tn=note;
   let url;
-  if(method==='phonepe'){
-    url=`phonepe://pay?transactionId=PHALL${Date.now()}&merchantId=&hostFlow=true&pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;
-  }else if(method==='gpay'){
-    url=`tez://upi/pay?pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;
-  }else{
-    url=`upi://pay?pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;
-  }
-  // Try deep link; fallback to intent URL for Android
+  if(method==='phonepe'){url=`phonepe://pay?transactionId=PHALL${Date.now()}&merchantId=&hostFlow=true&pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;}
+  else if(method==='gpay'){url=`tez://upi/pay?pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;}
+  else{url=`upi://pay?pa=${pa}&pn=${pn}&am=${am}&cu=${cu}&tn=${tn}`;}
   const a=document.createElement('a');a.href=url;a.style.display='none';document.body.appendChild(a);
   try{a.click();}catch(e){}
   setTimeout(()=>{document.body.removeChild(a);},300);
-  // Also try window.open for wider compat
-  setTimeout(()=>{
-    try{window.open(url,'_blank');}catch(e){}
-  },100);
+  setTimeout(()=>{try{window.open(url,'_blank');}catch(e){}},100);
   toast(`Opening ${method==='phonepe'?'PhonePe':method==='gpay'?'Google Pay':'UPI app'} — ₹${amount.toLocaleString('en-IN')} to ${UPI_PHONE}`,'inf');
 }
 
@@ -988,64 +963,329 @@ async function confirmBooking(){
   const req=document.getElementById('inRequirements').value.trim();
   const items=Object.values(foodCart);
   const foodTotal=items.reduce((s,x)=>s+x.qty*x.price,0);
+  const grandTotal=HALL_FEE+foodTotal;
   const refId='INFOCITY-'+Math.random().toString(36).substr(2,8).toUpperCase();
+  const bookingDate=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
 
   // Save user to Supabase
   try{
     const phoneInt=parseInt(phone.replace(/\D/g,''),10);
-    // Check duplicate
     const{data:ex}=await sb.from('Users').select('id').eq('email',email).maybeSingle();
     if(!ex){
       await sb.from('Users').insert([{name,phone:isNaN(phoneInt)?null:phoneInt,email,password:pw,type:'customer'}]);
     }
   }catch(e){console.warn('User save warn:',e);}
 
-  // Email via FormSubmit
-  const body=`
-╔═══════════════════════════════════════╗
-║   🎉  PARTY HALL BOOKING — INFOCITY  ║
-╚═══════════════════════════════════════╝
-Booking ID:    ${refId}
-Date/Time:     ${date} at ${time}
+  // ─── BEAUTIFUL HTML EMAIL ───
+  const partyEmoji = {
+    'Birthday Party':'🎂','Corporate Event':'💼','Wedding Reception':'💍',
+    'Anniversary':'🌹','Farewell':'👋','Other / Custom':'✨'
+  }[selectedParty]||'🎉';
 
-──────────────────────────────────────
-👤  GUEST DETAILS
-──────────────────────────────────────
-Name:         ${name}
-Email:        ${email}
-Phone:        ${phone}
-Designation:  ${selectedDesig}
-Organisation: ${company||'N/A'}
+  const foodRowsHtml = items.length ? items.map(x=>`
+    <tr>
+      <td style="padding:10px 14px;border-bottom:1px solid #2a1f35;font-family:Georgia,serif;font-size:14px;color:#d4c8f0;">
+        ${x.name}
+      </td>
+      <td style="padding:10px 14px;border-bottom:1px solid #2a1f35;text-align:center;font-size:13px;color:#9988bb;">×${x.qty}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid #2a1f35;text-align:right;font-weight:700;color:#e8ae5c;font-size:14px;">
+        ₹${(x.qty*x.price).toLocaleString('en-IN')}
+      </td>
+    </tr>`).join('') : `<tr><td colspan="3" style="padding:16px;text-align:center;color:#6b5a88;font-style:italic;font-size:13px;">No food pre-ordered — choose on the day</td></tr>`;
 
-──────────────────────────────────────
-🎊  EVENT DETAILS
-──────────────────────────────────────
-Party Type:   ${selectedParty}
-Guests:       ${guests} people
-Duration:     ${duration}
-Special Req:  ${req||'None'}
+  const htmlBody = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<title>Booking Confirmed · InfoCity Courts</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0a0612;font-family:'DM Sans',Arial,sans-serif;">
+<div style="max-width:640px;margin:0 auto;background:#0a0612;">
 
-──────────────────────────────────────
-🍽️  FOOD ORDER
-──────────────────────────────────────
-${items.length?items.map(x=>`${x.name} ×${x.qty} = ₹${(x.qty*x.price).toLocaleString('en-IN')}`).join('\n'):'No food pre-ordered'}
-Food Total:   ₹${foodTotal.toLocaleString('en-IN')}
+  <!-- ══ HERO BANNER ══ -->
+  <div style="position:relative;overflow:hidden;border-radius:0;">
+    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1200&q=85"
+         alt="Celebration" width="640"
+         style="width:100%;max-width:640px;display:block;height:280px;object-fit:cover;filter:brightness(0.38) saturate(1.2);"/>
+    <!-- Gradient overlay bar -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:100%;
+      background:linear-gradient(180deg,rgba(10,6,18,0) 0%,rgba(10,6,18,0.55) 55%,rgba(10,6,18,1) 100%);"></div>
+    <!-- Decorative top border -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,#c9933a,#f5cc80,#e8ae5c,#c9933a);"></div>
+    <!-- Hero text -->
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:28px 40px 32px;text-align:center;">
+      <div style="font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:5px;color:#e8ae5c;opacity:0.8;text-transform:uppercase;margin-bottom:8px;">
+        ◆ &nbsp; InfoCity Courts &nbsp; ◆
+      </div>
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:38px;font-weight:600;color:#ffffff;line-height:1;letter-spacing:-0.5px;">
+        ${partyEmoji} Your Hall is Reserved
+      </div>
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;color:rgba(255,255,255,0.55);margin-top:6px;">
+        An extraordinary celebration awaits
+      </div>
+    </div>
+  </div>
 
-──────────────────────────────────────
-💳  PAYMENT
-──────────────────────────────────────
-Hall Fee:     ₹1,000 (via UPI to ${UPI_PHONE})
-Food Payment: On event day
-Grand Total:  ₹${(HALL_FEE+foodTotal).toLocaleString('en-IN')}
-──────────────────────────────────────
-  `.trim();
+  <!-- ══ BOOKING ID BADGE ══ -->
+  <div style="background:linear-gradient(135deg,#1a1128 0%,#120c1e 100%);
+    border-top:1px solid #2a1f38;border-bottom:1px solid #2a1f38;
+    padding:22px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div style="font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:4px;color:#9370cc;text-transform:uppercase;margin-bottom:4px;">
+        Booking Reference
+      </div>
+      <div style="font-family:'Cinzel',Georgia,serif;font-size:18px;font-weight:700;
+        background:linear-gradient(135deg,#c9933a,#f5cc80);-webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;letter-spacing:2px;">
+        ${refId}
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:#9370cc;text-transform:uppercase;margin-bottom:4px;">
+        Confirmed On
+      </div>
+      <div style="font-family:'DM Sans',Arial,sans-serif;font-size:13px;font-weight:600;color:#d4c8f0;">
+        ${bookingDate}
+      </div>
+    </div>
+    <div style="width:48px;height:48px;border-radius:50%;
+      background:linear-gradient(135deg,#00c896,#008060);
+      display:inline-flex;align-items:center;justify-content:center;
+      box-shadow:0 6px 24px rgba(0,200,150,0.35);flex-shrink:0;">
+      <span style="color:#fff;font-size:22px;">✓</span>
+    </div>
+  </div>
 
+  <!-- ══ GREETING ══ -->
+  <div style="padding:36px 40px 8px;text-align:center;">
+    <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:500;color:#f0ecff;line-height:1.2;margin-bottom:10px;">
+      Hello, <em style="color:#e8ae5c;">${name}</em>!
+    </div>
+    <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-style:italic;
+      color:rgba(240,236,255,0.55);line-height:1.7;max-width:480px;margin:0 auto 0;">
+      We are delighted to confirm your reservation at InfoCity Courts Party Hall. 
+      Your event coordinator will reach out within 2 hours to finalise every detail.
+    </p>
+  </div>
+
+  <!-- ══ DECORATIVE DIVIDER ══ -->
+  <div style="padding:24px 40px;text-align:center;">
+    <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(201,147,58,0.4),rgba(245,204,128,0.6),rgba(201,147,58,0.4),transparent);"></div>
+    <div style="margin-top:-8px;font-size:13px;color:#c9933a;letter-spacing:8px;">✦ ✦ ✦</div>
+  </div>
+
+  <!-- ══ VENUE PHOTO STRIP ══ -->
+  <div style="padding:0 40px 28px;display:flex;gap:8px;">
+    <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=400&q=80"
+         alt="Venue" style="width:32%;height:90px;object-fit:cover;border-radius:2px;filter:brightness(0.7) saturate(1.1);"/>
+    <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=400&q=80"
+         alt="Venue" style="width:36%;height:90px;object-fit:cover;border-radius:2px;filter:brightness(0.65) saturate(1.2);border:2px solid #c9933a;"/>
+    <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=400&q=80"
+         alt="Venue" style="width:32%;height:90px;object-fit:cover;border-radius:2px;filter:brightness(0.7) saturate(1.1);"/>
+  </div>
+
+  <!-- ══ GUEST DETAILS CARD ══ -->
+  <div style="margin:0 28px 20px;background:#130e1f;border:1px solid #2a1f38;border-radius:2px;overflow:hidden;">
+    <!-- Card header -->
+    <div style="background:linear-gradient(90deg,#1e1530,#160f28);padding:14px 22px;border-bottom:1px solid #2a1f38;
+      display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">👤</span>
+      <span style="font-family:'Cinzel',Georgia,serif;font-size:11px;letter-spacing:3px;color:#c9933a;text-transform:uppercase;font-weight:600;">
+        Guest Profile
+      </span>
+    </div>
+    <!-- Card body -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      <tr>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;width:38%;font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Name</td>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:600;color:#f0ecff;">${name}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Email</td>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">${email}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Phone</td>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">${phone}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 22px;border-bottom:${company?'1px solid #1f1630':'none'};font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Role</td>
+        <td style="padding:12px 22px;border-bottom:${company?'1px solid #1f1630':'none'};font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">${selectedDesig}</td>
+      </tr>
+      ${company?`<tr>
+        <td style="padding:12px 22px;font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Organisation</td>
+        <td style="padding:12px 22px;font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">${company}</td>
+      </tr>`:''}
+    </table>
+  </div>
+
+  <!-- ══ EVENT DETAILS CARD ══ -->
+  <div style="margin:0 28px 20px;background:#130e1f;border:1px solid #2a1f38;border-radius:2px;overflow:hidden;">
+    <div style="background:linear-gradient(90deg,#1e1530,#160f28);padding:14px 22px;border-bottom:1px solid #2a1f38;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">${partyEmoji}</span>
+      <span style="font-family:'Cinzel',Georgia,serif;font-size:11px;letter-spacing:3px;color:#c9933a;text-transform:uppercase;font-weight:600;">Event Details</span>
+    </div>
+    <!-- Event banner image -->
+    <div style="position:relative;overflow:hidden;">
+      <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=640&q=75"
+           alt="Event" width="640"
+           style="width:100%;max-width:100%;height:120px;object-fit:cover;display:block;filter:brightness(0.3) saturate(1.3);"/>
+      <!-- Event stats overlay -->
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;padding:0 20px;">
+        <div style="text-align:center;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:600;color:#f5cc80;line-height:1;">${date}</div>
+          <div style="font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-top:3px;">Date</div>
+        </div>
+        <div style="width:1px;height:48px;background:rgba(201,147,58,0.3);"></div>
+        <div style="text-align:center;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:600;color:#f5cc80;line-height:1;">${time}</div>
+          <div style="font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-top:3px;">Start Time</div>
+        </div>
+        <div style="width:1px;height:48px;background:rgba(201,147,58,0.3);"></div>
+        <div style="text-align:center;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:600;color:#f5cc80;line-height:1;">${guests}</div>
+          <div style="font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-top:3px;">Guests</div>
+        </div>
+      </div>
+    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      <tr>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;width:38%;font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Party Type</td>
+        <td style="padding:12px 22px;border-bottom:1px solid #1f1630;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:600;color:#f0ecff;">${partyEmoji} ${selectedParty}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 22px;border-bottom:${req?'1px solid #1f1630':'none'};font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;">Duration</td>
+        <td style="padding:12px 22px;border-bottom:${req?'1px solid #1f1630':'none'};font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">${duration}</td>
+      </tr>
+      ${req?`<tr>
+        <td style="padding:12px 22px;font-family:'Cinzel',Georgia,serif;font-size:10px;letter-spacing:2px;color:#6b5a88;text-transform:uppercase;vertical-align:top;">Special Notes</td>
+        <td style="padding:12px 22px;font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;font-style:italic;">${req}</td>
+      </tr>`:''}
+    </table>
+  </div>
+
+  <!-- ══ FOOD ORDER CARD ══ -->
+  <div style="margin:0 28px 20px;background:#130e1f;border:1px solid #2a1f38;border-radius:2px;overflow:hidden;">
+    <div style="background:linear-gradient(90deg,#1e1530,#160f28);padding:14px 22px;border-bottom:1px solid #2a1f38;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🍽️</span>
+      <span style="font-family:'Cinzel',Georgia,serif;font-size:11px;letter-spacing:3px;color:#c9933a;text-transform:uppercase;font-weight:600;">Food Order</span>
+    </div>
+    <!-- Food image banner -->
+    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=640&q=75"
+         alt="Food" width="640"
+         style="width:100%;max-width:100%;height:100px;object-fit:cover;display:block;filter:brightness(0.35) saturate(1.4);"/>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      <thead>
+        <tr style="background:#0f0a1a;">
+          <th style="padding:10px 14px;text-align:left;font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:#6b5a88;text-transform:uppercase;font-weight:600;border-bottom:1px solid #2a1f38;">Dish</th>
+          <th style="padding:10px 14px;text-align:center;font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:#6b5a88;text-transform:uppercase;font-weight:600;border-bottom:1px solid #2a1f38;">Qty</th>
+          <th style="padding:10px 14px;text-align:right;font-family:'Cinzel',Georgia,serif;font-size:9px;letter-spacing:3px;color:#6b5a88;text-transform:uppercase;font-weight:600;border-bottom:1px solid #2a1f38;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>${foodRowsHtml}</tbody>
+    </table>
+  </div>
+
+  <!-- ══ BILLING CARD ══ -->
+  <div style="margin:0 28px 28px;background:#130e1f;border:1px solid #2a1f38;border-radius:2px;overflow:hidden;">
+    <div style="background:linear-gradient(90deg,#1e1530,#160f28);padding:14px 22px;border-bottom:1px solid #2a1f38;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">💳</span>
+      <span style="font-family:'Cinzel',Georgia,serif;font-size:11px;letter-spacing:3px;color:#c9933a;text-transform:uppercase;font-weight:600;">Billing Summary</span>
+    </div>
+    <div style="padding:20px 22px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+        <tr>
+          <td style="padding:10px 0;border-bottom:1px solid #1f1630;font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">Hall Booking Fee</td>
+          <td style="padding:10px 0;border-bottom:1px solid #1f1630;text-align:right;font-weight:600;color:#e8ae5c;font-size:14px;">₹1,000</td>
+        </tr>
+        ${foodTotal>0?`<tr>
+          <td style="padding:10px 0;border-bottom:1px solid #1f1630;font-family:'DM Sans',Arial,sans-serif;font-size:13px;color:#9988bb;">Food Subtotal (payable on event day)</td>
+          <td style="padding:10px 0;border-bottom:1px solid #1f1630;text-align:right;font-weight:600;color:#e8ae5c;font-size:14px;">₹${foodTotal.toLocaleString('en-IN')}</td>
+        </tr>`:''}
+        <tr>
+          <td style="padding:16px 0 0;font-family:'Cinzel',Georgia,serif;font-size:13px;font-weight:700;color:#f0ecff;letter-spacing:1px;">TOTAL</td>
+          <td style="padding:16px 0 0;text-align:right;">
+            <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;font-weight:600;
+              background:linear-gradient(135deg,#c9933a,#f5cc80);-webkit-background-clip:text;
+              -webkit-text-fill-color:transparent;letter-spacing:-0.5px;">
+              ₹${grandTotal.toLocaleString('en-IN')}
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- Paid badge -->
+    <div style="margin:0 20px 20px;padding:12px 18px;background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.2);border-radius:2px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:20px;flex-shrink:0;">🔒</span>
+      <span style="font-family:'DM Sans',Arial,sans-serif;font-size:12px;color:rgba(0,200,150,0.8);line-height:1.5;">
+        Hall booking fee of <strong style="color:#00c896;">₹1,000</strong> paid via UPI to ${UPI_PHONE} &nbsp;·&nbsp; Food payment on event day
+      </span>
+    </div>
+  </div>
+
+  <!-- ══ WHAT HAPPENS NEXT ══ -->
+  <div style="margin:0 28px 28px;padding:26px 26px;background:#0f0a1a;border:1px solid #2a1f38;border-radius:2px;text-align:center;">
+    <div style="font-family:'Cinzel',Georgia,serif;font-size:11px;letter-spacing:4px;color:#c9933a;text-transform:uppercase;margin-bottom:18px;">What Happens Next</div>
+    <div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:16px;">
+      <div style="text-align:center;max-width:120px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(201,147,58,0.1);border:1px solid rgba(201,147,58,0.3);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:18px;">📞</div>
+        <div style="font-family:'DM Sans',Arial,sans-serif;font-size:11px;color:#9988bb;line-height:1.5;">Coordinator calls you<br/><strong style="color:#d4c8f0;">within 2 hours</strong></div>
+      </div>
+      <div style="text-align:center;max-width:120px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(201,147,58,0.1);border:1px solid rgba(201,147,58,0.3);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🎨</div>
+        <div style="font-family:'DM Sans',Arial,sans-serif;font-size:11px;color:#9988bb;line-height:1.5;">Finalise décor &<br/><strong style="color:#d4c8f0;">seating plan</strong></div>
+      </div>
+      <div style="text-align:center;max-width:120px;">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(201,147,58,0.1);border:1px solid rgba(201,147,58,0.3);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🎊</div>
+        <div style="font-family:'DM Sans',Arial,sans-serif;font-size:11px;color:#9988bb;line-height:1.5;">Experience your<br/><strong style="color:#d4c8f0;">perfect celebration</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div style="position:relative;overflow:hidden;">
+    <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=640&q=70"
+         alt="Venue" width="640"
+         style="width:100%;max-width:100%;height:160px;object-fit:cover;display:block;filter:brightness(0.25) saturate(1.2);"/>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,6,18,0.5) 0%,rgba(10,6,18,0.85) 100%);"></div>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;">
+      <div style="font-family:'Cinzel',Georgia,serif;font-size:14px;font-weight:700;letter-spacing:4px;
+        background:linear-gradient(135deg,#c9933a,#f5cc80);-webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;margin-bottom:6px;">
+        INFOCITY COURTS · PARTY HALL
+      </div>
+      <div style="font-family:'DM Sans',Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:4px;">
+        Infocity, Gandhinagar, Gujarat 382007
+      </div>
+      <div style="font-family:'DM Sans',Arial,sans-serif;font-size:12px;color:rgba(201,147,58,0.6);">
+        infotech.officials2067@gmail.com
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom strip -->
+  <div style="background:#060410;padding:14px 28px;text-align:center;border-top:1px solid #15102a;">
+    <div style="font-family:'DM Sans',Arial,sans-serif;font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:1px;">
+      © 2026 InfoCity Courts · This is an automated booking confirmation · Please keep this for your records
+    </div>
+  </div>
+
+</div>
+</body>
+</html>`;
+
+  // Send HTML email via FormSubmit
   try{
     const fd=new FormData();
-    fd.append('name',name);fd.append('email',email);
-    fd.append('_subject',`[Party Hall Booking] ${refId} — ${name}`);
-    fd.append('message',body);fd.append('_cc',email);
-    fd.append('_captcha','false');fd.append('_template','table');
+    fd.append('name',name);
+    fd.append('email',email);
+    fd.append('_subject',`🎉 Party Hall Confirmed · ${refId} — ${name}`);
+    fd.append('_html', htmlBody);
+    fd.append('_cc',email);
+    fd.append('_captcha','false');
     await fetch('https://formsubmit.co/ajax/infotech.officials2067@gmail.com',{method:'POST',body:fd,headers:{'Accept':'application/json'}});
   }catch(e){console.warn('Email warn:',e);}
 
@@ -1053,7 +1293,6 @@ Grand Total:  ₹${(HALL_FEE+foodTotal).toLocaleString('en-IN')}
   document.getElementById('step4').style.display='none';
   const suc=document.getElementById('bookingSuccess');suc.style.display='block';
   document.getElementById('successRef').textContent='Booking ID: '+refId;
-  // Update sidesteps
   for(let i=1;i<=4;i++){const el=document.getElementById('sideStep'+i);el.classList.remove('active');el.classList.add('done');}
   toast('Booking confirmed! Check your email. 🎉','ok');
 }
