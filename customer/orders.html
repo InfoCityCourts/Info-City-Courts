@@ -36,12 +36,16 @@
     button{font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:none;background:none}
     input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
     ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--brand);border-radius:4px}
+
+    /* ── PAGE LOADER ── */
     #pageLoader{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .6s var(--ease)}
     #pageLoader.hidden{opacity:0;pointer-events:none}
     .ldr-brand{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--brand),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .ldr-sub{font-size:.8rem;color:var(--t3);font-weight:500}
     .ldr-ring{width:48px;height:48px;border-radius:50%;border:2px solid var(--border2);border-top-color:var(--brand);animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── NAVBAR ── */
     .navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--glass);backdrop-filter:blur(28px) saturate(1.8);border-bottom:1px solid var(--border);z-index:1000;display:flex;align-items:center;padding:0 clamp(16px,4vw,48px);gap:12px;transition:box-shadow .3s}
     .navbar.scrolled{box-shadow:0 4px 32px rgba(0,0,0,.2)}
     .nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
@@ -58,8 +62,14 @@
     .nav-btn:hover{background:var(--surface-h);color:var(--t1)}
     .nav-btn .material-icons{font-size:20px}
     .nav-badge{position:absolute;top:4px;right:4px;min-width:16px;height:16px;background:var(--red);color:#fff;font-size:.55rem;font-weight:800;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+    /* ── BACKGROUND CANVAS ── */
     #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+
+    /* ── CONTENT LAYOUT ── */
     .content{max-width:1100px;margin:0 auto;padding:calc(var(--nav-h)+28px) clamp(16px,3vw,40px) 100px;position:relative;z-index:1}
+
+    /* ── HERO BANNER ── */
     .hero-banner{background:var(--bg2);border:1px solid var(--border);border-radius:28px;padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
     .hero-banner::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(255,69,0,.12),transparent 65%);pointer-events:none}
     .hero-banner::after{content:'';position:absolute;bottom:-40px;left:20%;width:200px;height:200px;background:radial-gradient(circle,rgba(240,165,0,.07),transparent 65%);pointer-events:none}
@@ -75,6 +85,8 @@
     .hb-stat:hover{border-color:var(--border2);transform:translateY(-3px)}
     .hb-stat-num{font-size:1.5rem;font-weight:800;font-family:'Playfair Display',serif;background:linear-gradient(135deg,var(--brand),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .hb-stat-label{font-size:.62rem;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+    /* ── CONTROLS ── */
     .controls-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
     .tab-pills{display:flex;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:4px;flex-wrap:nowrap;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
     .tab-pills::-webkit-scrollbar{display:none}
@@ -90,6 +102,8 @@
     .search-box input::placeholder{color:var(--t4)}
     .sort-select{padding:10px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;font-size:.78rem;color:var(--t2);outline:none;cursor:pointer;transition:all .25s}
     .sort-select:focus{border-color:var(--brand)}
+
+    /* ── ACTIVE ALERT ── */
     .active-alert{background:linear-gradient(135deg,rgba(255,69,0,.1),rgba(240,165,0,.06));border:1px solid rgba(255,69,0,.2);border-radius:20px;padding:16px 20px;margin-bottom:18px;display:none;align-items:center;gap:14px;animation:slideIn .4s var(--ease)}
     .active-alert.show{display:flex}
     @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -99,10 +113,21 @@
     .aa-text h4{font-size:.92rem;font-weight:800;margin-bottom:2px}
     .aa-text p{font-size:.76rem;color:var(--t3)}
     .aa-count{font-size:2rem;font-weight:900;font-family:'Playfair Display',serif;background:linear-gradient(135deg,var(--brand),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-left:auto;flex-shrink:0}
+
+    /* ── ORDER CARDS ── */
     .orders-list{display:flex;flex-direction:column;gap:16px}
     .order-card{background:var(--bg2);border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .3s,transform .3s var(--ease);animation:cardIn .42s var(--ease) both}
     .order-card:hover{border-color:var(--border2);transform:translateY(-2px)}
     @keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── ORDER CARD REMOVE ANIMATION ── */
+    .order-card.removing{animation:cardOut .4s var(--ease) forwards}
+    @keyframes cardOut{
+      0%{opacity:1;transform:translateY(0) scale(1);max-height:600px;margin-bottom:16px}
+      60%{opacity:0;transform:translateY(-12px) scale(.97)}
+      100%{opacity:0;transform:translateY(-20px) scale(.95);max-height:0;margin-bottom:0;padding:0;border-width:0}
+    }
+
     .oc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:20px 22px 16px;flex-wrap:wrap}
     .oc-restaurant{font-size:1.08rem;font-weight:800;font-family:'Playfair Display',serif;margin-bottom:3px}
     .oc-num{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;color:var(--t3);font-weight:700;background:var(--surface);border:1px solid var(--border);padding:3px 9px;border-radius:50px;margin-bottom:5px}
@@ -123,6 +148,27 @@
     .eta-active{background:rgba(255,69,0,.08);border:1px solid rgba(255,69,0,.18);color:var(--brand)}
     .eta-done{background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.18);color:var(--green)}
     .eta-cancel{background:rgba(255,45,85,.07);border:1px solid rgba(255,45,85,.16);color:var(--red)}
+
+    /* ── REMOVE BUTTON ── */
+    .btn-remove-ord{
+      display:inline-flex;align-items:center;gap:5px;
+      padding:6px 13px;border-radius:50px;
+      font-size:.7rem;font-weight:700;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);
+      color:var(--t4);
+      transition:all .25s;
+      cursor:pointer;
+    }
+    .btn-remove-ord .material-icons{font-size:13px}
+    .btn-remove-ord:hover{
+      background:rgba(255,45,85,.1);
+      border-color:rgba(255,45,85,.25);
+      color:var(--red);
+      transform:translateY(-1px);
+    }
+
+    /* ── STEPPER ── */
     .stepper-wrap{margin:0 22px 16px;padding:18px;background:var(--surface);border:1px solid var(--border);border-radius:18px;position:relative;overflow:hidden}
     .stepper-wrap::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,69,0,.06),transparent 60%);pointer-events:none}
     .stepper-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
@@ -144,12 +190,18 @@
     .step-lbl{font-size:.56rem;font-weight:700;color:var(--t4);text-align:center;line-height:1.3;max-width:52px}
     .step.done .step-lbl,.step.active .step-lbl{color:var(--t2)}
     .step.active .step-lbl{color:var(--brand)}
+
+    /* ── CANCELLED BLOCK ── */
     .cancelled-block{margin:0 22px 16px;display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.15);border-radius:16px}
     .cb-icon{width:38px;height:38px;border-radius:11px;background:rgba(255,45,85,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .cb-icon .material-icons{font-size:18px;color:var(--red)}
     .cb-title{font-size:.85rem;font-weight:700;color:var(--red);margin-bottom:2px}
     .cb-sub{font-size:.73rem;color:var(--t3)}
+
+    /* ── ORDER ITEMS ── */
     .oc-items-wrap{padding:0 22px;margin-bottom:14px}
+    .oc-items-label{font-size:.62rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--t4);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+    .oc-items-label .material-icons{font-size:12px;color:var(--brand)}
     .oc-items-grid{display:flex;flex-direction:column;gap:7px}
     .oc-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:.25s}
     .oc-item:hover{border-color:var(--border2);background:var(--surface-h)}
@@ -159,6 +211,14 @@
     .oc-item-name{font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .oc-item-meta{font-size:.68rem;color:var(--t3);margin-top:2px}
     .oc-item-price{font-size:.9rem;font-weight:800;color:var(--brand);flex-shrink:0}
+
+    /* ── ITEMS LOADING SKELETON ── */
+    .oc-item-skeleton{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+    .sk-img{width:48px;height:48px;border-radius:11px;background:linear-gradient(90deg,var(--surface) 25%,var(--surface-h) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+    .sk-line{height:10px;border-radius:6px;background:linear-gradient(90deg,var(--surface) 25%,var(--surface-h) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ── REVIEW ── */
     .oc-review{margin:0 22px 14px;padding:14px 16px;background:linear-gradient(135deg,rgba(240,165,0,.05),rgba(255,69,0,.04));border:1px solid rgba(240,165,0,.15);border-radius:16px}
     .oc-review-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
     .oc-review-lbl{font-size:.62rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--gold)}
@@ -169,6 +229,8 @@
     .oc-reply{margin-top:9px;padding:9px 12px;background:rgba(255,69,0,.05);border-left:3px solid var(--brand);border-radius:0 10px 10px 0}
     .reply-lbl{font-size:.6rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--brand);margin-bottom:2px}
     .reply-text{font-size:.77rem;color:var(--t2);line-height:1.5}
+
+    /* ── ADDRESS ── */
     .oc-address{margin:0 22px 14px;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
     .addr-icon{width:32px;height:32px;border-radius:9px;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .addr-icon .material-icons{font-size:15px;color:var(--brand)}
@@ -178,14 +240,12 @@
     .addr-note .material-icons{font-size:12px;margin-top:1px;flex-shrink:0}
 
     /* ═══════════ CONTACT DELIVERY BOY ═══════════ */
+    /* BUG FIX 1: Only shown for non-delivered, non-cancelled orders */
     .dcb-wrap{margin:0 22px 16px;position:relative}
-
-    /* subtle road-dashes decorative separator above */
     .dcb-wrap::before{
       content:'';display:block;height:1px;margin-bottom:11px;
       background:repeating-linear-gradient(90deg,var(--border) 0,var(--border) 6px,transparent 6px,transparent 12px);
     }
-
     .dcb-strip{
       display:flex;align-items:center;gap:0;
       border-radius:20px;overflow:hidden;
@@ -202,8 +262,6 @@
       box-shadow:0 10px 32px rgba(0,200,150,.14);
     }
     .dcb-strip:active{transform:scale(.985)}
-
-    /* animated shimmer sweep */
     .dcb-strip::after{
       content:'';position:absolute;inset:0;pointer-events:none;
       background:linear-gradient(105deg,transparent 30%,rgba(0,200,150,.09) 50%,transparent 70%);
@@ -211,8 +269,6 @@
       animation:dcbShimmer 2.6s ease-in-out infinite;
     }
     @keyframes dcbShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
-
-    /* left accent bar */
     .dcb-accent{
       width:4px;align-self:stretch;flex-shrink:0;
       background:linear-gradient(180deg,#00c896,#00a07a,#00c896);
@@ -220,8 +276,6 @@
       animation:dcbBar 2s linear infinite;
     }
     @keyframes dcbBar{0%{background-position:0 0}100%{background-position:0 200%}}
-
-    /* phone ring zone */
     .dcb-ring-zone{
       width:62px;height:62px;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;
@@ -235,7 +289,6 @@
     .dcb-ring-zone::before{inset:-4px}
     .dcb-ring-zone::after{inset:-10px;animation-delay:.5s;border-color:rgba(0,200,150,.18)}
     @keyframes dcbRing{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.5);opacity:0}}
-
     .dcb-phone-orb{
       width:46px;height:46px;border-radius:50%;
       background:linear-gradient(135deg,#00c896,#00a07a);
@@ -253,8 +306,6 @@
       28%{transform:rotate(9deg)}
       36%{transform:rotate(0)}
     }
-
-    /* rider emoji badge */
     .dcb-rider{
       width:40px;height:40px;border-radius:50%;flex-shrink:0;
       background:linear-gradient(135deg,rgba(0,200,150,.12),rgba(90,223,255,.08));
@@ -262,8 +313,6 @@
       display:flex;align-items:center;justify-content:center;
       font-size:1.2rem;
     }
-
-    /* text block */
     .dcb-info{flex:1;min-width:0;padding:14px 10px 14px 6px}
     .dcb-badge{
       display:inline-flex;align-items:center;gap:4px;
@@ -278,8 +327,6 @@
     .dcb-name{font-size:.92rem;font-weight:800;font-family:'Playfair Display',serif;color:var(--t1);margin-bottom:2px}
     .dcb-ph{font-size:.75rem;color:var(--t3);display:flex;align-items:center;gap:4px;font-weight:600}
     .dcb-ph .material-icons{font-size:12px;color:var(--green)}
-
-    /* CTA */
     .dcb-cta{flex-shrink:0;padding:14px 16px 14px 8px;display:flex;flex-direction:column;align-items:center;gap:4px}
     .dcb-btn{
       display:inline-flex;align-items:center;gap:5px;
@@ -291,13 +338,8 @@
       font-family:'Plus Jakarta Sans',sans-serif;
     }
     .dcb-btn .material-icons{font-size:15px}
-    .dcb-strip:hover .dcb-btn{
-      box-shadow:0 6px 22px rgba(0,200,150,.5);
-      transform:scale(1.05);
-    }
+    .dcb-strip:hover .dcb-btn{box-shadow:0 6px 22px rgba(0,200,150,.5);transform:scale(1.05)}
     .dcb-hint{font-size:.56rem;color:var(--t4);font-weight:600;letter-spacing:.3px;text-align:center}
-
-    /* dotted sound-wave decoration */
     .dcb-wave{
       position:absolute;right:82px;top:0;bottom:0;
       display:flex;align-items:center;gap:3px;opacity:.14;pointer-events:none;
@@ -311,6 +353,7 @@
     @keyframes wavePulse{0%,100%{height:18px}50%{height:24px}}
     /* ════════════════════════════════════════════ */
 
+    /* ── FOOTER ── */
     .oc-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 22px 18px;border-top:1px solid var(--border)}
     .oc-total{font-size:1.1rem;font-weight:900;font-family:'Playfair Display',serif}
     .oc-total em{color:var(--brand);font-style:normal}
@@ -332,6 +375,10 @@
     .btn-share:hover{background:rgba(90,223,255,.14);transform:translateY(-1px)}
     .btn-track{background:linear-gradient(135deg,var(--brand),#bb2800);color:#fff;box-shadow:0 4px 14px rgba(255,69,0,.3)}
     .btn-track:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,69,0,.42)}
+    .btn-delete{background:rgba(255,45,85,.07);border:1px solid rgba(255,45,85,.18);color:var(--red)}
+    .btn-delete:hover{background:rgba(255,45,85,.15);transform:translateY(-1px)}
+
+    /* ── MODALS ── */
     .modal-overlay{position:fixed;inset:0;z-index:90000;background:rgba(0,0,0,.78);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px}
     .modal-overlay.open{display:flex;animation:mFade .28s}
     @keyframes mFade{from{opacity:0}to{opacity:1}}
@@ -344,6 +391,21 @@
     .modal-close:hover{background:var(--surface-h)}
     .modal-close .material-icons{font-size:18px;color:var(--t3)}
     .modal-body{padding:22px 26px 26px}
+
+    /* ── CONFIRM DELETE MODAL ── */
+    .delete-confirm-body{padding:28px 26px;text-align:center}
+    .delete-confirm-icon{width:72px;height:72px;border-radius:22px;background:rgba(255,45,85,.1);border:2px solid rgba(255,45,85,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .delete-confirm-icon .material-icons{font-size:34px;color:var(--red)}
+    .delete-confirm-title{font-size:1.1rem;font-weight:800;font-family:'Playfair Display',serif;margin-bottom:8px}
+    .delete-confirm-sub{font-size:.82rem;color:var(--t3);line-height:1.6;max-width:320px;margin:0 auto}
+    .delete-confirm-foot{display:flex;gap:10px;padding:0 26px 26px}
+    .delete-confirm-foot button{flex:1;padding:13px;border-radius:14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;font-weight:700;transition:.25s;cursor:pointer}
+    .btn-keep{background:var(--surface);border:1.5px solid var(--border);color:var(--t1)}
+    .btn-keep:hover{border-color:var(--border2)}
+    .btn-confirm-delete{background:linear-gradient(135deg,var(--red),#cc0033);color:#fff;border:none;box-shadow:0 5px 18px rgba(255,45,85,.28)}
+    .btn-confirm-delete:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,45,85,.42)}
+
+    /* ── INVOICE ── */
     .invoice-header{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(255,69,0,.08),rgba(240,165,0,.05));border-radius:16px;margin-bottom:20px;border:1px solid rgba(255,69,0,.12)}
     .invoice-brand{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--brand),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
     .invoice-num{font-size:.75rem;color:var(--t3);margin-bottom:2px}
@@ -359,6 +421,8 @@
     .invoice-footer-note{font-size:.68rem;color:var(--t4);text-align:center;padding:10px;background:var(--surface);border-radius:10px}
     .btn-print{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:13px;background:linear-gradient(135deg,var(--brand),#bb2800);color:#fff;font-size:.84rem;font-weight:800;border-radius:14px;margin-top:16px;transition:.25s;box-shadow:0 5px 18px rgba(255,69,0,.28)}
     .btn-print:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,69,0,.42)}
+
+    /* ── RATING MODAL ── */
     .star-picker{display:flex;justify-content:center;gap:8px;margin:16px 0 8px}
     .sp-star{font-size:36px;color:var(--t4);cursor:pointer;transition:.2s;-webkit-text-fill-color:initial}
     .sp-star:hover,.sp-star.lit{color:var(--gold);transform:scale(1.22);text-shadow:0 0 20px rgba(240,165,0,.5)}
@@ -380,6 +444,8 @@
     .btn-modal-submit{background:linear-gradient(135deg,var(--brand),#bb2800);color:#fff;border:none;box-shadow:0 5px 18px rgba(255,69,0,.28)}
     .btn-modal-submit:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,69,0,.42)}
     .btn-modal-submit:disabled{opacity:.45;pointer-events:none}
+
+    /* ── TRACK MODAL ── */
     .track-modal-body{padding:24px 26px 28px}
     .track-map-placeholder{background:var(--bg3);border:1px solid var(--border);border-radius:16px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:20px;position:relative;overflow:hidden}
     .track-map-placeholder::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(255,69,0,.1),transparent 60%)}
@@ -392,6 +458,8 @@
     .ts-dot .material-icons{font-size:15px}
     .ts-time{font-size:.65rem;color:var(--t4);margin-top:2px}
     .ts-title{font-size:.82rem;font-weight:600}
+
+    /* ── EMPTY STATE ── */
     .empty-state{text-align:center;padding:70px 24px}
     .empty-icon{width:80px;height:80px;margin:0 auto 18px;border-radius:22px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
     .empty-icon .material-icons{font-size:36px;color:var(--t4)}
@@ -400,6 +468,8 @@
     .btn-browse{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;background:linear-gradient(135deg,var(--brand),#bb2800);color:#fff;font-size:.84rem;font-weight:800;border-radius:50px;transition:.3s var(--ease);box-shadow:0 5px 18px rgba(255,69,0,.28)}
     .btn-browse:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,69,0,.42)}
     .btn-browse .material-icons{font-size:18px}
+
+    /* ── INSIGHTS ── */
     .insights-card{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:22px;box-shadow:var(--shadow);margin-bottom:20px}
     .ic-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
     .ic-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--gold));display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -410,6 +480,8 @@
     .insight-chip:hover{border-color:var(--border2)}
     .ic-num{font-size:1.1rem;font-weight:800;color:var(--brand)}
     .ic-label{font-size:.62rem;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+
+    /* ── TOAST ── */
     .toast-stack{position:fixed;top:84px;right:18px;z-index:99998;display:flex;flex-direction:column;gap:8px}
     .toast{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;font-size:.79rem;font-weight:600;backdrop-filter:blur(20px);animation:tIn .4s var(--ease);max-width:320px;box-shadow:0 12px 36px rgba(0,0,0,.3)}
     .toast.success{background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.24);color:var(--green)}
@@ -418,10 +490,13 @@
     .toast .material-icons{font-size:17px;flex-shrink:0}
     @keyframes tIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
     @keyframes tOut{from{transform:translateX(0);opacity:1}to{transform:translateX(110%);opacity:0}}
+
+    /* ── MOBILE NAV ── */
     .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--glass);backdrop-filter:blur(24px);border-top:1px solid var(--border);z-index:1000;align-items:center;justify-content:space-around;padding:0 6px}
     .mob-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 12px;border-radius:12px;color:var(--t4);transition:.2s;font-size:.57rem;font-weight:700;cursor:pointer;text-decoration:none}
     .mob-item.active,.mob-item:hover{color:var(--brand)}
     .mob-item .material-icons{font-size:21px}
+
     @media(max-width:768px){.nl-wrap{display:none}.mob-nav{display:flex}.content{padding-bottom:84px}}
     @media(max-width:600px){.hb-top{flex-direction:column}.hb-stats{width:100%}.hb-stat{flex:1;min-width:70px}.oc-actions{width:100%}.oc-btn{flex:1;justify-content:center}.dcb-name{font-size:.82rem}.dcb-btn{padding:7px 12px;font-size:.7rem}}
     @media(max-width:420px){.hb-stats{display:grid;grid-template-columns:1fr 1fr}.dcb-rider{display:none}}
@@ -436,6 +511,7 @@
 </div>
 <div class="toast-stack" id="toastStack"></div>
 
+<!-- ═══════ INVOICE MODAL ═══════ -->
 <div class="modal-overlay" id="invoiceModal">
   <div class="modal">
     <div class="modal-head">
@@ -446,6 +522,7 @@
   </div>
 </div>
 
+<!-- ═══════ RATING MODAL ═══════ -->
 <div class="modal-overlay" id="ratingModal">
   <div class="modal">
     <div class="modal-head">
@@ -479,6 +556,7 @@
   </div>
 </div>
 
+<!-- ═══════ TRACK MODAL ═══════ -->
 <div class="modal-overlay" id="trackModal">
   <div class="modal">
     <div class="modal-head">
@@ -489,6 +567,24 @@
   </div>
 </div>
 
+<!-- ═══════ DELETE CONFIRM MODAL ═══════ -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:420px">
+    <div class="delete-confirm-body">
+      <div class="delete-confirm-icon"><span class="material-icons">delete_forever</span></div>
+      <div class="delete-confirm-title">Remove this order?</div>
+      <p class="delete-confirm-sub">This will permanently remove the order from your history. This action cannot be undone.</p>
+    </div>
+    <div class="delete-confirm-foot">
+      <button class="btn-keep" onclick="closeModal('deleteModal')">Keep it</button>
+      <button class="btn-confirm-delete" id="deleteConfirmBtn" onclick="confirmDelete()">
+        <span class="material-icons" style="font-size:15px;vertical-align:middle">delete</span> Remove Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ NAVBAR ═══════ -->
 <nav class="navbar" id="navbar">
   <a href="index" class="nav-brand">
     <div class="nb-icon"><span class="material-icons">restaurant</span></div>
@@ -510,6 +606,7 @@
   </div>
 </nav>
 
+<!-- ═══════ MAIN CONTENT ═══════ -->
 <div class="content">
 <br><br><br><br><br>
   <div class="hero-banner">
@@ -564,6 +661,7 @@
   <div class="orders-list" id="ordersList"></div>
 </div>
 
+<!-- ═══════ MOBILE NAV ═══════ -->
 <div class="mob-nav">
   <a class="mob-item" href="index"><span class="material-icons">home</span>Home</a>
   <a class="mob-item" href="cart"><span class="material-icons">shopping_cart</span>Cart</a>
@@ -572,135 +670,328 @@
 </div>
 
 <script>
-const SB_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
-const sb=supabase.createClient(SB_URL,SB_KEY);
+/* ══════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════ */
+const SB_URL = 'https://okifxlsmlzeyrvvxyzdx.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-let USER=null,allOrders=[],itemsByOrder={},currentFilter='all',searchQuery='',ratingOrderId=null,selectedStars=0;
-const ACTIVE_STATUSES=['pending','confirmed','preparing','ready','out_for_delivery'];
-const FALLBACK_IMG='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60';
-const S_ICONS={pending:'schedule',confirmed:'thumb_up',preparing:'restaurant',ready:'check_circle',out_for_delivery:'delivery_dining',delivered:'done_all',cancelled:'cancel'};
-const S_LABELS={pending:'Placed',confirmed:'Confirmed',preparing:'Preparing',ready:'Ready!',out_for_delivery:'On the Way',delivered:'Delivered',cancelled:'Cancelled'};
-const RATING_LABELS=['','😞 Poor','😕 Fair','😊 Good','😄 Great','🤩 Excellent!'];
-const STEPS=[{key:'pending',icon:'receipt',label:'Placed'},{key:'confirmed',icon:'thumb_up',label:'Confirmed'},{key:'preparing',icon:'restaurant',label:'Preparing'},{key:'ready',icon:'check_circle',label:'Ready'},{key:'out_for_delivery',icon:'delivery_dining',label:'On Way'},{key:'delivered',icon:'done_all',label:'Delivered'}];
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let USER = null;
+let allOrders = [];
+let itemsByOrder = {};
+let currentFilter = 'all';
+let searchQuery = '';
+let ratingOrderId = null;
+let selectedStars = 0;
+let deleteTargetId = null; // BUG FIX 2: track which order to delete
 
-/* ─── DELIVERY BOY CONFIG ─── */
-const DELIVERY_BOY={name:'Ravi Kumar',phone:'7319749216',display:'73197 49216',emoji:'🛵'};
+const ACTIVE_STATUSES = ['pending', 'confirmed', 'preparing', 'ready', 'out_for_delivery'];
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=100&q=60';
 
+const S_ICONS = {
+  pending: 'schedule', confirmed: 'thumb_up', preparing: 'restaurant',
+  ready: 'check_circle', out_for_delivery: 'delivery_dining',
+  delivered: 'done_all', cancelled: 'cancel'
+};
+const S_LABELS = {
+  pending: 'Placed', confirmed: 'Confirmed', preparing: 'Preparing',
+  ready: 'Ready!', out_for_delivery: 'On the Way',
+  delivered: 'Delivered', cancelled: 'Cancelled'
+};
+const RATING_LABELS = ['', '😞 Poor', '😕 Fair', '😊 Good', '😄 Great', '🤩 Excellent!'];
+const STEPS = [
+  { key: 'pending',          icon: 'receipt',          label: 'Placed'     },
+  { key: 'confirmed',        icon: 'thumb_up',          label: 'Confirmed'  },
+  { key: 'preparing',        icon: 'restaurant',        label: 'Preparing'  },
+  { key: 'ready',            icon: 'check_circle',      label: 'Ready'      },
+  { key: 'out_for_delivery', icon: 'delivery_dining',   label: 'On Way'     },
+  { key: 'delivered',        icon: 'done_all',          label: 'Delivered'  }
+];
+
+/* ── DELIVERY BOY CONFIG ── */
+const DELIVERY_BOY = { name: 'Ravi Kumar', phone: '7319749216', display: '73197 49216', emoji: '🛵' };
+
+/* ══════════════════════════════════════════
+   ANIMATED BACKGROUND
+══════════════════════════════════════════ */
 (()=>{
-  const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
-  let W,H,orbs=[];
-  const resize=()=>{W=c.width=innerWidth;H=c.height=innerHeight};
-  window.addEventListener('resize',resize);resize();
-  for(let i=0;i<4;i++)orbs.push({x:Math.random()*W,y:Math.random()*H,r:200+Math.random()*260,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,hue:i%2?15:38});
-  const draw=()=>{
-    ctx.clearRect(0,0,W,H);
-    orbs.forEach(o=>{
-      const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
-      const dk=document.documentElement.getAttribute('data-theme')==='dark';
-      g.addColorStop(0,dk?`hsla(${o.hue},100%,55%,.1)`:`hsla(${o.hue},100%,55%,.05)`);
-      g.addColorStop(1,'transparent');
-      ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();
-      o.x+=o.vx;o.y+=o.vy;
-      if(o.x<-o.r||o.x>W+o.r)o.vx*=-1;
-      if(o.y<-o.r||o.y>H+o.r)o.vy*=-1;
+  const c = document.getElementById('bgCanvas');
+  const ctx = c.getContext('2d');
+  let W, H, orbs = [];
+  const resize = () => { W = c.width = innerWidth; H = c.height = innerHeight; };
+  window.addEventListener('resize', resize); resize();
+  for (let i = 0; i < 4; i++) orbs.push({
+    x: Math.random() * W, y: Math.random() * H,
+    r: 200 + Math.random() * 260,
+    vx: (Math.random() - .5) * .2, vy: (Math.random() - .5) * .2,
+    hue: i % 2 ? 15 : 38
+  });
+  const draw = () => {
+    ctx.clearRect(0, 0, W, H);
+    orbs.forEach(o => {
+      const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+      const dk = document.documentElement.getAttribute('data-theme') === 'dark';
+      g.addColorStop(0, dk ? `hsla(${o.hue},100%,55%,.1)` : `hsla(${o.hue},100%,55%,.05)`);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); ctx.fill();
+      o.x += o.vx; o.y += o.vy;
+      if (o.x < -o.r || o.x > W + o.r) o.vx *= -1;
+      if (o.y < -o.r || o.y > H + o.r) o.vy *= -1;
     });
     requestAnimationFrame(draw);
-  };draw();
+  };
+  draw();
 })();
 
-(async()=>{
-  initTheme();updateCartBadge();
-  const uid=localStorage.getItem('infocity_uid');
-  if(!uid){location.href='../authentication';return}
-  try{
-    const{data,error}=await sb.from('Users').select('*').eq('id',uid).maybeSingle();
-    if(error||!data){localStorage.clear();location.href='../authentication';return}
-    if(data.type!=='customer'){location.href='../authentication';return}
-    USER=data;await fetchOrders();
-  }catch(e){toast('Connection error','error')}
+/* ══════════════════════════════════════════
+   BOOT
+══════════════════════════════════════════ */
+(async () => {
+  initTheme();
+  updateCartBadge();
+  const uid = localStorage.getItem('infocity_uid');
+  if (!uid) { location.href = '../authentication'; return; }
+  try {
+    const { data, error } = await sb.from('Users').select('*').eq('id', uid).maybeSingle();
+    if (error || !data) { localStorage.clear(); location.href = '../authentication'; return; }
+    if (data.type !== 'customer') { location.href = '../authentication'; return; }
+    USER = data;
+    await fetchOrders();
+  } catch (e) { toast('Connection error', 'error'); }
   document.getElementById('pageLoader').classList.add('hidden');
 })();
 
-async function fetchOrders(){
-  let orders=null;
-  try{const{data,error}=await sb.from('orders').select('*').eq('user_id',USER.id).order('created_at',{ascending:false});if(!error&&data)orders=data}catch(_){}
-  if(!orders?.length){try{const{data,error}=await sb.from('orders').select('*').eq('user_name',USER.name).order('created_at',{ascending:false});if(!error&&data)orders=data}catch(_){}}
-  allOrders=orders||[];itemsByOrder={};
-  if(allOrders.length){
-    try{
-      const ids=allOrders.map(o=>o.id);
-      const{data:items}=await sb.from('order_items').select('*').in('order_id',ids);
-      (items||[]).forEach(it=>{const k=String(it.order_id);if(!itemsByOrder[k])itemsByOrder[k]=[];itemsByOrder[k].push(it)});
-    }catch(e){console.warn('items fetch:',e)}
+/* ══════════════════════════════════════════
+   DATA: FETCH ORDERS + ITEMS
+   BUG FIX 3: Multi-strategy item fetching
+══════════════════════════════════════════ */
+async function fetchOrders() {
+  let orders = null;
+
+  /* Strategy 1: fetch by user_id */
+  try {
+    const { data, error } = await sb.from('orders').select('*').eq('user_id', USER.id).order('created_at', { ascending: false });
+    if (!error && data && data.length) orders = data;
+  } catch (_) {}
+
+  /* Strategy 2: fallback to user_name */
+  if (!orders || !orders.length) {
+    try {
+      const { data, error } = await sb.from('orders').select('*').eq('user_name', USER.name).order('created_at', { ascending: false });
+      if (!error && data) orders = data;
+    } catch (_) {}
   }
-  updateStats();buildInsights();renderOrders();
+
+  allOrders = orders || [];
+  itemsByOrder = {};
+
+  if (allOrders.length) {
+    await fetchItemsForOrders(allOrders);
+  }
+
+  updateStats();
+  buildInsights();
+  renderOrders();
 }
 
-function updateStats(){
-  const active=allOrders.filter(o=>ACTIVE_STATUSES.includes(o.status));
-  const delivered=allOrders.filter(o=>o.status==='delivered');
-  const unrated=delivered.filter(o=>!o.rating);
-  const spent=delivered.reduce((s,o)=>s+(parseFloat(o.total)||0),0);
-  el('stTotal').textContent=allOrders.length;el('stActive').textContent=active.length;
-  el('stSpent').textContent='₹'+Math.round(spent);el('stUnrated').textContent=unrated.length;
-  el('tc-all').textContent=allOrders.length;el('tc-active').textContent=active.length;
-  el('hbSub').textContent=`${allOrders.length} order${allOrders.length!==1?'s':''} · ${active.length} active`;
-  const aa=el('activeAlert');
-  if(active.length){aa.classList.add('show');el('activeCount').textContent=active.length;el('livePill').style.display='inline-flex'}
-  else{aa.classList.remove('show');el('livePill').style.display='none'}
+/* ── BUG FIX 3: robust item fetching with multiple column name strategies ── */
+async function fetchItemsForOrders(orders) {
+  const ids = orders.map(o => o.id);
+
+  /* Attempt 1: column name "order_id" (integer match) */
+  try {
+    const { data: items, error } = await sb.from('order_items').select('*').in('order_id', ids);
+    if (!error && items && items.length > 0) {
+      items.forEach(it => {
+        const k = String(it.order_id);
+        if (!itemsByOrder[k]) itemsByOrder[k] = [];
+        itemsByOrder[k].push(it);
+      });
+      /* If we got results for at least some orders, we're good */
+      const hitCount = Object.keys(itemsByOrder).length;
+      if (hitCount > 0) return;
+    }
+  } catch (e) { console.warn('order_items fetch (order_id):', e); }
+
+  /* Attempt 2: fetch one by one using .eq to handle type mismatch (string vs int) */
+  try {
+    for (const order of orders) {
+      const oid = String(order.id);
+      if (itemsByOrder[oid] && itemsByOrder[oid].length) continue; /* already fetched */
+
+      /* Try both integer id and string id */
+      let items = null;
+
+      try {
+        const { data } = await sb.from('order_items').select('*').eq('order_id', order.id);
+        if (data && data.length) items = data;
+      } catch (_) {}
+
+      if (!items || !items.length) {
+        /* Try with order_number if available */
+        if (order.order_number) {
+          try {
+            const { data } = await sb.from('order_items').select('*').eq('order_number', order.order_number);
+            if (data && data.length) items = data;
+          } catch (_) {}
+        }
+      }
+
+      if (items && items.length) {
+        itemsByOrder[oid] = items;
+      }
+    }
+  } catch (e) { console.warn('order_items one-by-one fetch:', e); }
+
+  /* Attempt 3: try alternate table names */
+  if (!Object.keys(itemsByOrder).length) {
+    const altTables = ['order_details', 'orderitems', 'cart_items'];
+    for (const tbl of altTables) {
+      try {
+        const { data, error } = await sb.from(tbl).select('*').in('order_id', ids);
+        if (!error && data && data.length) {
+          data.forEach(it => {
+            const k = String(it.order_id);
+            if (!itemsByOrder[k]) itemsByOrder[k] = [];
+            itemsByOrder[k].push(it);
+          });
+          if (Object.keys(itemsByOrder).length > 0) break;
+        }
+      } catch (_) {}
+    }
+  }
 }
 
-function buildInsights(){
-  if(!allOrders.length){el('insightsCard').style.display='none';return}
-  const delivered=allOrders.filter(o=>o.status==='delivered');
-  if(!delivered.length){el('insightsCard').style.display='none';return}
-  const spent=delivered.reduce((s,o)=>s+(parseFloat(o.total)||0),0);
-  const avg=spent/delivered.length;
-  const restCount={};delivered.forEach(o=>{restCount[o.seller_name]=(restCount[o.seller_name]||0)+1});
-  const fav=Object.entries(restCount).sort((a,b)=>b[1]-a[1])[0];
-  const avgRating=delivered.filter(o=>o.rating).reduce((s,o,_,a)=>s+Number(o.rating)/a.length,0)||0;
-  el('insightChips').innerHTML=`
-    <div class="insight-chip"><div class="ic-num">₹${Math.round(avg)}</div><div class="ic-label">Avg Order Value</div></div>
-    <div class="insight-chip"><div class="ic-num">${fav?fav[1]:0}x</div><div class="ic-label">Fav: ${fav?fav[0].split(' ')[0]:'—'}</div></div>
-    <div class="insight-chip"><div class="ic-num">${avgRating?avgRating.toFixed(1)+'★':'N/A'}</div><div class="ic-label">Avg Rating</div></div>
-    <div class="insight-chip"><div class="ic-num">${delivered.length}</div><div class="ic-label">Delivered</div></div>`;
-  el('insightsCard').style.display='block';
+/* ══════════════════════════════════════════
+   STATS
+══════════════════════════════════════════ */
+function updateStats() {
+  const active = allOrders.filter(o => ACTIVE_STATUSES.includes(o.status));
+  const delivered = allOrders.filter(o => o.status === 'delivered');
+  const unrated = delivered.filter(o => !o.rating);
+  const spent = delivered.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+
+  el('stTotal').textContent = allOrders.length;
+  el('stActive').textContent = active.length;
+  el('stSpent').textContent = '₹' + Math.round(spent);
+  el('stUnrated').textContent = unrated.length;
+  el('tc-all').textContent = allOrders.length;
+  el('tc-active').textContent = active.length;
+  el('hbSub').textContent = `${allOrders.length} order${allOrders.length !== 1 ? 's' : ''} · ${active.length} active`;
+
+  const aa = el('activeAlert');
+  if (active.length) {
+    aa.classList.add('show');
+    el('activeCount').textContent = active.length;
+    el('livePill').style.display = 'inline-flex';
+  } else {
+    aa.classList.remove('show');
+    el('livePill').style.display = 'none';
+  }
 }
 
-function getFiltered(){
-  let list=[...allOrders];
-  if(currentFilter==='active')list=list.filter(o=>ACTIVE_STATUSES.includes(o.status));
-  else if(currentFilter==='delivered')list=list.filter(o=>o.status==='delivered');
-  else if(currentFilter==='cancelled')list=list.filter(o=>o.status==='cancelled');
-  if(searchQuery){const q=searchQuery.toLowerCase();list=list.filter(o=>(o.seller_name||'').toLowerCase().includes(q)||(String(o.id)).includes(q)||(o.order_number||'').toLowerCase().includes(q))}
-  const sort=el('sortSelect').value;
-  if(sort==='oldest')list.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
-  else if(sort==='amount_high')list.sort((a,b)=>(parseFloat(b.total)||0)-(parseFloat(a.total)||0));
-  else if(sort==='amount_low')list.sort((a,b)=>(parseFloat(a.total)||0)-(parseFloat(b.total)||0));
+/* ══════════════════════════════════════════
+   INSIGHTS
+══════════════════════════════════════════ */
+function buildInsights() {
+  if (!allOrders.length) { el('insightsCard').style.display = 'none'; return; }
+  const delivered = allOrders.filter(o => o.status === 'delivered');
+  if (!delivered.length) { el('insightsCard').style.display = 'none'; return; }
+
+  const spent = delivered.reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+  const avg = spent / delivered.length;
+  const restCount = {};
+  delivered.forEach(o => { restCount[o.seller_name] = (restCount[o.seller_name] || 0) + 1; });
+  const fav = Object.entries(restCount).sort((a, b) => b[1] - a[1])[0];
+  const rated = delivered.filter(o => o.rating);
+  const avgRating = rated.length ? rated.reduce((s, o) => s + Number(o.rating), 0) / rated.length : 0;
+
+  el('insightChips').innerHTML = `
+    <div class="insight-chip"><div><div class="ic-num">₹${Math.round(avg)}</div><div class="ic-label">Avg Order Value</div></div></div>
+    <div class="insight-chip"><div><div class="ic-num">${fav ? fav[1] : 0}x</div><div class="ic-label">Fav: ${fav ? fav[0].split(' ')[0] : '—'}</div></div></div>
+    <div class="insight-chip"><div><div class="ic-num">${avgRating ? avgRating.toFixed(1) + '★' : 'N/A'}</div><div class="ic-label">Avg Rating</div></div></div>
+    <div class="insight-chip"><div><div class="ic-num">${delivered.length}</div><div class="ic-label">Delivered</div></div></div>`;
+  el('insightsCard').style.display = 'block';
+}
+
+/* ══════════════════════════════════════════
+   FILTER / SORT / SEARCH
+══════════════════════════════════════════ */
+function getFiltered() {
+  let list = [...allOrders];
+  if (currentFilter === 'active') list = list.filter(o => ACTIVE_STATUSES.includes(o.status));
+  else if (currentFilter === 'delivered') list = list.filter(o => o.status === 'delivered');
+  else if (currentFilter === 'cancelled') list = list.filter(o => o.status === 'cancelled');
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(o =>
+      (o.seller_name || '').toLowerCase().includes(q) ||
+      String(o.id).includes(q) ||
+      (o.order_number || '').toLowerCase().includes(q)
+    );
+  }
+
+  const sort = el('sortSelect').value;
+  if (sort === 'oldest') list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  else if (sort === 'amount_high') list.sort((a, b) => (parseFloat(b.total) || 0) - (parseFloat(a.total) || 0));
+  else if (sort === 'amount_low') list.sort((a, b) => (parseFloat(a.total) || 0) - (parseFloat(b.total) || 0));
   return list;
 }
 
-function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.tp-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderOrders()}
-function handleSearch(){searchQuery=el('searchInput').value.trim();renderOrders()}
-
-function renderOrders(){
-  const list=getFiltered();const cont=el('ordersList');
-  if(!list.length){
-    const noAll=currentFilter==='all'&&!allOrders.length;
-    cont.innerHTML=`<div class="empty-state"><div class="empty-icon"><span class="material-icons">${noAll?'receipt_long':'inbox'}</span></div><h3>${noAll?'No orders yet':searchQuery?'No results found':'Nothing here'}</h3><p>${noAll?'Your complete order history will appear once you place your first order.':searchQuery?'Try a different search term.':'No orders match this filter.'}</p>${noAll?'<a href="index" class="btn-browse"><span class="material-icons">restaurant_menu</span>Explore Restaurants</a>':''}</div>`;
-    return;
-  }
-  cont.innerHTML=list.map((o,i)=>{try{return buildCard(o,i)}catch(e){console.error(e);return `<div style="padding:16px;color:var(--red);font-size:.8rem">⚠ Error displaying order #${String(o.id).slice(0,8)}</div>`}}).join('');
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.tp-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders();
 }
 
-/* ─────────────────────────────────────────────
-   CONTACT DELIVERY BOY STRIP
-───────────────────────────────────────────── */
-function buildDeliveryStrip(order){
-  if(order.status==='cancelled') return '';
-  const onWay = order.status==='out_for_delivery';
+function handleSearch() {
+  searchQuery = el('searchInput').value.trim();
+  renderOrders();
+}
+
+/* ══════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════ */
+function renderOrders() {
+  const list = getFiltered();
+  const cont = el('ordersList');
+
+  if (!list.length) {
+    const noAll = currentFilter === 'all' && !allOrders.length;
+    cont.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon"><span class="material-icons">${noAll ? 'receipt_long' : 'inbox'}</span></div>
+        <h3>${noAll ? 'No orders yet' : searchQuery ? 'No results found' : 'Nothing here'}</h3>
+        <p>${noAll ? 'Your complete order history will appear once you place your first order.' : searchQuery ? 'Try a different search term.' : 'No orders match this filter.'}</p>
+        ${noAll ? '<a href="index" class="btn-browse"><span class="material-icons">restaurant_menu</span>Explore Restaurants</a>' : ''}
+      </div>`;
+    return;
+  }
+
+  cont.innerHTML = list.map((o, i) => {
+    try { return buildCard(o, i); }
+    catch (e) { console.error(e); return `<div style="padding:16px;color:var(--red);font-size:.8rem">⚠ Error displaying order #${String(o.id).slice(0, 8)}</div>`; }
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   BUG FIX 1: DELIVERY BOY STRIP
+   Only shown for ACTIVE orders, NOT for
+   delivered or cancelled.
+══════════════════════════════════════════ */
+function buildDeliveryStrip(order) {
+  /* FIXED: hide for delivered AND cancelled orders */
+  if (order.status === 'delivered' || order.status === 'cancelled') return '';
+
+  const onWay = order.status === 'out_for_delivery';
   const badge = onWay ? '🛵 Your rider is close!' : 'Delivery Partner';
+
   return `
   <div class="dcb-wrap">
     <a class="dcb-strip" href="tel:${DELIVERY_BOY.phone}" onclick="onCallRider(event)">
@@ -725,191 +1016,546 @@ function buildDeliveryStrip(order){
   </div>`;
 }
 
-function onCallRider(e){
+function onCallRider(e) {
   toast(`📞 Calling ${DELIVERY_BOY.name} — ${DELIVERY_BOY.display}`, 'success');
 }
 
-function buildCard(order,idx){
-  const oid=String(order.id);
-  const shortId=oid.length>8?oid.slice(0,8):oid;
-  const items=itemsByOrder[oid]||[];
-  const d=new Date(order.created_at);
-  const ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  const icon=S_ICONS[order.status]||'info';
-  const sLabel=S_LABELS[order.status]||order.status.replace(/_/g,' ');
-  const isActive=ACTIVE_STATUSES.includes(order.status);
-  const isDelivered=order.status==='delivered';
-  const isCancelled=order.status==='cancelled';
-  const canCancel=['pending','confirmed'].includes(order.status);
-  const hasRating=order.rating&&Number(order.rating)>0;
-  const eta=getETA(order);
-  const pmIcons={cod:'payments',upi:'smartphone',card:'credit_card',wallet:'account_balance_wallet',online:'language'};
-  const pmIcon=pmIcons[order.payment_method]||'payments';
+/* ══════════════════════════════════════════
+   BUILD ORDER CARD
+══════════════════════════════════════════ */
+function buildCard(order, idx) {
+  const oid = String(order.id);
+  const shortId = oid.length > 8 ? oid.slice(0, 8) : oid;
+  const items = itemsByOrder[oid] || [];
+  const d = new Date(order.created_at);
+  const ds = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) +
+             ' · ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
-  const itemsHtml=items.length?items.map(it=>{
-    const total=(parseFloat(it.unit_price||0)*(parseInt(it.quantity)||1)).toFixed(0);
-    return `<div class="oc-item"><div class="oc-img"><img src="${esc(it.food_image||FALLBACK_IMG)}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy"/></div><div class="oc-item-info"><div class="oc-item-name">${esc(it.food_name||'Item')}</div><div class="oc-item-meta">×${it.quantity}${it.unit_price?' · ₹'+parseFloat(it.unit_price).toFixed(0)+' each':''}</div></div><div class="oc-item-price">₹${total}</div></div>`;
-  }).join(''):`<div style="padding:10px 12px;font-size:.76rem;color:var(--t3);background:var(--surface);border-radius:12px;text-align:center">No item details available</div>`;
+  const icon = S_ICONS[order.status] || 'info';
+  const sLabel = S_LABELS[order.status] || order.status.replace(/_/g, ' ');
+  const isActive = ACTIVE_STATUSES.includes(order.status);
+  const isDelivered = order.status === 'delivered';
+  const isCancelled = order.status === 'cancelled';
+  const canCancel = ['pending', 'confirmed'].includes(order.status);
+  const hasRating = order.rating && Number(order.rating) > 0;
+  const eta = getETA(order);
 
-  const reviewHtml=isDelivered&&hasRating?`<div class="oc-review"><div class="oc-review-head"><div class="oc-review-lbl">Your Review</div><div class="stars-row">${Array.from({length:5},(_,i)=>`<span class="material-icons ${i<Math.round(Number(order.rating))?'':'off'}">star</span>`).join('')}</div></div>${order.review?`<div class="oc-review-text">"${esc(order.review)}"</div>`:''}${order.review_reply?`<div class="oc-reply"><div class="reply-lbl">Restaurant replied</div><div class="reply-text">${esc(order.review_reply)}</div></div>`:''}</div>`:'';
+  const pmIcons = { cod: 'payments', upi: 'smartphone', card: 'credit_card', wallet: 'account_balance_wallet', online: 'language' };
+  const pmIcon = pmIcons[order.payment_method] || 'payments';
 
-  const addrHtml=order.delivery_address?`<div class="oc-address"><div class="addr-icon"><span class="material-icons">location_on</span></div><div><div class="addr-lbl">Delivery Address</div><div class="addr-text">${esc(order.delivery_address)}${order.delivery_city?', '+esc(order.delivery_city):''}</div>${order.delivery_instructions?`<div class="addr-note"><span class="material-icons">sticky_note_2</span>${esc(order.delivery_instructions)}</div>`:''}</div></div>`:'';
+  /* ── BUG FIX 3: Items HTML with better fallback display ── */
+  let itemsHtml = '';
+  if (items.length) {
+    itemsHtml = items.map(it => {
+      /* normalize field names: support multiple column name conventions */
+      const name      = it.food_name   || it.item_name   || it.name        || 'Item';
+      const price     = parseFloat(it.unit_price || it.price || it.item_price || 0);
+      const qty       = parseInt(it.quantity || it.qty || 1);
+      const img       = it.food_image  || it.item_image  || it.image       || FALLBACK_IMG;
+      const lineTotal = (price * qty).toFixed(0);
 
-  const cancelBlock=isCancelled?`<div class="cancelled-block"><div class="cb-icon"><span class="material-icons">info</span></div><div><div class="cb-title">${order.cancelled_by==='seller'?'Restaurant declined this order':'Order cancelled'}</div>${order.cancellation_reason?`<div class="cb-sub">${esc(order.cancellation_reason)}</div>`:''}</div></div>`:'';
+      return `<div class="oc-item">
+        <div class="oc-img"><img src="${esc(img)}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy"/></div>
+        <div class="oc-item-info">
+          <div class="oc-item-name">${esc(name)}</div>
+          <div class="oc-item-meta">×${qty}${price > 0 ? ' · ₹' + price.toFixed(0) + ' each' : ''}</div>
+        </div>
+        <div class="oc-item-price">₹${lineTotal}</div>
+      </div>`;
+    }).join('');
+  } else {
+    /* BUG FIX 3: Better no-items message with context */
+    itemsHtml = `<div style="padding:12px 14px;font-size:.76rem;color:var(--t3);background:var(--surface);border:1px solid var(--border);border-radius:14px;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px">
+      <span class="material-icons" style="font-size:15px;color:var(--t4)">inventory_2</span>
+      Item details are not yet available for this order
+    </div>`;
+  }
 
-  const stepperSection=!isCancelled?buildStepper(order.status):cancelBlock;
+  /* ── Review section ── */
+  const reviewHtml = isDelivered && hasRating ? `
+    <div class="oc-review">
+      <div class="oc-review-head">
+        <div class="oc-review-lbl">Your Review</div>
+        <div class="stars-row">
+          ${Array.from({ length: 5 }, (_, i) => `<span class="material-icons ${i < Math.round(Number(order.rating)) ? '' : 'off'}">star</span>`).join('')}
+        </div>
+      </div>
+      ${order.review ? `<div class="oc-review-text">"${esc(order.review)}"</div>` : ''}
+      ${order.review_reply ? `<div class="oc-reply"><div class="reply-lbl">Restaurant replied</div><div class="reply-text">${esc(order.review_reply)}</div></div>` : ''}
+    </div>` : '';
 
-  const actions=[
-    isActive?`<button class="oc-btn btn-track" onclick="openTrackModal('${oid}')"><span class="material-icons">gps_fixed</span>Track</button>`:'',
-    isDelivered&&!hasRating?`<button class="oc-btn btn-rate" onclick="openRatingModal('${oid}')"><span class="material-icons">star</span>Rate</button>`:'',
-    isDelivered&&hasRating?`<button class="oc-btn btn-rated"><span class="material-icons">check_circle</span>${Number(order.rating)}★ Rated</button>`:'',
-    canCancel?`<button class="oc-btn btn-cancel-ord" onclick="cancelOrder('${oid}')"><span class="material-icons">cancel</span>Cancel</button>`:'',
-    (isDelivered||isCancelled)?`<button class="oc-btn btn-reorder" onclick="reorder('${oid}')"><span class="material-icons">replay</span>Reorder</button>`:'',
+  /* ── Address section ── */
+  const addrHtml = order.delivery_address ? `
+    <div class="oc-address">
+      <div class="addr-icon"><span class="material-icons">location_on</span></div>
+      <div>
+        <div class="addr-lbl">Delivery Address</div>
+        <div class="addr-text">${esc(order.delivery_address)}${order.delivery_city ? ', ' + esc(order.delivery_city) : ''}</div>
+        ${order.delivery_instructions ? `<div class="addr-note"><span class="material-icons">sticky_note_2</span>${esc(order.delivery_instructions)}</div>` : ''}
+      </div>
+    </div>` : '';
+
+  /* ── Cancelled block ── */
+  const cancelBlock = isCancelled ? `
+    <div class="cancelled-block">
+      <div class="cb-icon"><span class="material-icons">info</span></div>
+      <div>
+        <div class="cb-title">${order.cancelled_by === 'seller' ? 'Restaurant declined this order' : 'Order cancelled'}</div>
+        ${order.cancellation_reason ? `<div class="cb-sub">${esc(order.cancellation_reason)}</div>` : ''}
+      </div>
+    </div>` : '';
+
+  const stepperSection = !isCancelled ? buildStepper(order.status) : cancelBlock;
+
+  /* ── Action buttons ── */
+  const actions = [
+    isActive ? `<button class="oc-btn btn-track" onclick="openTrackModal('${oid}')"><span class="material-icons">gps_fixed</span>Track</button>` : '',
+    isDelivered && !hasRating ? `<button class="oc-btn btn-rate" onclick="openRatingModal('${oid}')"><span class="material-icons">star</span>Rate</button>` : '',
+    isDelivered && hasRating ? `<button class="oc-btn btn-rated"><span class="material-icons">check_circle</span>${Number(order.rating)}★ Rated</button>` : '',
+    canCancel ? `<button class="oc-btn btn-cancel-ord" onclick="cancelOrder('${oid}')"><span class="material-icons">cancel</span>Cancel</button>` : '',
+    (isDelivered || isCancelled) ? `<button class="oc-btn btn-reorder" onclick="reorder('${oid}')"><span class="material-icons">replay</span>Reorder</button>` : '',
     `<button class="oc-btn btn-invoice" onclick="openInvoice('${oid}')"><span class="material-icons">receipt</span>Invoice</button>`,
     `<button class="oc-btn btn-share" onclick="shareOrder('${oid}')"><span class="material-icons">share</span>Share</button>`,
+    /* BUG FIX 2: Remove/Delete button on every order */
+    `<button class="oc-btn btn-delete" onclick="promptDelete('${oid}')"><span class="material-icons">delete_outline</span>Remove</button>`,
   ].filter(Boolean).join('');
 
-  return `<div class="order-card" id="oc_${oid}" style="animation-delay:${idx*0.06}s">
+  return `<div class="order-card" id="oc_${oid}" style="animation-delay:${idx * 0.06}s">
     <div class="oc-head">
       <div>
-        <div class="oc-restaurant">${esc(order.seller_name||'Restaurant')}</div>
-        <div class="oc-num"><span class="material-icons" style="font-size:11px">tag</span>${order.order_number||shortId}</div>
+        <div class="oc-restaurant">${esc(order.seller_name || 'Restaurant')}</div>
+        <div class="oc-num"><span class="material-icons" style="font-size:11px">tag</span>${order.order_number || shortId}</div>
         <div class="oc-time"><span class="material-icons">schedule</span>${ds}</div>
       </div>
       <div class="oc-right">
         <div class="status-chip s-${order.status}"><span class="material-icons">${icon}</span>${sLabel}</div>
         <div class="eta-chip ${eta.cls}"><span class="material-icons">timer</span>${eta.label}</div>
+        <!-- Quick remove button in header corner -->
+        <button class="btn-remove-ord" onclick="promptDelete('${oid}')" title="Remove from history">
+          <span class="material-icons">close</span>Remove
+        </button>
       </div>
     </div>
     ${stepperSection}
     ${reviewHtml}
-    <div class="oc-items-wrap"><div class="oc-items-grid">${itemsHtml}</div></div>
+    <div class="oc-items-wrap">
+      <div class="oc-items-label"><span class="material-icons">fastfood</span>Items Ordered</div>
+      <div class="oc-items-grid">${itemsHtml}</div>
+    </div>
     ${addrHtml}
     ${buildDeliveryStrip(order)}
     <div class="oc-footer">
-      <div><div class="oc-total">Total: <em>₹${parseFloat(order.total||0).toFixed(0)}</em></div><div class="oc-payment"><span class="material-icons">${pmIcon}</span>${(order.payment_method||'COD').toUpperCase()}</div></div>
+      <div>
+        <div class="oc-total">Total: <em>₹${parseFloat(order.total || 0).toFixed(0)}</em></div>
+        <div class="oc-payment"><span class="material-icons">${pmIcon}</span>${(order.payment_method || 'COD').toUpperCase()}</div>
+      </div>
       <div class="oc-actions">${actions}</div>
     </div>
   </div>`;
 }
 
-function buildStepper(status){
-  const activeIdx=STEPS.findIndex(s=>s.key===status);
-  const pct=activeIdx<=0?0:(activeIdx/(STEPS.length-1))*100;
-  const stepsHtml=STEPS.map((s,i)=>{const cls=i<activeIdx?'done':i===activeIdx?'active':'';const icon=i<activeIdx?'check':s.icon;return `<div class="step ${cls}"><div class="step-node"><span class="material-icons">${icon}</span></div><div class="step-lbl">${s.label}</div></div>`;}).join('');
-  return `<div class="stepper-wrap"><div class="stepper-top"><div class="stepper-lbl"><span class="material-icons">gps_fixed</span>Live Tracking</div><div class="stepper-status">${esc(S_LABELS[status]||status)}</div></div><div class="stepper"><div class="stepper-rail"></div><div class="stepper-fill" style="width:${pct}%"></div>${stepsHtml}</div></div>`;
+/* ══════════════════════════════════════════
+   STEPPER
+══════════════════════════════════════════ */
+function buildStepper(status) {
+  const activeIdx = STEPS.findIndex(s => s.key === status);
+  const pct = activeIdx <= 0 ? 0 : (activeIdx / (STEPS.length - 1)) * 100;
+  const stepsHtml = STEPS.map((s, i) => {
+    const cls = i < activeIdx ? 'done' : i === activeIdx ? 'active' : '';
+    const icon = i < activeIdx ? 'check' : s.icon;
+    return `<div class="step ${cls}">
+      <div class="step-node"><span class="material-icons">${icon}</span></div>
+      <div class="step-lbl">${s.label}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="stepper-wrap">
+    <div class="stepper-top">
+      <div class="stepper-lbl"><span class="material-icons">gps_fixed</span>Live Tracking</div>
+      <div class="stepper-status">${esc(S_LABELS[status] || status)}</div>
+    </div>
+    <div class="stepper">
+      <div class="stepper-rail"></div>
+      <div class="stepper-fill" style="width:${pct}%"></div>
+      ${stepsHtml}
+    </div>
+  </div>`;
 }
 
-function getETA(order){
-  const s=order.status;
-  if(s==='delivered')return{label:'Delivered ✓',cls:'eta-done'};
-  if(s==='cancelled')return{label:'Cancelled',cls:'eta-cancel'};
-  if(s==='pending')return{label:'Awaiting restaurant',cls:'eta-active'};
-  if(s==='ready')return{label:'Ready for pickup!',cls:'eta-active'};
-  const prepTime=parseInt(order.prep_time_mins)||25;
-  const elapsed=(Date.now()-new Date(order.created_at).getTime())/60000;
-  const etaMap={confirmed:prepTime+20,preparing:Math.max(prepTime-Math.max(elapsed-7,0),4)+15,out_for_delivery:20};
-  const mins=Math.round(etaMap[s]||30);
-  return{label:mins>0?`~${mins} min away`:'Any moment now!',cls:'eta-active'};
+/* ══════════════════════════════════════════
+   ETA
+══════════════════════════════════════════ */
+function getETA(order) {
+  const s = order.status;
+  if (s === 'delivered') return { label: 'Delivered ✓', cls: 'eta-done' };
+  if (s === 'cancelled') return { label: 'Cancelled', cls: 'eta-cancel' };
+  if (s === 'pending') return { label: 'Awaiting restaurant', cls: 'eta-active' };
+  if (s === 'ready') return { label: 'Ready for pickup!', cls: 'eta-active' };
+  const prepTime = parseInt(order.prep_time_mins) || 25;
+  const elapsed = (Date.now() - new Date(order.created_at).getTime()) / 60000;
+  const etaMap = {
+    confirmed: prepTime + 20,
+    preparing: Math.max(prepTime - Math.max(elapsed - 7, 0), 4) + 15,
+    out_for_delivery: 20
+  };
+  const mins = Math.round(etaMap[s] || 30);
+  return { label: mins > 0 ? `~${mins} min away` : 'Any moment now!', cls: 'eta-active' };
 }
 
-async function cancelOrder(oid){
-  if(!confirm('Cancel this order? The restaurant will be notified.'))return;
-  try{
-    const{error}=await sb.from('orders').update({status:'cancelled',cancelled_by:'user',cancellation_reason:'Cancelled by customer'}).eq('id',oid);
-    if(error)throw error;
-    const idx=allOrders.findIndex(o=>String(o.id)===oid);
-    if(idx>-1)Object.assign(allOrders[idx],{status:'cancelled',cancelled_by:'user',cancellation_reason:'Cancelled by customer'});
-    updateStats();renderOrders();toast('Order cancelled','info');
-  }catch(e){toast('Failed: '+e.message,'error')}
+/* ══════════════════════════════════════════
+   CANCEL ORDER
+══════════════════════════════════════════ */
+async function cancelOrder(oid) {
+  if (!confirm('Cancel this order? The restaurant will be notified.')) return;
+  try {
+    const { error } = await sb.from('orders').update({
+      status: 'cancelled',
+      cancelled_by: 'user',
+      cancellation_reason: 'Cancelled by customer'
+    }).eq('id', oid);
+    if (error) throw error;
+    const idx = allOrders.findIndex(o => String(o.id) === oid);
+    if (idx > -1) Object.assign(allOrders[idx], { status: 'cancelled', cancelled_by: 'user', cancellation_reason: 'Cancelled by customer' });
+    updateStats(); renderOrders();
+    toast('Order cancelled', 'info');
+  } catch (e) { toast('Failed: ' + e.message, 'error'); }
 }
 
-async function reorder(oid){
-  const items=itemsByOrder[oid]||[];
-  if(!items.length){toast('No items to reorder','error');return}
-  const cart=JSON.parse(localStorage.getItem('infocity_cart')||'[]');
-  items.forEach(it=>{const existing=cart.find(c=>c.id===it.food_id);if(existing)existing.qty+=it.quantity;else cart.push({id:it.food_id,name:it.food_name,price:parseFloat(it.unit_price)||0,qty:it.quantity,image:it.food_image||''})});
-  localStorage.setItem('infocity_cart',JSON.stringify(cart));
-  updateCartBadge();toast('Items added to cart! 🛒','success');
-  setTimeout(()=>location.href='cart',1200);
+/* ══════════════════════════════════════════
+   BUG FIX 2: DELETE / REMOVE ORDER
+   Permanently removes from Supabase so it
+   won't reappear after refresh.
+══════════════════════════════════════════ */
+function promptDelete(oid) {
+  deleteTargetId = oid;
+  openModal('deleteModal');
 }
 
-function shareOrder(oid){
-  const order=allOrders.find(o=>String(o.id)===oid);if(!order)return;
-  const text=`My order from ${order.seller_name} — ₹${parseFloat(order.total||0).toFixed(0)} on InfoCity Courts`;
-  if(navigator.share)navigator.share({title:'My Order',text,url:window.location.href}).catch(()=>{});
-  else{navigator.clipboard.writeText(text).then(()=>toast('Order details copied!','success')).catch(()=>toast('Share failed','error'))}
+async function confirmDelete() {
+  if (!deleteTargetId) return;
+  const oid = deleteTargetId;
+  const btn = el('deleteConfirmBtn');
+  btn.disabled = true;
+  btn.textContent = 'Removing…';
+
+  try {
+    /* Delete order items first (foreign key safety) */
+    try {
+      await sb.from('order_items').delete().eq('order_id', oid);
+    } catch (_) { /* silently ignore if items don't exist or FK setup differs */ }
+
+    /* Delete the order itself */
+    const { error } = await sb.from('orders').delete().eq('id', oid);
+    if (error) throw error;
+
+    /* Animate card out */
+    const card = document.getElementById('oc_' + oid);
+    if (card) {
+      card.classList.add('removing');
+      await new Promise(r => setTimeout(r, 420));
+      card.remove();
+    }
+
+    /* Remove from local state */
+    allOrders = allOrders.filter(o => String(o.id) !== oid);
+    delete itemsByOrder[oid];
+
+    closeModal('deleteModal');
+    updateStats();
+    buildInsights();
+
+    /* If no cards left in DOM, re-render to show empty state */
+    if (el('ordersList').children.length === 0) renderOrders();
+
+    toast('Order removed from history', 'success');
+  } catch (e) {
+    toast('Failed to remove: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-icons" style="font-size:15px;vertical-align:middle">delete</span> Remove Order';
+    deleteTargetId = null;
+  }
 }
 
-function openInvoice(oid){
-  const order=allOrders.find(o=>String(o.id)===oid);if(!order)return;
-  const items=itemsByOrder[oid]||[];
-  const d=new Date(order.created_at);
-  const ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-  const subtotal=items.reduce((s,it)=>(parseFloat(it.unit_price||0)*(parseInt(it.quantity)||1))+s,0)||parseFloat(order.total)||0;
-  const tax=Math.round(subtotal*0.05);const delivery=parseFloat(order.delivery_charge)||0;const total=parseFloat(order.total)||subtotal+tax+delivery;
-  const itemsRows=items.length?items.map(it=>`<tr><td>${esc(it.food_name)}</td><td>${it.quantity}</td><td>₹${parseFloat(it.unit_price||0).toFixed(0)}</td><td>₹${(parseFloat(it.unit_price||0)*(parseInt(it.quantity)||1)).toFixed(0)}</td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--t4)">No item details</td></tr>';
-  el('invoiceBody').innerHTML=`<div class="invoice-header"><div class="invoice-brand">InfoCity Courts</div><div class="invoice-num">Invoice #${order.order_number||String(order.id).slice(0,8).toUpperCase()}</div><div class="invoice-date">${ds}</div></div><div class="invoice-meta"><span><span>Restaurant</span><strong>${esc(order.seller_name||'—')}</strong></span><span><span>Customer</span><strong>${esc(USER.name)}</strong></span><span><span>Status</span><strong>${S_LABELS[order.status]||order.status}</strong></span><span><span>Payment</span><strong>${(order.payment_method||'COD').toUpperCase()}</strong></span>${order.delivery_address?`<span><span>Address</span><strong>${esc(order.delivery_address)}</strong></span>`:''}</div><table class="invoice-table"><thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${itemsRows}</tbody><tfoot><tr><td colspan="3">Subtotal</td><td>₹${subtotal.toFixed(0)}</td></tr><tr><td colspan="3">GST (5%)</td><td>₹${tax}</td></tr>${delivery>0?`<tr><td colspan="3">Delivery</td><td>₹${delivery.toFixed(0)}</td></tr>`:''}<tr class="invoice-total-row"><td colspan="3"><strong>Total</strong></td><td><strong>₹${total.toFixed(0)}</strong></td></tr></tfoot></table><div class="invoice-footer-note">Thank you for ordering from InfoCity Courts! 🎉</div><button class="btn-print" onclick="window.print()"><span class="material-icons" style="font-size:17px">print</span>Print Invoice</button>`;
+/* ══════════════════════════════════════════
+   REORDER
+══════════════════════════════════════════ */
+async function reorder(oid) {
+  const items = itemsByOrder[oid] || [];
+  if (!items.length) { toast('No items found to reorder', 'error'); return; }
+  const cart = JSON.parse(localStorage.getItem('infocity_cart') || '[]');
+  items.forEach(it => {
+    const name  = it.food_name  || it.item_name  || it.name  || 'Item';
+    const price = parseFloat(it.unit_price || it.price || 0);
+    const qty   = parseInt(it.quantity || it.qty || 1);
+    const img   = it.food_image || it.item_image || it.image || '';
+    const foodId = it.food_id || it.item_id || it.id || null;
+    const existing = cart.find(c => c.id === foodId);
+    if (existing) existing.qty += qty;
+    else cart.push({ id: foodId, name, price, qty, image: img });
+  });
+  localStorage.setItem('infocity_cart', JSON.stringify(cart));
+  updateCartBadge();
+  toast('Items added to cart! 🛒', 'success');
+  setTimeout(() => location.href = 'cart', 1200);
+}
+
+/* ══════════════════════════════════════════
+   SHARE ORDER
+══════════════════════════════════════════ */
+function shareOrder(oid) {
+  const order = allOrders.find(o => String(o.id) === oid);
+  if (!order) return;
+  const text = `My order from ${order.seller_name} — ₹${parseFloat(order.total || 0).toFixed(0)} on InfoCity Courts`;
+  if (navigator.share) {
+    navigator.share({ title: 'My Order', text, url: window.location.href }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text)
+      .then(() => toast('Order details copied!', 'success'))
+      .catch(() => toast('Share failed', 'error'));
+  }
+}
+
+/* ══════════════════════════════════════════
+   INVOICE MODAL
+══════════════════════════════════════════ */
+function openInvoice(oid) {
+  const order = allOrders.find(o => String(o.id) === oid);
+  if (!order) return;
+  const items = itemsByOrder[oid] || [];
+  const d = new Date(order.created_at);
+  const ds = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const subtotal = items.length
+    ? items.reduce((s, it) => s + (parseFloat(it.unit_price || it.price || 0) * (parseInt(it.quantity || it.qty) || 1)), 0)
+    : parseFloat(order.total) || 0;
+
+  const tax = Math.round(subtotal * 0.05);
+  const delivery = parseFloat(order.delivery_charge) || 0;
+  const total = parseFloat(order.total) || subtotal + tax + delivery;
+
+  const itemsRows = items.length
+    ? items.map(it => {
+        const name = it.food_name || it.item_name || it.name || 'Item';
+        const price = parseFloat(it.unit_price || it.price || 0);
+        const qty = parseInt(it.quantity || it.qty || 1);
+        return `<tr>
+          <td>${esc(name)}</td>
+          <td>${qty}</td>
+          <td>₹${price.toFixed(0)}</td>
+          <td>₹${(price * qty).toFixed(0)}</td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="4" style="text-align:center;color:var(--t4)">No item details available</td></tr>';
+
+  el('invoiceBody').innerHTML = `
+    <div class="invoice-header">
+      <div class="invoice-brand">InfoCity Courts</div>
+      <div class="invoice-num">Invoice #${order.order_number || String(order.id).slice(0, 8).toUpperCase()}</div>
+      <div class="invoice-date">${ds}</div>
+    </div>
+    <div class="invoice-meta">
+      <span><span>Restaurant</span><strong>${esc(order.seller_name || '—')}</strong></span>
+      <span><span>Customer</span><strong>${esc(USER.name)}</strong></span>
+      <span><span>Status</span><strong>${S_LABELS[order.status] || order.status}</strong></span>
+      <span><span>Payment</span><strong>${(order.payment_method || 'COD').toUpperCase()}</strong></span>
+      ${order.delivery_address ? `<span><span>Address</span><strong>${esc(order.delivery_address)}</strong></span>` : ''}
+    </div>
+    <table class="invoice-table">
+      <thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+      <tbody>${itemsRows}</tbody>
+      <tfoot>
+        <tr><td colspan="3">Subtotal</td><td>₹${subtotal.toFixed(0)}</td></tr>
+        <tr><td colspan="3">GST (5%)</td><td>₹${tax}</td></tr>
+        ${delivery > 0 ? `<tr><td colspan="3">Delivery</td><td>₹${delivery.toFixed(0)}</td></tr>` : ''}
+        <tr class="invoice-total-row"><td colspan="3"><strong>Total</strong></td><td><strong>₹${total.toFixed(0)}</strong></td></tr>
+      </tfoot>
+    </table>
+    <div class="invoice-footer-note">Thank you for ordering from InfoCity Courts! 🎉</div>
+    <button class="btn-print" onclick="window.print()"><span class="material-icons" style="font-size:17px">print</span>Print Invoice</button>`;
+
   openModal('invoiceModal');
 }
 
-function openTrackModal(oid){
-  const order=allOrders.find(o=>String(o.id)===oid);if(!order)return;
-  const eta=getETA(order);
-  const timelineItems=[
-    {icon:'receipt',bg:'rgba(255,69,0,.12)',ic:'var(--brand)',title:'Order Placed',done:true,time:new Date(order.created_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})},
-    {icon:'thumb_up',bg:'rgba(90,223,255,.1)',ic:'var(--blue)',title:'Restaurant Confirmed',done:['confirmed','preparing','ready','out_for_delivery','delivered'].includes(order.status),time:'+2 min'},
-    {icon:'restaurant',bg:'rgba(191,90,242,.1)',ic:'var(--purple)',title:'Being Prepared',done:['preparing','ready','out_for_delivery','delivered'].includes(order.status),time:'+12 min'},
-    {icon:'check_circle',bg:'rgba(0,200,150,.1)',ic:'var(--green)',title:'Ready for Pickup',done:['ready','out_for_delivery','delivered'].includes(order.status),time:'+20 min'},
-    {icon:'delivery_dining',bg:'rgba(255,69,0,.1)',ic:'var(--brand)',title:'On the Way',done:['out_for_delivery','delivered'].includes(order.status),time:'+25 min'},
-    {icon:'done_all',bg:'rgba(0,200,150,.1)',ic:'var(--green)',title:'Delivered',done:order.status==='delivered',time:'+40 min'},
+/* ══════════════════════════════════════════
+   TRACK MODAL
+══════════════════════════════════════════ */
+function openTrackModal(oid) {
+  const order = allOrders.find(o => String(o.id) === oid);
+  if (!order) return;
+  const eta = getETA(order);
+
+  const timelineItems = [
+    { icon: 'receipt',          bg: 'rgba(255,69,0,.12)',    ic: 'var(--brand)',  title: 'Order Placed',          done: true,                                                                        time: new Date(order.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) },
+    { icon: 'thumb_up',         bg: 'rgba(90,223,255,.1)',   ic: 'var(--blue)',   title: 'Restaurant Confirmed',  done: ['confirmed','preparing','ready','out_for_delivery','delivered'].includes(order.status), time: '+2 min'  },
+    { icon: 'restaurant',       bg: 'rgba(191,90,242,.1)',   ic: 'var(--purple)', title: 'Being Prepared',        done: ['preparing','ready','out_for_delivery','delivered'].includes(order.status),            time: '+12 min' },
+    { icon: 'check_circle',     bg: 'rgba(0,200,150,.1)',    ic: 'var(--green)',  title: 'Ready for Pickup',      done: ['ready','out_for_delivery','delivered'].includes(order.status),                         time: '+20 min' },
+    { icon: 'delivery_dining',  bg: 'rgba(255,69,0,.1)',     ic: 'var(--brand)',  title: 'On the Way',            done: ['out_for_delivery','delivered'].includes(order.status),                                time: '+25 min' },
+    { icon: 'done_all',         bg: 'rgba(0,200,150,.1)',    ic: 'var(--green)',  title: 'Delivered',             done: order.status === 'delivered',                                                          time: '+40 min' },
   ];
-  el('trackBody').innerHTML=`<div class="track-map-placeholder"><div class="map-pin">📍</div><div style="font-size:.8rem;font-weight:700;color:var(--t2)">${esc(order.seller_name||'Restaurant')} → Your Door</div><div style="font-size:.68rem;color:var(--t4);margin-top:2px">${eta.label}</div></div><div style="font-size:.7rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--t4);margin-bottom:12px">Order Timeline</div><div class="track-steps">${timelineItems.map(t=>`<div class="ts-row"><div class="ts-dot" style="background:${t.done?t.bg:'var(--surface)'}"><span class="material-icons" style="color:${t.done?t.ic:'var(--t4)'};font-size:15px">${t.icon}</span></div><div><div class="ts-title" style="color:${t.done?'var(--t1)':'var(--t4)'}">${t.title}</div><div class="ts-time">${t.time}</div></div></div>`).join('')}</div>`;
+
+  el('trackBody').innerHTML = `
+    <div class="track-map-placeholder">
+      <div class="map-pin">📍</div>
+      <div style="font-size:.8rem;font-weight:700;color:var(--t2)">${esc(order.seller_name || 'Restaurant')} → Your Door</div>
+      <div style="font-size:.68rem;color:var(--t4);margin-top:2px">${eta.label}</div>
+    </div>
+    <div style="font-size:.7rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--t4);margin-bottom:12px">Order Timeline</div>
+    <div class="track-steps">
+      ${timelineItems.map(t => `
+        <div class="ts-row">
+          <div class="ts-dot" style="background:${t.done ? t.bg : 'var(--surface)'}">
+            <span class="material-icons" style="color:${t.done ? t.ic : 'var(--t4)'};font-size:15px">${t.icon}</span>
+          </div>
+          <div>
+            <div class="ts-title" style="color:${t.done ? 'var(--t1)' : 'var(--t4)'}">${t.title}</div>
+            <div class="ts-time">${t.time}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+
   openModal('trackModal');
 }
 
-function openRatingModal(oid){
-  ratingOrderId=oid;selectedStars=0;
-  const order=allOrders.find(o=>String(o.id)===oid);if(!order)return;
-  el('rmRest').textContent=order.seller_name||'Restaurant';
-  el('rmOrdNum').textContent=order.order_number?'#'+order.order_number:'#'+String(oid).slice(0,8);
-  el('rmReviewText').value='';
-  const items=itemsByOrder[oid]||[];
-  el('rmItems').innerHTML=items.map(it=>`<div class="rate-item"><div class="rate-item-img"><img src="${esc(it.food_image||FALLBACK_IMG)}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy"/></div><div class="rate-item-name">${esc(it.food_name)}</div><div class="rate-item-qty">×${it.quantity}</div></div>`).join('');
-  setRating(0);openModal('ratingModal');
+/* ══════════════════════════════════════════
+   RATING MODAL
+══════════════════════════════════════════ */
+function openRatingModal(oid) {
+  ratingOrderId = oid;
+  selectedStars = 0;
+  const order = allOrders.find(o => String(o.id) === oid);
+  if (!order) return;
+  el('rmRest').textContent = order.seller_name || 'Restaurant';
+  el('rmOrdNum').textContent = order.order_number ? '#' + order.order_number : '#' + String(oid).slice(0, 8);
+  el('rmReviewText').value = '';
+  const items = itemsByOrder[oid] || [];
+  el('rmItems').innerHTML = items.map(it => {
+    const name = it.food_name || it.item_name || it.name || 'Item';
+    const img  = it.food_image || it.item_image || it.image || FALLBACK_IMG;
+    const qty  = it.quantity || it.qty || 1;
+    return `<div class="rate-item">
+      <div class="rate-item-img"><img src="${esc(img)}" onerror="this.src='${FALLBACK_IMG}'" loading="lazy"/></div>
+      <div class="rate-item-name">${esc(name)}</div>
+      <div class="rate-item-qty">×${qty}</div>
+    </div>`;
+  }).join('');
+  setRating(0);
+  openModal('ratingModal');
 }
 
-function setRating(v){selectedStars=v;document.querySelectorAll('.sp-star').forEach((s,i)=>s.classList.toggle('lit',i<v));el('ratingLbl').textContent=RATING_LABELS[v]||'Tap a star to rate'}
-
-async function submitRating(){
-  if(!selectedStars){toast('Please select a star rating','error');return}
-  const review=el('rmReviewText').value.trim();el('rmSubmitBtn').disabled=true;
-  try{
-    const{error}=await sb.from('orders').update({rating:selectedStars,review:review||null,rated_at:new Date().toISOString()}).eq('id',ratingOrderId);
-    if(error)throw error;
-    const idx=allOrders.findIndex(o=>String(o.id)===ratingOrderId);
-    if(idx>-1)Object.assign(allOrders[idx],{rating:selectedStars,review:review||null});
-    closeModal('ratingModal');updateStats();renderOrders();toast('Review submitted — thank you! 🌟','success');
-  }catch(e){toast('Failed: '+e.message,'error')}
-  el('rmSubmitBtn').disabled=false;
+function setRating(v) {
+  selectedStars = v;
+  document.querySelectorAll('.sp-star').forEach((s, i) => s.classList.toggle('lit', i < v));
+  el('ratingLbl').textContent = RATING_LABELS[v] || 'Tap a star to rate';
 }
 
-async function refreshOrders(){
-  const icon=el('refreshIcon');icon.style.animation='spin .6s linear infinite';
-  await fetchOrders();icon.style.animation='';toast('Orders refreshed','success');
+async function submitRating() {
+  if (!selectedStars) { toast('Please select a star rating', 'error'); return; }
+  const review = el('rmReviewText').value.trim();
+  el('rmSubmitBtn').disabled = true;
+  try {
+    const { error } = await sb.from('orders').update({
+      rating: selectedStars,
+      review: review || null,
+      rated_at: new Date().toISOString()
+    }).eq('id', ratingOrderId);
+    if (error) throw error;
+    const idx = allOrders.findIndex(o => String(o.id) === ratingOrderId);
+    if (idx > -1) Object.assign(allOrders[idx], { rating: selectedStars, review: review || null });
+    closeModal('ratingModal');
+    updateStats();
+    renderOrders();
+    toast('Review submitted — thank you! 🌟', 'success');
+  } catch (e) { toast('Failed: ' + e.message, 'error'); }
+  el('rmSubmitBtn').disabled = false;
 }
 
-function openModal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-document.querySelectorAll&&['invoiceModal','ratingModal','trackModal'].forEach(id=>{const m=document.getElementById(id);if(m)m.addEventListener('click',e=>{if(e.target===m)closeModal(id)})});
-function el(id){return document.getElementById(id)}
-function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=String(s);return d.innerHTML}
-function toast(msg,type='info'){const icons={success:'check_circle',error:'error',info:'info'};const t=document.createElement('div');t.className='toast '+type;t.innerHTML=`<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;el('toastStack').appendChild(t);setTimeout(()=>{t.style.animation='tOut .32s forwards';setTimeout(()=>t.remove(),320)},3200)}
-function updateCartBadge(){const count=JSON.parse(localStorage.getItem('infocity_cart')||'[]').reduce((s,c)=>s+c.qty,0);const b=el('cartBadge');if(count>0){b.style.display='flex';b.textContent=count}else b.style.display='none'}
-function toggleTheme(){const h=document.documentElement;const next=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',next);localStorage.setItem('infocity_theme',next);el('themeIcon').textContent=next==='dark'?'dark_mode':'light_mode'}
-function initTheme(){const s=localStorage.getItem('infocity_theme')||'dark';document.documentElement.setAttribute('data-theme',s);el('themeIcon').textContent=s==='dark'?'dark_mode':'light_mode'}
-window.addEventListener('scroll',()=>el('navbar').classList.toggle('scrolled',scrollY>10));
-setInterval(()=>{if(USER&&allOrders.some(o=>ACTIVE_STATUSES.includes(o.status)))fetchOrders()},30000);
+/* ══════════════════════════════════════════
+   REFRESH
+══════════════════════════════════════════ */
+async function refreshOrders() {
+  const icon = el('refreshIcon');
+  icon.style.animation = 'spin .6s linear infinite';
+  await fetchOrders();
+  icon.style.animation = '';
+  toast('Orders refreshed', 'success');
+}
+
+/* ══════════════════════════════════════════
+   MODAL HELPERS
+══════════════════════════════════════════ */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+/* Close modals on backdrop click */
+['invoiceModal', 'ratingModal', 'trackModal', 'deleteModal'].forEach(id => {
+  const m = document.getElementById(id);
+  if (m) m.addEventListener('click', e => { if (e.target === m) closeModal(id); });
+});
+
+/* Close modals with Escape key */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ['invoiceModal', 'ratingModal', 'trackModal', 'deleteModal'].forEach(id => closeModal(id));
+  }
+});
+
+/* ══════════════════════════════════════════
+   UTILITY HELPERS
+══════════════════════════════════════════ */
+function el(id) { return document.getElementById(id); }
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function toast(msg, type = 'info') {
+  const icons = { success: 'check_circle', error: 'error', info: 'info' };
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<span class="material-icons">${icons[type]}</span><span>${msg}</span>`;
+  el('toastStack').appendChild(t);
+  setTimeout(() => {
+    t.style.animation = 'tOut .32s forwards';
+    setTimeout(() => t.remove(), 320);
+  }, 3200);
+}
+
+function updateCartBadge() {
+  const count = JSON.parse(localStorage.getItem('infocity_cart') || '[]').reduce((s, c) => s + c.qty, 0);
+  const b = el('cartBadge');
+  if (count > 0) { b.style.display = 'flex'; b.textContent = count; }
+  else b.style.display = 'none';
+}
+
+function toggleTheme() {
+  const h = document.documentElement;
+  const next = h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  h.setAttribute('data-theme', next);
+  localStorage.setItem('infocity_theme', next);
+  el('themeIcon').textContent = next === 'dark' ? 'dark_mode' : 'light_mode';
+}
+
+function initTheme() {
+  const s = localStorage.getItem('infocity_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', s);
+  el('themeIcon').textContent = s === 'dark' ? 'dark_mode' : 'light_mode';
+}
+
+/* ══════════════════════════════════════════
+   SCROLL & AUTO-REFRESH
+══════════════════════════════════════════ */
+window.addEventListener('scroll', () => el('navbar').classList.toggle('scrolled', scrollY > 10));
+
+/* Auto-refresh every 30s if there are active orders */
+setInterval(() => {
+  if (USER && allOrders.some(o => ACTIVE_STATUSES.includes(o.status))) {
+    fetchOrders();
+  }
+}, 30000);
 </script>
 </body>
 </html>

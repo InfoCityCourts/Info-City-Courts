@@ -100,7 +100,6 @@ body {
   min-height:100vh;
   overflow-x:hidden;
   transition:background .4s, color .3s;
-  /* Global noise texture */
   position:relative;
 }
 body::before {
@@ -186,11 +185,9 @@ input, select, textarea { font-family:var(--sf) }
   overflow:hidden;
 }
 
-/* Top gradient border */
 .sb-chrome { height:3px; background:linear-gradient(90deg,var(--ember),var(--copper),var(--amber2),var(--copper),var(--ember)); flex-shrink:0; position:relative }
 .sb-chrome::after { content:''; position:absolute; inset:0; background:inherit; filter:blur(6px); opacity:.5 }
 
-/* Brand */
 .sb-brand {
   padding:18px 16px 15px;
   border-bottom:1px solid var(--bdr);
@@ -225,7 +222,6 @@ input, select, textarea { font-family:var(--sf) }
 .sb-name { font-family:var(--pf); font-size:1.08rem; font-weight:700; letter-spacing:.02em }
 .sb-tagline { font-size:.58rem; font-weight:600; color:var(--amber2); text-transform:uppercase; letter-spacing:.18em; margin-top:3px; opacity:.8 }
 
-/* Kitchen Status Toggle */
 .kb-status {
   margin:10px 12px;
   display:flex; align-items:center; gap:8px;
@@ -242,7 +238,6 @@ input, select, textarea { font-family:var(--sf) }
 .kb-toggle::after { content:''; position:absolute; width:14px; height:14px; border-radius:50%; background:#fff; top:2px; left:2px; transition:var(--tr); box-shadow:0 1px 4px rgba(0,0,0,.3) }
 .kb-toggle.on::after { left:18px }
 
-/* Scroll area */
 .sb-scroll { flex:1; overflow-y:auto; overflow-x:hidden }
 .sb-scroll::-webkit-scrollbar { width:0 }
 
@@ -289,7 +284,6 @@ input, select, textarea { font-family:var(--sf) }
 }
 @keyframes pulseBdg { 0%,100%{box-shadow:0 2px 6px rgba(160,65,45,.4),0 0 10px rgba(160,65,45,.2)} 50%{box-shadow:0 2px 6px rgba(160,65,45,.6),0 0 18px rgba(160,65,45,.4)} }
 
-/* Sidebar food accordion */
 .sb-menu-acc { padding:4px 9px 8px }
 .sb-menu-hd {
   display:flex; align-items:center; gap:7px;
@@ -319,7 +313,6 @@ input, select, textarea { font-family:var(--sf) }
 .sb-food-btn.del:hover .material-icons-round { color:var(--danger-c) }
 .sb-food-btn.edit:hover .material-icons-round { color:var(--amber2) }
 
-/* Sidebar user */
 .sb-bot { flex-shrink:0; padding:10px 9px; border-top:1px solid var(--bdr) }
 .sb-user {
   display:flex; align-items:center; gap:9px;
@@ -344,7 +337,6 @@ input, select, textarea { font-family:var(--sf) }
 ═══════════════════════════════════════ */
 .main { flex:1; margin-left:var(--sb-w); transition:margin .32s; min-width:0; display:flex; flex-direction:column }
 
-/* Topbar */
 .topbar {
   height:var(--tb-h);
   background:var(--glass);
@@ -370,7 +362,6 @@ input, select, textarea { font-family:var(--sf) }
 .tb-btn:hover { background:var(--inp); border-color:var(--bdr) }
 .tb-btn .material-icons-round { font-size:18px; color:var(--c2) }
 
-/* Search bar in topbar */
 .tb-search {
   display:flex; align-items:center; gap:6px;
   padding:6px 12px; border-radius:var(--rf);
@@ -392,7 +383,6 @@ input, select, textarea { font-family:var(--sf) }
 .live-dot { width:6px; height:6px; border-radius:50%; background:currentColor; animation:blink 1.4s ease infinite }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
 
-/* ── CONTENT ── */
 .content { padding:clamp(12px,2.5vw,24px); flex:1 }
 .view { display:none; animation:fadeSlide .35s cubic-bezier(.16,1,.3,1) }
 .view.active { display:block }
@@ -414,13 +404,11 @@ input, select, textarea { font-family:var(--sf) }
   box-shadow:var(--depth2), var(--inner-light);
   cursor:default;
 }
-/* Foil top edge */
 .stat-card::before {
   content:''; position:absolute;
   top:0; left:0; right:0; height:1px;
   background:linear-gradient(90deg,transparent,var(--foil-top),transparent);
 }
-/* Ambient glow circle */
 .stat-card::after {
   content:''; position:absolute;
   right:-20px; bottom:-20px; width:80px; height:80px;
@@ -613,7 +601,6 @@ input, select, textarea { font-family:var(--sf) }
 
 .oc-chip-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap }
 
-/* Stepper */
 .stepper {
   padding:14px 16px; background:var(--glass2);
   border:1px solid var(--bdr); border-radius:var(--r2);
@@ -649,7 +636,6 @@ input, select, textarea { font-family:var(--sf) }
 .step.done .stp-nm, .step.cur .stp-nm { color:var(--c2) }
 .step.cur .stp-nm { color:var(--amber) }
 
-/* Items */
 .oitems { display:flex; flex-direction:column; gap:6px; margin:13px 0 }
 .oitem {
   display:flex; align-items:center; gap:10px;
@@ -666,13 +652,11 @@ input, select, textarea { font-family:var(--sf) }
 .oitem-rating .material-icons-round { font-size:11px; color:#f59e0b }
 .oitem-px { font-size:.84rem; font-weight:700; color:var(--copper); flex-shrink:0 }
 
-/* Price breakdown */
 .pb { background:var(--glass2); border:1px solid var(--bdr); border-radius:var(--r2); padding:12px 15px; margin:10px 0; display:flex; flex-direction:column; gap:5px }
 .pb-row { display:flex; justify-content:space-between; font-size:.7rem; color:var(--c3) }
 .pb-row.tot { font-size:.82rem; font-weight:700; color:var(--c1); border-top:1px dashed var(--bdr); padding-top:7px; margin-top:3px }
 .pb-row.save { color:var(--success-c) }
 
-/* Address */
 .oaddr { display:flex; align-items:flex-start; gap:10px; padding:10px 13px; background:var(--glass2); border:1px solid var(--bdr); border-radius:var(--r2); margin:10px 0 }
 .oaddr-ico { width:30px; height:30px; border-radius:9px; flex-shrink:0; background:rgba(201,146,42,.08); border:1px solid rgba(201,146,42,.2); display:flex; align-items:center; justify-content:center }
 .oaddr-ico .material-icons-round { font-size:15px; color:var(--amber) }
@@ -681,7 +665,6 @@ input, select, textarea { font-family:var(--sf) }
 .oaddr-note { font-size:.65rem; color:var(--c3); margin-top:4px; display:flex; align-items:flex-start; gap:3px }
 .oaddr-note .material-icons-round { font-size:11px; color:var(--amber); margin-top:2px }
 
-/* Rating row */
 .order-rating-row { display:flex; align-items:center; gap:8px; padding:10px 13px; background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.18); border-radius:var(--r2); margin:10px 0 }
 .order-rating-row .material-icons-round { font-size:16px; color:#f59e0b; flex-shrink:0 }
 .or-val { font-family:var(--pf); font-size:1rem; font-weight:800; color:var(--warn-c); margin-right:4px }
@@ -689,18 +672,15 @@ input, select, textarea { font-family:var(--sf) }
 .or-stars .material-icons-round { font-size:14px }
 .or-review { font-size:.74rem; color:var(--c2); font-style:italic; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 
-/* Timestamps */
 .ts-row { display:flex; flex-wrap:wrap; gap:5px; margin:9px 0 }
 .ts-pill { display:flex; align-items:center; gap:3px; padding:3px 8px; background:var(--inp); border:1px solid var(--bdr); border-radius:var(--rf); font-size:.61rem; color:var(--c3) }
 .ts-pill .material-icons-round { font-size:10px; color:var(--amber) }
 
-/* Cancel note */
 .cancel-note { display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--danger-bg); border:1px solid var(--danger-bdr); border-radius:var(--r2); margin:10px 0 }
 .cancel-note .material-icons-round { font-size:18px; color:var(--danger-c) }
 .cancel-nm { font-size:.79rem; font-weight:700; color:var(--danger-c) }
 .cancel-rsn { font-size:.65rem; color:var(--c3); margin-top:2px }
 
-/* Kitchen Notes */
 .kitchen-note-box {
   display:flex; align-items:flex-start; gap:9px;
   padding:10px 13px; background:rgba(201,146,42,.05);
@@ -710,10 +690,8 @@ input, select, textarea { font-family:var(--sf) }
 .kn-label { font-size:.57rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--amber); margin-bottom:2px }
 .kn-text { font-size:.73rem; color:var(--c2); line-height:1.5 }
 
-/* Print ticket button */
 .print-area { display:none }
 
-/* Footer */
 .ocard-foot {
   display:flex; align-items:center; justify-content:space-between;
   flex-wrap:wrap; gap:10px; padding-top:14px;
@@ -755,7 +733,7 @@ input, select, textarea { font-family:var(--sf) }
 .oa-notify:hover { background:rgba(168,85,247,.15) }
 
 /* ═══════════════════════════════════════
-   ANALYTICS CHART — CSS-only bars
+   ANALYTICS CHART
 ═══════════════════════════════════════ */
 .chart-wrap { padding:0 4px }
 .bar-chart { display:flex; align-items:flex-end; gap:5px; height:120px; border-bottom:1px solid var(--bdr); padding-bottom:4px; margin-bottom:8px }
@@ -773,7 +751,6 @@ input, select, textarea { font-family:var(--sf) }
 .chart-axis-x { display:flex; gap:5px; padding:0 4px }
 .chart-axis-x > * { flex:1; text-align:center; font-size:.58rem; color:var(--c4) }
 
-/* Revenue gauge */
 .gauge-wrap { display:flex; align-items:center; justify-content:center; padding:16px 0 }
 .gauge { width:160px; height:80px; position:relative }
 .gauge svg { overflow:visible }
@@ -877,7 +854,6 @@ input, select, textarea { font-family:var(--sf) }
 .rv-avg-row { display:flex; align-items:center; gap:5px; font-size:.76rem; font-weight:700; color:var(--warn-c) }
 .rv-avg-row .material-icons-round { font-size:16px; color:#f59e0b }
 
-/* Rating distribution bar */
 .rv-dist { display:flex; flex-direction:column; gap:4px; padding:12px 14px; background:var(--glass2); border-radius:var(--r2); border:1px solid var(--bdr) }
 .rv-dist-row { display:flex; align-items:center; gap:7px; font-size:.62rem }
 .rv-dist-stars { width:18px; text-align:right; color:var(--c3); font-weight:700 }
@@ -938,7 +914,6 @@ input, select, textarea { font-family:var(--sf) }
 .modal-body { padding:20px 21px }
 .modal-ft { padding:13px 21px; border-top:1px solid var(--bdr); display:flex; justify-content:flex-end; gap:8px; background:var(--glass2) }
 
-/* Form */
 .fg { margin-bottom:14px }
 .fg label { display:block; font-size:.62rem; font-weight:700; color:var(--c3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px }
 .fg input, .fg select, .fg textarea {
@@ -953,7 +928,6 @@ input, select, textarea { font-family:var(--sf) }
 .fg2 { display:grid; grid-template-columns:1fr 1fr; gap:12px }
 .fg3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px }
 
-/* Upload */
 .up-zone { border:2px dashed var(--bdr); border-radius:var(--r2); padding:20px; text-align:center; cursor:pointer; transition:var(--tr); background:var(--inp); position:relative }
 .up-zone:hover, .up-zone.drag { border-color:var(--amber); background:rgba(201,146,42,.05) }
 .up-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100% }
@@ -969,7 +943,6 @@ input, select, textarea { font-family:var(--sf) }
 .ipv-del { position:absolute; top:2px; right:2px; width:16px; height:16px; border-radius:50%; background:rgba(160,65,45,.92); display:flex; align-items:center; justify-content:center; cursor:pointer; border:none }
 .ipv-del .material-icons-round { font-size:10px; color:#fff }
 
-/* Buttons */
 .btn-primary {
   display:inline-flex; align-items:center; gap:6px;
   padding:10px 22px; background:linear-gradient(135deg,var(--copper),var(--amber));
@@ -990,7 +963,6 @@ input, select, textarea { font-family:var(--sf) }
 }
 .btn-secondary:hover { border-color:var(--bdrh); background:var(--inp2); transform:translateY(-1px) }
 
-/* Empty */
 .empty { text-align:center; padding:52px 16px }
 .empty-ico { width:62px; height:62px; border-radius:16px; background:var(--inp); border:1px solid var(--bdr); display:flex; align-items:center; justify-content:center; margin:0 auto 14px; box-shadow:var(--depth1) }
 .empty-ico .material-icons-round { font-size:26px; color:var(--c3) }
@@ -1016,11 +988,9 @@ input, select, textarea { font-family:var(--sf) }
 @keyframes tIn  { from{transform:translateX(110%);opacity:0} to{transform:translateX(0);opacity:1} }
 @keyframes tOut { from{transform:translateX(0);opacity:1} to{transform:translateX(110%);opacity:0} }
 
-/* Sidebar mobile overlay */
 .sb-overlay { position:fixed; inset:0; z-index:290; background:rgba(2,1,0,.6); backdrop-filter:blur(3px); display:none }
 .sb-overlay.on { display:block }
 
-/* Notification panel */
 .notif-panel {
   position:fixed; top:var(--tb-h); right:0; bottom:0; width:320px;
   background:var(--glass); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);
@@ -1076,12 +1046,10 @@ input, select, textarea { font-family:var(--sf) }
 </head>
 <body>
 
-<!-- Ambient blobs -->
 <div class="ambient amb-1"></div>
 <div class="ambient amb-2"></div>
 <div class="ambient amb-3"></div>
 
-<!-- LOADER -->
 <div id="loader">
   <div class="ld-scene">
     <div class="ld-cube">
@@ -1200,7 +1168,6 @@ input, select, textarea { font-family:var(--sf) }
 
 <!-- APP -->
 <div class="app">
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-chrome"></div>
     <div class="sb-brand">
@@ -1214,7 +1181,6 @@ input, select, textarea { font-family:var(--sf) }
       </div>
     </div>
 
-    <!-- Kitchen Status -->
     <div class="kb-status" id="kbStatus">
       <div class="kb-status-dot open" id="kbDot"></div>
       <div class="kb-status-label" id="kbLabel">Kitchen Open</div>
@@ -1233,7 +1199,6 @@ input, select, textarea { font-family:var(--sf) }
         <div class="sb-item" data-v="reviews" onclick="go('reviews',this)"><span class="material-icons-round">star_rate</span>Reviews</div>
       </nav>
 
-      <!-- Sidebar dish list accordion -->
       <div class="sb-sect">My Menu Items</div>
       <div class="sb-menu-acc">
         <div class="sb-menu-hd" id="sbMenuHd" onclick="toggleSbMenu()">
@@ -1272,7 +1237,6 @@ input, select, textarea { font-family:var(--sf) }
         <div class="tb-title" id="tbTitle">Dashboard</div>
         <div class="tb-sub" id="tbSub">InfoCity Courts Kitchen</div>
       </div>
-      <!-- Search -->
       <div class="tb-search">
         <span class="material-icons-round">search</span>
         <input type="text" id="globalSearch" placeholder="Search orders…" oninput="onSearch(this.value)"/>
@@ -1289,9 +1253,8 @@ input, select, textarea { font-family:var(--sf) }
 
     <div class="content">
 
-      <!-- ════ DASHBOARD ════ -->
+      <!-- DASHBOARD -->
       <div class="view active" id="vDashboard">
-        <!-- Quick actions -->
         <div class="quick-strip">
           <button class="qa-btn qa-primary" onclick="openAdd()"><span class="material-icons-round">add_circle</span>Add Dish</button>
           <button class="qa-btn" onclick="go('orders',q('[data-v=orders]'))"><span class="material-icons-round">receipt_long</span>View Orders</button>
@@ -1354,7 +1317,7 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-      <!-- ════ ALL ORDERS ════ -->
+      <!-- ALL ORDERS -->
       <div class="view" id="vOrders">
         <div class="sec">
           <div class="sec-hd">
@@ -1374,7 +1337,7 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-      <!-- ════ EARNINGS ════ -->
+      <!-- EARNINGS -->
       <div class="view" id="vEarnings">
         <div class="earn-big-grid">
           <div class="earn-big">
@@ -1398,7 +1361,7 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-      <!-- ════ ANALYTICS ════ -->
+      <!-- ANALYTICS -->
       <div class="view" id="vAnalytics">
         <div class="stat-grid" style="margin-bottom:20px">
           <div class="stat-card">
@@ -1461,7 +1424,7 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-      <!-- ════ MENU ════ -->
+      <!-- MENU -->
       <div class="view" id="vMenu">
         <div class="sec">
           <div class="sec-hd">
@@ -1475,7 +1438,7 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-      <!-- ════ INVENTORY ════ -->
+      <!-- INVENTORY -->
       <div class="view" id="vInventory">
         <div class="sec">
           <div class="sec-hd">
@@ -1489,7 +1452,7 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-      <!-- ════ REVIEWS ════ -->
+      <!-- REVIEWS -->
       <div class="view" id="vReviews">
         <div class="sec">
           <div class="sec-hd">
@@ -1504,9 +1467,9 @@ input, select, textarea { font-family:var(--sf) }
         </div>
       </div>
 
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /app -->
+    </div>
+  </div>
+</div>
 
 <!-- INVENTORY MODAL -->
 <div class="overlay" id="invModal" onclick="if(event.target===this)closeInvModal()">
@@ -1549,7 +1512,18 @@ const FB     = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?aut
 ══════════════════════════════════════════ */
 let user = null;
 let allOrders = [];
-let visibleIds = new Set();
+
+// ─── FIX 1: hiddenIds persists across refreshes ────────────────────────────
+// Instead of visibleIds (a whitelist rebuilt each refresh), we track which
+// orders the user has explicitly hidden. This set survives auto-refresh.
+const HIDDEN_KEY = 'ic_hidden_orders';
+let hiddenIds = new Set(JSON.parse(localStorage.getItem(HIDDEN_KEY) || '[]'));
+
+function saveHiddenIds() {
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...hiddenIds]));
+}
+// ───────────────────────────────────────────────────────────────────────────
+
 let iMap = {};
 let allFoods = [];
 let ordFlt = 'all';
@@ -1612,13 +1586,13 @@ async function loadOrders() {
   try {
     const { data, error } = await sb.from('orders').select('*').order('created_at', { ascending: false });
     if (error) throw error;
-    const prev = allOrders.map(o => String(o.id));
+    const prevIds = allOrders.map(o => String(o.id));
     allOrders = data || [];
 
     // detect new orders for notification
     allOrders.forEach(o => {
       const id = String(o.id);
-      if (!prev.includes(id) && prev.length > 0 && o.status === 'pending') {
+      if (!prevIds.includes(id) && prevIds.length > 0 && o.status === 'pending') {
         pushNotif('🆕 New Order', `Order #${id} from ${o.user_name} — ₹${fmt(o.total)}`, true);
       }
     });
@@ -1656,20 +1630,21 @@ async function loadMenu() {
    REBUILD UI
 ══════════════════════════════════════════ */
 function rebuildUI() {
-  allOrders.forEach(o => { const id = String(o.id); if (!visibleIds.has(id)) visibleIds.add(id); });
   updBadges(); updStats(); renderOrders(); renderDashRecent();
   renderEarnings(); renderReviews(); renderAnalytics();
 }
 
 function updBadges() {
-  const pc = allOrders.filter(o => o.status === 'pending').length;
+  // Count only non-hidden orders
+  const visible = allOrders.filter(o => !hiddenIds.has(String(o.id)));
+  const pc = visible.filter(o => o.status === 'pending').length;
   const b = g('pendBdg');
   b.style.display = pc ? 'flex' : 'none';
   b.textContent = pc;
-  setText('tcAll', allOrders.length);
+  setText('tcAll', visible.length);
   setText('tcPnd', pc);
-  setText('tcCnf', allOrders.filter(o => o.status === 'confirmed').length);
-  setText('tcPrp', allOrders.filter(o => o.status === 'preparing').length);
+  setText('tcCnf', visible.filter(o => o.status === 'confirmed').length);
+  setText('tcPrp', visible.filter(o => o.status === 'preparing').length);
 }
 
 function updStats() {
@@ -1718,8 +1693,9 @@ function filt(f, btn) {
 }
 
 function getFilteredOrders() {
-  let list = ordFlt === 'all' ? allOrders : allOrders.filter(o => o.status === ordFlt);
-  list = list.filter(o => visibleIds.has(String(o.id)));
+  // ─── FIX 1 applied: filter out hidden orders ───────────────────────────
+  let list = allOrders.filter(o => !hiddenIds.has(String(o.id)));
+  if (ordFlt !== 'all') list = list.filter(o => o.status === ordFlt);
   return applySearch(list);
 }
 
@@ -1735,7 +1711,8 @@ function renderOrders() {
 
 function renderDashRecent() {
   const box = g('dashRec');
-  const list = applySearch(allOrders.filter(o => visibleIds.has(String(o.id)))).slice(0, 5);
+  // Also respect hidden IDs on dashboard
+  const list = applySearch(allOrders.filter(o => !hiddenIds.has(String(o.id)))).slice(0, 5);
   if (!list.length) {
     box.innerHTML = `<div class="empty"><div class="empty-ico"><span class="material-icons-round">inbox</span></div><h3>No orders yet</h3><p>Orders appear here in real time.</p></div>`;
     return;
@@ -1760,10 +1737,8 @@ function buildOrderCard(o, compact) {
   const canDecline = ['pending','confirmed'].includes(o.status);
   const isActive   = ACTIVE_STATUSES.includes(o.status);
 
-  /* Timer */
   const timerH = isActive && !compact ? buildTimer(o) : '';
 
-  /* Items */
   const itemsH = its.length
     ? its.map(it => {
         const ratingH = it.item_rating
@@ -1781,7 +1756,6 @@ function buildOrderCard(o, compact) {
       }).join('')
     : `<div style="padding:9px;font-size:.72rem;color:var(--c3);background:var(--inp);border-radius:var(--r2);text-align:center;border:1px solid var(--bdr)">No item details</div>`;
 
-  /* Address */
   const addrH = !compact && o.delivery_address
     ? `<div class="oaddr">
         <div class="oaddr-ico"><span class="material-icons-round">location_on</span></div>
@@ -1793,7 +1767,6 @@ function buildOrderCard(o, compact) {
       </div>`
     : '';
 
-  /* Price breakdown */
   const priceH = !compact
     ? `<div class="pb">
         <div class="pb-row"><span>Subtotal</span><span>₹${fmt(o.subtotal)}</span></div>
@@ -1805,7 +1778,6 @@ function buildOrderCard(o, compact) {
       </div>`
     : '';
 
-  /* Timestamps */
   const tsH = !compact && (o.confirmed_at||o.preparing_at||o.out_for_delivery_at||o.delivered_at||o.cancelled_at)
     ? `<div class="ts-row">
         ${o.confirmed_at       ? mkTs('thumb_up','Confirmed',o.confirmed_at):''}
@@ -1816,7 +1788,6 @@ function buildOrderCard(o, compact) {
       </div>`
     : '';
 
-  /* Order rating */
   const orderRatingH = !compact && o.order_rating
     ? (() => {
         const stars = Array.from({length:5},(_,i) =>
@@ -1831,19 +1802,16 @@ function buildOrderCard(o, compact) {
       })()
     : '';
 
-  /* Cancel */
   const cancelH = o.status === 'cancelled' && !compact
     ? `<div class="cancel-note"><span class="material-icons-round">cancel</span><div><div class="cancel-nm">Order Cancelled</div><div class="cancel-rsn">${esc(o.cancellation_reason||'No reason provided')}${o.cancelled_by?' · by '+esc(o.cancelled_by):''}</div></div></div>`
     : '';
 
-  /* Kitchen notes */
   const noteH = !compact && o.kitchen_note
     ? `<div class="kitchen-note-box"><span class="material-icons-round">sticky_note_2</span><div><div class="kn-label">Kitchen Note</div><div class="kn-text">${esc(o.kitchen_note)}</div></div></div>`
     : '';
 
-  /* Actions */
   const notifyBtn = isActive
-    ? `<button class="oact oa-notify" onclick="openNotifyModal('${esc(String(o.user_id||''))}')"><span class="material-icons-round">campaign</span>Notify</button>`
+    ? `<button class="oact oa-notify" data-uid="${esc(String(o.user_id||''))}" onclick="openNotifyModal(this.getAttribute('data-uid'))"><span class="material-icons-round">campaign</span>Notify</button>`
     : '';
 
   const actsH = `<div class="oc-acts">
@@ -1962,14 +1930,24 @@ async function declineOrd(oid) {
   } catch(e) { toast('Failed: ' + e.message, 'error') }
 }
 
+/* ══════════════════════════════════════════
+   FIX 1: removeCard — persists across refreshes
+══════════════════════════════════════════ */
 function removeCard(oid) {
-  visibleIds.delete(oid);
+  // Add to persistent hidden set and save to localStorage
+  hiddenIds.add(String(oid));
+  saveHiddenIds();
+
   const el = g('oc_' + oid);
   if (el) {
     el.style.transition = 'opacity .3s, transform .3s';
     el.style.opacity = '0';
     el.style.transform = 'translateX(50px)';
-    setTimeout(() => { el.remove(); updBadges(); updStats(); }, 320);
+    setTimeout(() => {
+      el.remove();
+      updBadges();
+      updStats();
+    }, 320);
   }
 }
 
@@ -2138,7 +2116,6 @@ function renderAnalytics() {
   setText('anToday', today.length);
   setText('anWeek', week.length);
 
-  // Top dish by order count in order_items
   const dishCount = {};
   Object.values(iMap).flat().forEach(it => {
     if (it.food_name) dishCount[it.food_name] = (dishCount[it.food_name]||0) + it.quantity;
@@ -2146,17 +2123,14 @@ function renderAnalytics() {
   const topDish = Object.entries(dishCount).sort((a,b)=>b[1]-a[1])[0];
   setText('anTopDish', topDish ? topDish[0].split(' ').slice(0,2).join(' ') : '—');
 
-  // Avg prep time (delivered_at - confirmed_at)
   const prepTimes = allOrders.filter(o => o.delivered_at && o.confirmed_at).map(o =>
     (new Date(o.delivered_at) - new Date(o.confirmed_at)) / 60000
   );
   const avgPrep = prepTimes.length ? prepTimes.reduce((s,v)=>s+v,0)/prepTimes.length : 0;
   setText('anAvgTime', avgPrep ? Math.round(avgPrep) + ' min' : '—');
 
-  // 7-day bar chart
   renderDayChart();
 
-  // Gauge
   const todayRev = allOrders.filter(o => o.status==='delivered' && isToday(o.created_at))
     .reduce((s,o) => s + (parseFloat(o.total)||0), 0);
   const target = 5000;
@@ -2168,7 +2142,6 @@ function renderAnalytics() {
   const gp = g('gaugePath');
   if (gp) gp.style.strokeDashoffset = offset;
 
-  // Top dishes list
   const topList = Object.entries(dishCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const maxQ = topList[0]?.[1] || 1;
   g('topDishList').innerHTML = topList.map(([nm, qty]) => `
@@ -2210,10 +2183,11 @@ function renderMenu() {
   em.style.display = 'none';
   grid.innerHTML = allFoods.map(f => {
     const img = firstImg(f.images);
+    const fid = String(f.id);
     const savingH = f.original_price && f.original_price > f.price
       ? `<div style="font-size:.62rem;color:var(--success-c);margin-bottom:3px">Save ₹${fmt(f.original_price-f.price)} <s style="color:var(--c3)">₹${fmt(f.original_price)}</s></div>`
       : '';
-    return `<div class="mcard" style="position:relative">
+    return `<div class="mcard" style="position:relative" data-food-id="${fid}">
       <div class="mcard-img">
         <img src="${esc(img)}" onerror="this.src='${FB}'" loading="lazy"/>
         <div class="mc-badges">
@@ -2232,8 +2206,9 @@ function renderMenu() {
         ${f.description?`<div class="mc-desc">${esc(f.description)}</div>`:''}
         ${savingH}
         <div class="mc-foot">
-          <button class="mc-btn" onclick="openEdit('${esc(String(f.id))}')"><span class="material-icons-round">edit</span>Edit</button>
-          <button class="mc-btn mc-del" onclick="delDish('${esc(String(f.id))}','${esc(f.food_name)}')"><span class="material-icons-round">delete</span>Delete</button>
+          <!-- FIX 2: use data attributes instead of inline string interpolation to avoid quote-breaking -->
+          <button class="mc-btn" data-edit-id="${fid}" onclick="openEdit(this.getAttribute('data-edit-id'))"><span class="material-icons-round">edit</span>Edit</button>
+          <button class="mc-btn mc-del" data-del-id="${fid}" data-del-name="${esc(f.food_name)}" onclick="delDish(this.getAttribute('data-del-id'), this.getAttribute('data-del-name'))"><span class="material-icons-round">delete</span>Delete</button>
         </div>
       </div>
     </div>`;
@@ -2249,14 +2224,15 @@ function renderSbFoods() {
   }
   container.innerHTML = allFoods.map(f => {
     const img = firstImg(f.images);
-    const fid = esc(String(f.id)), fnm = esc(f.food_name);
+    const fid = String(f.id);
     return `<div class="sb-food-item">
       <img class="sb-food-thumb" src="${esc(img)}" onerror="this.src='${FB}'" loading="lazy"/>
-      <span class="sb-food-nm" title="${fnm}">${fnm}</span>
+      <span class="sb-food-nm" title="${esc(f.food_name)}">${esc(f.food_name)}</span>
       <span class="sb-food-px">₹${fmt(f.price)}</span>
       <div class="sb-food-acts">
-        <button class="sb-food-btn edit" onclick="openEdit('${fid}')" title="Edit"><span class="material-icons-round">edit</span></button>
-        <button class="sb-food-btn del" onclick="delDish('${fid}','${fnm}')" title="Delete"><span class="material-icons-round">delete</span></button>
+        <!-- FIX 2: data attributes here too -->
+        <button class="sb-food-btn edit" data-edit-id="${fid}" onclick="openEdit(this.getAttribute('data-edit-id'))" title="Edit"><span class="material-icons-round">edit</span></button>
+        <button class="sb-food-btn del" data-del-id="${fid}" data-del-name="${esc(f.food_name)}" onclick="delDish(this.getAttribute('data-del-id'), this.getAttribute('data-del-name'))" title="Delete"><span class="material-icons-round">delete</span></button>
       </div>
     </div>`;
   }).join('');
@@ -2324,14 +2300,19 @@ async function saveDish() {
   g('dmSp').style.display='none'; g('dmSave').disabled=false;
 }
 
+/* ══════════════════════════════════════════
+   FIX 2: delDish — receives plain string params via data attributes
+══════════════════════════════════════════ */
 async function delDish(id, nm) {
-  if (!confirm(`Permanently delete "${nm}"?\nThis cannot be undone.`)) return;
+  if (!id) { toast('Invalid dish ID','error'); return; }
+  const displayName = nm || 'this dish';
+  if (!confirm(`Permanently delete "${displayName}"?\nThis cannot be undone.`)) return;
   try {
     const { error } = await sb.from('foods').delete().eq('id', id);
     if (error) throw error;
-    toast(`"${nm}" deleted`,'info');
+    toast(`"${displayName}" deleted`, 'info');
     await loadMenu();
-  } catch(e) { toast('Delete failed: ' + e.message,'error') }
+  } catch(e) { toast('Delete failed: ' + e.message, 'error') }
 }
 
 /* ══════════════════════════════════════════
@@ -2369,12 +2350,21 @@ async function onFiles(files) {
   g('dmSave').disabled=false;
 }
 function onDrop(e) { e.preventDefault(); g('upZone').classList.remove('drag'); onFiles(e.dataTransfer.files) }
+
+/* ══════════════════════════════════════════
+   FIX 2: renderPrevs — use data-index attribute instead of inline index
+══════════════════════════════════════════ */
 function renderPrevs() {
-  g('imgPrevs').innerHTML = upURLs.map((u,i) =>
-    `<div class="ipv"><img src="${esc(u)}" onerror="this.style.opacity='.3'"/><button class="ipv-del" onclick="rmImg(${i})" type="button"><span class="material-icons-round">close</span></button></div>`
+  g('imgPrevs').innerHTML = upURLs.map((u, i) =>
+    `<div class="ipv">
+      <img src="${esc(u)}" onerror="this.style.opacity='.3'"/>
+      <button class="ipv-del" data-img-index="${i}" onclick="rmImg(parseInt(this.getAttribute('data-img-index')))" type="button">
+        <span class="material-icons-round">close</span>
+      </button>
+    </div>`
   ).join('');
 }
-function rmImg(i) { upURLs.splice(i,1); renderPrevs() }
+function rmImg(i) { upURLs.splice(i, 1); renderPrevs(); }
 
 /* ══════════════════════════════════════════
    INVENTORY
@@ -2411,22 +2401,22 @@ function renderInventory() {
       <div class="inv-meta"><span>${item.current} ${item.unit}</span><span>of ${item.max} ${item.unit}</span></div>
       <div class="inv-stock-bar"><div class="inv-stock-fill ${cls}" style="width:${pct}%"></div></div>
       <div style="display:flex;gap:5px;margin-top:4px">
-        <button onclick="adjustInv(${item.id},-10)" style="flex:1;padding:5px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--inp);color:var(--c2);font-size:.68rem;cursor:pointer;font-family:var(--sf)">−10</button>
-        <button onclick="adjustInv(${item.id},10)"  style="flex:1;padding:5px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--inp);color:var(--c2);font-size:.68rem;cursor:pointer;font-family:var(--sf)">+10</button>
-        <button onclick="delInv(${item.id})" style="padding:5px 8px;border:1px solid var(--danger-bdr);border-radius:var(--r);background:var(--danger-bg);color:var(--danger-c);font-size:.68rem;cursor:pointer;font-family:var(--sf)">✕</button>
+        <button data-inv-id="${item.id}" onclick="adjustInv(this.getAttribute('data-inv-id'),-10)" style="flex:1;padding:5px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--inp);color:var(--c2);font-size:.68rem;cursor:pointer;font-family:var(--sf)">−10</button>
+        <button data-inv-id="${item.id}" onclick="adjustInv(this.getAttribute('data-inv-id'),10)"  style="flex:1;padding:5px;border:1px solid var(--bdr);border-radius:var(--r);background:var(--inp);color:var(--c2);font-size:.68rem;cursor:pointer;font-family:var(--sf)">+10</button>
+        <button data-inv-id="${item.id}" onclick="delInv(this.getAttribute('data-inv-id'))" style="padding:5px 8px;border:1px solid var(--danger-bdr);border-radius:var(--r);background:var(--danger-bg);color:var(--danger-c);font-size:.68rem;cursor:pointer;font-family:var(--sf)">✕</button>
       </div>
     </div>`;
   }).join('');
 }
 function adjustInv(id, delta) {
-  const item = inventory.find(x => x.id===id);
+  const item = inventory.find(x => String(x.id)===String(id));
   if (!item) return;
   item.current = Math.max(0, Math.min(item.max, item.current+delta));
   saveInventory(); renderInventory();
 }
 function delInv(id) {
   if (!confirm('Remove this inventory item?')) return;
-  inventory = inventory.filter(x => x.id!==id);
+  inventory = inventory.filter(x => String(x.id)!==String(id));
   saveInventory(); renderInventory();
 }
 
@@ -2445,7 +2435,6 @@ function renderReviews() {
   const avg = rated.length ? rated.reduce((s,o)=>s+o.order_rating,0)/rated.length : 0;
   sc.innerHTML = `<div class="rv-avg-row"><span class="material-icons-round">star</span>${avg.toFixed(1)} avg · ${rw.length} review${rw.length!==1?'s':''}</div>`;
 
-  // Rating distribution
   const distData = [5,4,3,2,1].map(r => ({r, count:rated.filter(o=>o.order_rating===r).length}));
   const maxCount = Math.max(...distData.map(d=>d.count), 1);
   dist.innerHTML = distData.map(d =>
