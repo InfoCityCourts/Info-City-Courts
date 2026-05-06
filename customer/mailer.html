@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InfoCity Courts — We Heard You ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Dancing+Script:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0d0508;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 16px;position:relative;overflow-x:hidden}
+
+  /* ── Ambient BG ── */
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 70% at 20% 10%,rgba(255,69,0,.14) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(240,165,0,.10) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(139,0,0,.08) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+  /* ── Paper ── */
+  .paper{position:relative;max-width:660px;width:100%;z-index:1}
+
+  /* ── Envelope Flap ── */
+  .env-flap{width:100%;height:52px;background:linear-gradient(135deg,#1a0505 0%,#2d0808 50%,#1a0505 100%);border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(255,120,0,.18);border-bottom:none;position:relative;overflow:hidden}
+  .env-flap::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,69,0,.04) 8px,rgba(255,69,0,.04) 9px)}
+  .env-stamp{width:38px;height:38px;border:2px dashed rgba(255,165,0,.35);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;position:absolute;right:18px;top:7px;background:rgba(255,120,0,.06)}
+  .env-line{height:1px;flex:1;background:rgba(255,120,0,.15);margin:0 18px}
+  .env-text{font-size:.62rem;letter-spacing:3px;color:rgba(255,120,0,.45);font-weight:600;text-transform:uppercase;white-space:nowrap}
+
+  /* ── Card ── */
+  .card{background:#0f0205;border:1px solid rgba(255,100,0,.14);border-radius:0 0 24px 24px;overflow:hidden;position:relative;box-shadow:0 40px 120px rgba(0,0,0,.9),0 0 0 1px rgba(255,80,0,.05)}
+
+  /* ── Header ── */
+  .header{position:relative;height:320px;overflow:hidden}
+  .header-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.38) saturate(1.2)}
+  .header-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,2,5,.0) 0%,rgba(15,2,5,.3) 50%,rgba(15,2,5,1) 100%),linear-gradient(135deg,rgba(200,40,0,.22) 0%,transparent 60%)}
+
+  /* Watercolor splashes */
+  .splash{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none}
+  .sp1{width:280px;height:280px;background:rgba(255,69,0,.12);top:-60px;right:-60px}
+  .sp2{width:200px;height:200px;background:rgba(240,140,0,.09);bottom:40px;left:-40px}
+
+  /* Decorative lines */
+  .deco-lines{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;opacity:.25}
+
+  /* Logo area */
+  .logo-area{position:absolute;top:32px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .logo-box{width:60px;height:60px;background:linear-gradient(135deg,#ff4500,#f0a500);border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 12px 40px rgba(255,69,0,.45),0 0 0 1px rgba(255,200,0,.2);position:relative}
+  .logo-box::after{content:'';position:absolute;inset:-3px;border-radius:20px;border:1px solid rgba(255,165,0,.25);pointer-events:none}
+  .logo-name{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;background:linear-gradient(135deg,#ff7235,#ffd166);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
+  .logo-tag{font-size:.6rem;letter-spacing:4px;color:rgba(255,180,60,.5);text-transform:uppercase;font-weight:600}
+
+  /* Main heading */
+  .hero-text{position:absolute;bottom:0;left:0;right:0;padding:0 36px 36px;text-align:center}
+  .greeting-hand{font-family:'Dancing Script',cursive;font-size:2rem;color:#f0a500;display:block;line-height:1;margin-bottom:4px;filter:drop-shadow(0 2px 20px rgba(240,140,0,.5))}
+  .hero-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px}
+  .hero-title em{font-style:italic;background:linear-gradient(135deg,#ff7235,#ffd166);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+  /* ── Decorative Divider ── */
+  .div-wrap{display:flex;align-items:center;gap:0;padding:0 32px;margin:28px 0}
+  .div-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,120,0,.25),transparent)}
+  .div-ornament{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:0 16px}
+  .div-diamond{width:6px;height:6px;background:linear-gradient(135deg,#ff4500,#f0a500);transform:rotate(45deg);border-radius:1px}
+  .div-center{width:10px;height:10px;background:linear-gradient(135deg,#f0a500,#ff7235);transform:rotate(45deg);border-radius:2px;box-shadow:0 0 10px rgba(255,120,0,.4)}
+
+  /* ── Body content ── */
+  .body-pad{padding:0 36px}
+
+  /* Personal message */
+  .personal-msg{background:linear-gradient(135deg,rgba(255,69,0,.06),rgba(240,140,0,.04));border:1px solid rgba(255,120,0,.12);border-radius:20px;padding:28px 30px;position:relative;overflow:hidden;margin-bottom:28px}
+  .personal-msg::before{content:'❝';position:absolute;top:-8px;left:18px;font-size:5rem;color:rgba(255,69,0,.08);font-family:'Playfair Display',serif;line-height:1;pointer-events:none}
+  .personal-msg::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#ff4500,#f0a500,transparent)}
+  .msg-hand{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:rgba(255,220,180,.85);line-height:1.85;position:relative;z-index:1}
+  .msg-sign{display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px dashed rgba(255,120,0,.15)}
+  .sign-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#ff4500,#f0a500);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;flex-shrink:0;box-shadow:0 6px 20px rgba(255,69,0,.3)}
+  .sign-info .name{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#f0a500}
+  .sign-info .role{font-size:.65rem;color:rgba(255,180,80,.45);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-top:1px}
+
+  /* Section label */
+  .sec-label{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .sec-label .bar{width:3px;height:22px;background:linear-gradient(180deg,#ff4500,#f0a500);border-radius:2px}
+  .sec-label span{font-size:.65rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,165,0,.55);font-weight:700}
+
+  /* Details card */
+  .details-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,120,0,.1);border-radius:18px;overflow:hidden;margin-bottom:28px}
+  .dc-header{padding:14px 22px;background:linear-gradient(90deg,rgba(255,69,0,.12),rgba(240,140,0,.06));display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,120,0,.08)}
+  .dc-header-icon{font-size:1.1rem}
+  .dc-header-title{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:700;color:rgba(255,210,150,.85)}
+  .dc-row{display:flex;align-items:flex-start;gap:0;border-bottom:1px solid rgba(255,120,0,.06);position:relative}
+  .dc-row:last-child{border-bottom:none}
+  .dc-key{width:130px;flex-shrink:0;padding:14px 18px;font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,165,0,.4);font-weight:700;background:rgba(255,69,0,.04);border-right:1px solid rgba(255,120,0,.06)}
+  .dc-val{flex:1;padding:14px 18px;font-size:.84rem;color:rgba(255,230,200,.8);font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.5}
+  .dc-val .highlight{color:#f0a500;font-weight:600}
+  .dc-val .stars{color:#ffd166;letter-spacing:2px;font-size:1rem}
+
+  /* Message bubble */
+  .msg-bubble{background:rgba(255,255,255,.03);border:1px solid rgba(255,120,0,.1);border-radius:18px;padding:22px 24px;margin-bottom:28px;position:relative}
+  .msg-bubble::before{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,120,0,.25),transparent)}
+  .msg-label{font-size:.6rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,140,0,.4);font-weight:700;margin-bottom:12px}
+  .msg-content{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:rgba(255,220,180,.75);line-height:1.8}
+  .msg-content::before{content:'"';font-size:2.5rem;color:rgba(255,69,0,.15);font-family:'Playfair Display',serif;float:left;line-height:.8;margin-right:8px;margin-top:4px}
+
+  /* Promise section */
+  .promise-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px}
+  .ps-item{background:rgba(255,255,255,.025);border:1px solid rgba(255,120,0,.09);border-radius:16px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;transition:all .3s}
+  .ps-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.6}
+  .ps-item:nth-child(1)::before{background:linear-gradient(90deg,#ff4500,#ff7235)}
+  .ps-item:nth-child(2)::before{background:linear-gradient(90deg,#f0a500,#ffd166)}
+  .ps-item:nth-child(3)::before{background:linear-gradient(90deg,#00c896,#00e0aa)}
+  .ps-emoji{font-size:1.6rem;display:block;margin-bottom:8px}
+  .ps-title{font-family:'Playfair Display',serif;font-size:.78rem;font-weight:700;color:rgba(255,210,160,.75);margin-bottom:4px}
+  .ps-sub{font-size:.65rem;color:rgba(255,180,120,.35);line-height:1.45}
+
+  /* Timeline */
+  .timeline{padding:4px 0;margin-bottom:28px}
+  .tl-item{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;position:relative}
+  .tl-item:not(:last-child)::after{content:'';position:absolute;left:19px;top:40px;width:1px;height:calc(100% - 10px);background:linear-gradient(180deg,rgba(255,69,0,.2),transparent);pointer-events:none}
+  .tl-dot{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;border:1.5px solid rgba(255,120,0,.2)}
+  .tl-dot.done{background:linear-gradient(135deg,rgba(255,69,0,.2),rgba(240,140,0,.15));box-shadow:0 0 14px rgba(255,69,0,.15)}
+  .tl-dot.active{background:linear-gradient(135deg,rgba(255,69,0,.3),rgba(240,140,0,.2));box-shadow:0 0 20px rgba(255,69,0,.25);border-color:rgba(255,120,0,.4);animation:glowPulse 2s ease-in-out infinite}
+  @keyframes glowPulse{0%,100%{box-shadow:0 0 18px rgba(255,69,0,.2)}50%{box-shadow:0 0 32px rgba(255,69,0,.4)}}
+  .tl-dot.pending{background:rgba(255,255,255,.04);opacity:.45}
+  .tl-text .tl-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:rgba(255,220,180,.8);margin-bottom:2px}
+  .tl-text .tl-sub{font-size:.72rem;color:rgba(255,180,100,.4);line-height:1.5}
+
+  /* Handwritten note */
+  .hand-note{background:linear-gradient(135deg,rgba(240,140,0,.07),rgba(255,69,0,.04));border:1px dashed rgba(255,165,0,.2);border-radius:18px;padding:24px 28px;margin-bottom:28px;position:relative}
+  .hn-label{font-family:'Dancing Script',cursive;font-size:1.1rem;color:#f0a500;margin-bottom:10px;display:block;filter:drop-shadow(0 1px 8px rgba(240,140,0,.3))}
+  .hn-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:rgba(255,210,160,.65);line-height:1.85}
+  .hn-bg-text{position:absolute;bottom:-10px;right:16px;font-family:'Dancing Script',cursive;font-size:5rem;color:rgba(255,100,0,.04);pointer-events:none;line-height:1}
+
+  /* CTA Button */
+  .cta-wrap{text-align:center;margin-bottom:32px}
+  .cta-btn{display:inline-flex;align-items:center;gap:10px;padding:17px 44px;background:linear-gradient(135deg,#ff4500,#bb2800);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.92rem;border-radius:50px;text-decoration:none;box-shadow:0 14px 40px rgba(255,69,0,.35),inset 0 1px 0 rgba(255,255,255,.12);letter-spacing:.3px;border:1px solid rgba(255,200,100,.1);cursor:pointer;transition:all .3s}
+  .cta-btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border:1px solid rgba(255,120,0,.25);color:rgba(255,165,0,.7);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.84rem;border-radius:50px;text-decoration:none;margin-left:12px;cursor:pointer;transition:.2s}
+
+  /* Food gallery strip */
+  .gallery{display:flex;gap:10px;margin-bottom:32px;border-radius:16px;overflow:hidden;height:100px}
+  .gallery-img{flex:1;object-fit:cover;display:block;filter:brightness(.55) saturate(.9);transition:.4s}
+  .gallery-img:hover{filter:brightness(.75) saturate(1.1);flex:1.4}
+
+  /* Social row */
+  .social-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
+  .soc-btn{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid rgba(255,120,0,.12);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.2s;cursor:pointer;text-decoration:none}
+
+  /* ── Footer ── */
+  .footer{background:linear-gradient(180deg,transparent,rgba(0,0,0,.4));padding:24px 36px;border-top:1px solid rgba(255,120,0,.07);text-align:center}
+  .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,#ff7235,#ffd166);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+  .footer-addr{font-size:.68rem;color:rgba(255,150,80,.35);letter-spacing:.5px;line-height:1.8;margin-bottom:14px}
+  .footer-links{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:16px}
+  .footer-links a{font-size:.66rem;color:rgba(255,150,80,.3);text-decoration:none;text-transform:uppercase;letter-spacing:1px;font-weight:600;transition:.2s}
+  .footer-links a:hover{color:rgba(255,165,0,.6)}
+  .footer-note{font-size:.62rem;color:rgba(255,100,50,.2);line-height:1.7}
+  .footer-note span{color:rgba(255,69,0,.3)}
+
+  /* Postscript wax seal area */
+  .wax-seal-row{display:flex;justify-content:flex-end;padding:0 36px;margin-bottom:-20px;position:relative;z-index:2}
+  .wax-seal{width:68px;height:68px;background:radial-gradient(circle at 35% 35%,#ff7235,#aa2000);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(255,69,0,.45),inset 0 1px 0 rgba(255,200,100,.2);border:1.5px solid rgba(255,180,80,.2)}
+  .wax-letter{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:rgba(255,240,200,.9);line-height:1}
+  .wax-sub{font-size:.4rem;letter-spacing:2px;color:rgba(255,200,150,.6);text-transform:uppercase;margin-top:1px}
+
+  /* Ornamental corners */
+  .corner{position:absolute;width:40px;height:40px;pointer-events:none;opacity:.25}
+  .corner.tl{top:0;left:0;border-top:1.5px solid #f0a500;border-left:1.5px solid #f0a500;border-radius:4px 0 0 0}
+  .corner.tr{top:0;right:0;border-top:1.5px solid #f0a500;border-right:1.5px solid #f0a500;border-radius:0 4px 0 0}
+  .corner.bl{bottom:0;left:0;border-bottom:1.5px solid #f0a500;border-left:1.5px solid #f0a500;border-radius:0 0 0 4px}
+  .corner.br{bottom:0;right:0;border-bottom:1.5px solid #f0a500;border-right:1.5px solid #f0a500;border-radius:0 0 4px 0}
+
+  /* Responsive */
+  @media(max-width:560px){
+    .promise-strip{grid-template-columns:1fr}.body-pad{padding:0 20px}.hero-title{font-size:1.7rem}
+    .div-wrap{padding:0 20px}.cta-btn-ghost{display:none}.footer{padding:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+  <!-- Envelope top flap -->
+  <div class="env-flap">
+    <div class="env-line"></div>
+    <div class="env-text">InfoCity Courts · Official Communication</div>
+    <div class="env-line"></div>
+    <div class="env-stamp">🍽️</div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="card">
+
+    <!-- Header with food image -->
+    <div class="header">
+      <img class="header-img" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80" alt="InfoCity Courts"/>
+      <div class="splash sp1"></div>
+      <div class="splash sp2"></div>
+      <div class="header-overlay"></div>
+
+      <!-- Logo -->
+      <div class="logo-area">
+        <div class="logo-box">🍽️</div>
+        <div class="logo-name">InfoCity Courts</div>
+        <div class="logo-tag">Fine Food, Delivered</div>
+      </div>
+
+      <!-- Hero text -->
+      <div class="hero-text">
+        <span class="greeting-hand">Dear Biswajeet,</span>
+        <h1 class="hero-title">We Heard You,<br/><em>Truly.</em></h1>
+      </div>
+    </div>
+
+    <!-- Wax seal -->
+    <div class="wax-seal-row">
+      <div class="wax-seal">
+        <div class="wax-letter">IC</div>
+        <div class="wax-sub">Verified</div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="div-wrap">
+      <div class="div-line"></div>
+      <div class="div-ornament">
+        <div class="div-diamond"></div>
+        <div class="div-center"></div>
+        <div class="div-diamond"></div>
+      </div>
+      <div class="div-line"></div>
+    </div>
+
+    <!-- Body -->
+    <div class="body-pad">
+
+      <!-- Personal message -->
+      <div class="sec-label">
+        <div class="bar"></div>
+        <span>A Note From Our Team</span>
+      </div>
+      <div class="personal-msg">
+        <p class="msg-hand">
+          Thank you for taking the time to reach out to us at <strong style="color:#f0a500;font-style:normal">InfoCity Courts</strong>. Your experience and
+          satisfaction are the very reason we do what we do — and hearing from you, even when things don't go perfectly,
+          is something we genuinely cherish.<br/><br/>
+          We have received your message and our team is already looking into your concern with the utmost care.
+          You deserve nothing less than a <em>warm, perfectly delivered meal</em>, and we're committed to making that right.
+        </p>
+        <div class="msg-sign">
+          <div class="sign-av">IC</div>
+          <div class="sign-info">
+            <div class="name">InfoCity Courts Team</div>
+            <div class="role">Customer Experience · Gandhinagar, Gujarat</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submission Details -->
+      <div class="sec-label">
+        <div class="bar"></div>
+        <span>Your Submission Details</span>
+      </div>
+      <div class="details-card">
+        <div class="dc-header">
+          <span class="dc-header-icon">📋</span>
+          <span class="dc-header-title">Message Reference — <span style="color:rgba(255,120,0,.5);font-family:monospace;font-size:.78rem">#MSG-20260506-1951</span></span>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">From</div>
+          <div class="dc-val"><span class="highlight">Biswajeet Chakra</span></div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">Email</div>
+          <div class="dc-val"><span style="color:#ff8c40">biswajeet.chakra2012@gmail.com</span></div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">Phone</div>
+          <div class="dc-val">+91 7319749216</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">Subject</div>
+          <div class="dc-val"><span class="highlight">🛒 Order Issue</span></div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">Rating</div>
+          <div class="dc-val"><span class="stars">★★★</span><span style="color:rgba(255,200,100,.4)">★★</span> &nbsp;<span style="font-size:.8rem;color:rgba(255,165,0,.5)">3 / 5 — Good 🙂</span></div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">Sent On</div>
+          <div class="dc-val">6 May 2026 · 9:51 PM IST</div>
+        </div>
+        <div class="dc-row">
+          <div class="dc-key">User ID</div>
+          <div class="dc-val" style="font-family:monospace;font-size:.8rem;color:rgba(255,120,60,.5)">IC-USER-003</div>
+        </div>
+      </div>
+
+      <!-- Their message -->
+      <div class="sec-label">
+        <div class="bar"></div>
+        <span>Your Message</span>
+      </div>
+      <div class="msg-bubble">
+        <div class="msg-label">What you wrote to us</div>
+        <div class="msg-content">
+          I want to contact the manager — The food was not warm.
+        </div>
+      </div>
+
+      <!-- Our promise -->
+      <div class="sec-label">
+        <div class="bar"></div>
+        <span>Our Promise to You</span>
+      </div>
+      <div class="promise-strip">
+        <div class="ps-item">
+          <span class="ps-emoji">⚡</span>
+          <div class="ps-title">24-Hour Reply</div>
+          <div class="ps-sub">Our team responds within one business day, guaranteed</div>
+        </div>
+        <div class="ps-item">
+          <span class="ps-emoji">🔍</span>
+          <div class="ps-title">Full Review</div>
+          <div class="ps-sub">Your concern is escalated directly to our kitchen manager</div>
+        </div>
+        <div class="ps-item">
+          <span class="ps-emoji">🎁</span>
+          <div class="ps-title">We Make It Right</div>
+          <div class="ps-sub">Expect a special gesture of goodwill from our team</div>
+        </div>
+      </div>
+
+      <!-- Resolution Timeline -->
+      <div class="sec-label">
+        <div class="bar"></div>
+        <span>Resolution Journey</span>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done">✅</div>
+          <div class="tl-text">
+            <div class="tl-title">Message Received</div>
+            <div class="tl-sub">Your complaint landed safely in our team's inbox · 6 May, 9:51 PM</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active">🔍</div>
+          <div class="tl-text">
+            <div class="tl-title">Under Investigation</div>
+            <div class="tl-sub">Our kitchen manager & delivery team are reviewing your order history</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pending">💬</div>
+          <div class="tl-text">
+            <div class="tl-title">Team Response</div>
+            <div class="tl-sub">A dedicated agent will personally reach out — within 24 hours</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pending">🎉</div>
+          <div class="tl-text">
+            <div class="tl-title">Issue Resolved</div>
+            <div class="tl-sub">We'll ensure this never happens again & you'll get a warm meal, always</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Handwritten closing note -->
+      <div class="hand-note">
+        <span class="hn-label">A little note from our heart —</span>
+        <p class="hn-text">
+          "Food is not just nutrition at InfoCity Courts — it is a warm hug, a memory, a promise. 
+          When that warmth is missing from your plate, it breaks our hearts too. 
+          We will do everything in our power to restore your faith in us. 
+          Thank you for giving us that chance, Biswajeet."
+        </p>
+        <div class="hn-bg-text">♥</div>
+      </div>
+
+      <!-- Food gallery -->
+      <img class="gallery-img" style="width:100%;height:100px;object-fit:cover;border-radius:14px;margin-bottom:28px;display:block;filter:brightness(.5) saturate(.9)" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80" alt="Fine food"/>
+
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <a class="cta-btn" href="mailto:infotech.officials2067@gmail.com">
+          🍽️ &nbsp;Visit InfoCity Courts
+        </a>
+        <a class="cta-btn-ghost" href="mailto:infotech.officials2067@gmail.com">
+          📩 Reply to this
+        </a>
+      </div>
+
+      <!-- Social row -->
+      <div class="social-row">
+        <a class="soc-btn">🌐</a>
+        <a class="soc-btn">📸</a>
+        <a class="soc-btn">🐦</a>
+        <a class="soc-btn">💼</a>
+      </div>
+
+    </div><!-- /body-pad -->
+
+    <!-- Divider -->
+    <div class="div-wrap">
+      <div class="div-line"></div>
+      <div class="div-ornament">
+        <div class="div-diamond"></div>
+        <div class="div-center"></div>
+        <div class="div-diamond"></div>
+      </div>
+      <div class="div-line"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-logo">InfoCity Courts</div>
+      <div class="footer-addr">
+        Infocity, Gandhinagar, Gujarat – 382007, India<br/>
+        infotech.officials2067@gmail.com · Mon–Sun · 8:00 AM – 11:00 PM
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Refund Policy</a>
+        <a href="#">Unsubscribe</a>
+      </div>
+      <div class="footer-note">
+        This email was sent to <span>biswajeet.chakra2012@gmail.com</span> because you submitted a message
+        through InfoCity Courts contact form. © 2026 InfoCity Courts. All rights reserved.
+      </div>
+    </div>
+
+    <!-- Ornamental corners -->
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+  </div><!-- /card -->
+</div><!-- /paper -->
+
+</body>
+</html>
