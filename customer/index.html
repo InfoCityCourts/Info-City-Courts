@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ✅ FIX 1: EmailJS loaded in <head> so it's always available -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --brand:#ff4500;--brand2:#ff7235;--gold:#f0a500;--gold2:#ffd166;
@@ -767,6 +769,14 @@ input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
 </div>
 
 <script>
+// ════════════════════════════════════════════
+// ✅ FIX 2: EmailJS initialized ONCE at top, properly
+// ════════════════════════════════════════════
+const EMAILJS_SERVICE  = 'service_0lpfrbq';
+const EMAILJS_TEMPLATE = 'template_ehr4mgq';
+const EMAILJS_PUBLIC   = 'kDL071ERYcgO-m7Us';
+emailjs.init(EMAILJS_PUBLIC);
+
 const SB_URL='https://okifxlsmlzeyrvvxyzdx.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9raWZ4bHNtbHpleXJ2dnh5emR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2ODY1MjEsImV4cCI6MjA5MDI2MjUyMX0.IOlPcYju3wjLDryDq_62N8JsK6EFaxMFmNrvbTDTX_I';
 const sb=supabase.createClient(SB_URL,SB_KEY);
@@ -1061,210 +1071,98 @@ document.getElementById('ratingRow').addEventListener('click',e=>{const s=e.targ
 document.getElementById('ratingRow').addEventListener('mouseover',e=>{const s=e.target.closest('.star-btn');if(!s)return;const hv=parseInt(s.dataset.val);document.querySelectorAll('.star-btn').forEach((x,i)=>{x.style.color=i<hv?'var(--gold2)':'';x.style.transform=i<hv?'scale(1.16)':''})});
 document.getElementById('ratingRow').addEventListener('mouseleave',()=>{document.querySelectorAll('.star-btn').forEach((x,i)=>{x.style.color='';x.style.transform='';x.classList.toggle('active',i<selectedRating)})});
 
-/* ── Build beautiful HTML email body ── */
 function buildHtmlMailer(name, email, phone, subject, ratingVal, ratingLabel, message, userId, timestamp, refId) {
-  const starsHtml = '★'.repeat(ratingVal) + '☆'.repeat(5 - ratingVal);
-  const ratingDisplay = ratingVal > 0 ? `${starsHtml} &nbsp;${ratingVal}/5 — ${ratingLabel}` : 'Not rated';
+  const stars = '&#9733;'.repeat(ratingVal) + '&#9734;'.repeat(5 - ratingVal);
+  const ratingDisplay = ratingVal > 0 ? `${stars} &nbsp;${ratingVal}/5 &mdash; ${ratingLabel}` : 'Not rated';
+  const firstName = name.split(' ')[0];
+  const rows = [
+    ['From',    `<strong style="color:#f0a500">${name}</strong>`],
+    ['Email',   `<span style="color:#ff8c40">${email}</span>`],
+    ['Phone',   phone || 'Not provided'],
+    ['Subject', `<strong style="color:#f0a500">${subject}</strong>`],
+    ['Rating',  ratingDisplay],
+    ['Sent On', timestamp],
+    ['Ref ID',  `<span style="font-family:monospace;color:rgba(255,120,0,.6)">#${refId}</span>`],
+  ].map(([k,v],i,arr)=>`
+    <tr>
+      <td style="width:110px;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,165,0,.4);font-weight:700;background:rgba(255,69,0,.04);border-right:1px solid rgba(255,120,0,.06);border-bottom:${i<arr.length-1?'1px solid rgba(255,120,0,.06)':'none'};vertical-align:top">${k}</td>
+      <td style="padding:11px 14px;font-size:14px;color:rgba(255,230,200,.82);border-bottom:${i<arr.length-1?'1px solid rgba(255,120,0,.06)':'none'}">${v}</td>
+    </tr>`).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>InfoCity Courts — We Heard You ❤️</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Dancing+Script:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-</head>
-<body style="margin:0;padding:0;background:#0d0508;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0508;padding:40px 16px">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>InfoCity Courts</title></head>
+<body style="margin:0;padding:0;background:#0b0307;font-family:Georgia,serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0b0307;padding:32px 12px">
 <tr><td align="center">
-<table width="620" cellpadding="0" cellspacing="0" style="max-width:620px;width:100%">
-
-  <!-- Envelope flap -->
-  <tr><td style="background:linear-gradient(135deg,#1a0505,#2d0808,#1a0505);border-radius:16px 16px 0 0;padding:14px 20px;border:1px solid rgba(255,120,0,.18);border-bottom:none;text-align:center">
-    <span style="font-size:.6rem;letter-spacing:3px;color:rgba(255,120,0,.5);font-weight:700;text-transform:uppercase">InfoCity Courts &nbsp;·&nbsp; Official Communication &nbsp;&nbsp; 🍽️</span>
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+  <tr><td style="background:linear-gradient(135deg,#180404,#2a0606,#180404);border-radius:14px 14px 0 0;padding:13px 20px;border:1px solid rgba(255,110,0,.2);border-bottom:none;text-align:center">
+    <span style="font-size:10px;letter-spacing:4px;color:rgba(255,120,0,.5);font-weight:700;text-transform:uppercase;font-family:Arial,sans-serif">&#x1F374;&nbsp;&nbsp;InfoCity Courts &nbsp;&middot;&nbsp; Official Communication</span>
   </td></tr>
-
-  <!-- Main card -->
-  <tr><td style="background:#0f0205;border:1px solid rgba(255,100,0,.14);border-top:none;border-radius:0 0 24px 24px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.9)">
-
-    <!-- Header image area -->
+  <tr><td style="background:#100205;border:1px solid rgba(255,90,0,.15);border-top:none;border-radius:0 0 20px 20px">
     <table width="100%" cellpadding="0" cellspacing="0">
-    <tr><td style="background:linear-gradient(135deg,#1a0000,#2d0808,#0a0020);padding:36px 30px 28px;text-align:center;border-bottom:1px solid rgba(255,69,0,.1)">
-      <div style="width:64px;height:64px;background:linear-gradient(135deg,#ff4500,#f0a500);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 12px 40px rgba(255,69,0,.45);margin-bottom:14px">🍽️</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,#ff7235,#ffd166);-webkit-background-clip:text;color:#ff7235;letter-spacing:.5px;margin-bottom:4px">InfoCity Courts</div>
-      <div style="font-size:.58rem;letter-spacing:4px;color:rgba(255,180,60,.45);text-transform:uppercase;font-weight:600;margin-bottom:20px">Fine Food, Delivered</div>
-      <div style="font-family:'Dancing Script',cursive;font-size:1.6rem;color:#f0a500;line-height:1;margin-bottom:6px">Dear ${name},</div>
-      <h1 style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px;margin:0">We Heard You, <em style="font-style:italic;color:#ff7235">Truly.</em></h1>
+    <tr><td style="background:linear-gradient(160deg,#1e0202,#2e0808,#08001a);padding:40px 28px 32px;text-align:center;border-bottom:2px solid rgba(255,69,0,.08)">
+      <div style="display:inline-block;width:68px;height:68px;background:linear-gradient(135deg,#ff4500,#f0a500);border-radius:18px;font-size:32px;line-height:68px;text-align:center;box-shadow:0 14px 44px rgba(255,69,0,.4);margin-bottom:16px">&#x1F374;</div>
+      <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#ff7235;letter-spacing:1px;margin-bottom:4px">InfoCity Courts</div>
+      <div style="font-size:10px;letter-spacing:5px;color:rgba(255,175,60,.4);text-transform:uppercase;font-family:Arial,sans-serif;margin-bottom:28px">Fine Food, Delivered</div>
+      <div style="font-family:Georgia,serif;font-size:28px;color:#f0a500;font-style:italic;margin-bottom:8px">Dear ${firstName},</div>
+      <h1 style="font-family:Georgia,serif;font-size:32px;font-weight:900;color:#ffffff;line-height:1.1;margin:0;letter-spacing:-1px">We Heard You, <span style="color:#ff7235;font-style:italic">Truly.</span></h1>
     </td></tr>
-
-    <!-- Decorative divider -->
-    <tr><td style="padding:20px 30px 0">
-      <table width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,120,0,.25),transparent)"></td>
-        <td width="60" style="text-align:center;padding:0 12px">
-          <span style="display:inline-block;width:8px;height:8px;background:linear-gradient(135deg,#ff4500,#f0a500);transform:rotate(45deg);border-radius:2px;box-shadow:0 0 10px rgba(255,120,0,.4)"></span>
-        </td>
-        <td style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,120,0,.25),transparent)"></td>
-      </tr></table>
-    </td></tr>
-
-    <!-- Personal message -->
-    <tr><td style="padding:24px 30px 0">
-      <div style="background:linear-gradient(135deg,rgba(255,69,0,.06),rgba(240,140,0,.04));border:1px solid rgba(255,120,0,.12);border-radius:18px;padding:24px 26px;position:relative;overflow:hidden">
-        <div style="width:100%;height:2px;background:linear-gradient(90deg,transparent,#ff4500,#f0a500,transparent);margin-bottom:16px;border-radius:2px"></div>
-        <p style="font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:rgba(255,220,180,.85);line-height:1.85;margin:0 0 18px">
-          Thank you for reaching out to us at <strong style="color:#f0a500;font-style:normal">InfoCity Courts</strong>. Your experience and
-          satisfaction are the very reason we do what we do — and hearing from you, even when things don't go perfectly,
-          is something we genuinely cherish.<br/><br/>
-          We have received your message and our team is already looking into your concern with the utmost care.
-          You deserve nothing less than a <em>warm, perfectly delivered meal</em>, and we're committed to making that right.
-        </p>
-        <table cellpadding="0" cellspacing="0" style="border-top:1px dashed rgba(255,120,0,.15);padding-top:16px;width:100%;margin-top:4px">
-          <tr>
-            <td width="48" style="padding-right:12px">
-              <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ff4500,#f0a500);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;box-shadow:0 6px 20px rgba(255,69,0,.3);text-align:center;line-height:44px">IC</div>
-            </td>
-            <td>
-              <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#f0a500">InfoCity Courts Team</div>
-              <div style="font-size:.62rem;color:rgba(255,180,80,.45);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-top:2px">Customer Experience · Gandhinagar, Gujarat</div>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </td></tr>
-
-    <!-- Submission Details -->
-    <tr><td style="padding:24px 30px 0">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <div style="width:3px;height:22px;background:linear-gradient(180deg,#ff4500,#f0a500);border-radius:2px;display:inline-block"></div>
-        <span style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,165,0,.55);font-weight:700;margin-left:8px">Your Submission Details</span>
-      </div>
-      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.025);border:1px solid rgba(255,120,0,.1);border-radius:16px;overflow:hidden">
-        <tr><td colspan="2" style="padding:12px 20px;background:linear-gradient(90deg,rgba(255,69,0,.12),rgba(240,140,0,.06));border-bottom:1px solid rgba(255,120,0,.08)">
-          <span style="font-size:.85rem;font-weight:700;color:rgba(255,210,150,.85)">📋 Message Reference — </span>
-          <span style="font-family:monospace;font-size:.75rem;color:rgba(255,120,0,.5)">#${refId}</span>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:28px 28px 0">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,rgba(255,69,0,.06),rgba(240,140,0,.03));border:1px solid rgba(255,120,0,.12);border-radius:16px;overflow:hidden">
+        <tr><td style="height:3px;background:linear-gradient(90deg,transparent,#ff4500 30%,#f0a500 70%,transparent)"></td></tr>
+        <tr><td style="padding:22px 24px 18px">
+          <p style="font-family:Georgia,serif;font-size:16px;font-style:italic;color:rgba(255,215,175,.85);line-height:1.9;margin:0 0 18px">
+            Thank you for reaching out to us at <strong style="color:#f0a500;font-style:normal">InfoCity Courts</strong>.
+            Your experience is the very reason we do what we do &mdash; and hearing from you, even when things don&rsquo;t go perfectly, is something we genuinely cherish.
+            We have received your message and our team is already giving it the utmost attention.
+          </p>
         </td></tr>
-        ${[
-          ['From', `<strong style="color:#f0a500">${name}</strong>`],
-          ['Email', `<span style="color:#ff8c40">${email}</span>`],
-          ['Phone', phone || 'Not provided'],
-          ['Subject', `<strong style="color:#f0a500">${subject}</strong>`],
-          ['Rating', ratingDisplay],
-          ['Sent On', timestamp],
-          ['User ID', userId || 'Guest'],
-        ].map(([k,v],i,arr)=>`
-        <tr>
-          <td width="120" style="padding:12px 16px;font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,165,0,.4);font-weight:700;background:rgba(255,69,0,.04);border-right:1px solid rgba(255,120,0,.06);border-bottom:${i<arr.length-1?'1px solid rgba(255,120,0,.06)':'none'};vertical-align:top">${k}</td>
-          <td style="padding:12px 16px;font-size:.9rem;color:rgba(255,230,200,.8);border-bottom:${i<arr.length-1?'1px solid rgba(255,120,0,.06)':'none'}">${v}</td>
-        </tr>`).join('')}
       </table>
     </td></tr>
-
-    <!-- Their message -->
-    <tr><td style="padding:24px 30px 0">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <div style="width:3px;height:22px;background:linear-gradient(180deg,#ff4500,#f0a500);border-radius:2px;display:inline-block"></div>
-        <span style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,165,0,.55);font-weight:700;margin-left:8px">Your Message</span>
-      </div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,120,0,.1);border-radius:16px;padding:20px 22px">
-        <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,140,0,.4);font-weight:700;margin-bottom:10px">What you wrote to us</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:rgba(255,220,180,.75);line-height:1.8">"${message}"</div>
-      </div>
-    </td></tr>
-
-    <!-- Promise strip -->
-    <tr><td style="padding:24px 30px 0">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <div style="width:3px;height:22px;background:linear-gradient(180deg,#ff4500,#f0a500);border-radius:2px;display:inline-block"></div>
-        <span style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,165,0,.55);font-weight:700;margin-left:8px">Our Promise to You</span>
-      </div>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          ${[
-            {e:'⚡',t:'24-Hour Reply',s:'Our team responds within one business day, guaranteed',c:'#ff4500,#ff7235'},
-            {e:'🔍',t:'Full Review',s:'Your concern is escalated directly to our kitchen manager',c:'#f0a500,#ffd166'},
-            {e:'🎁',t:'We Make It Right',s:'Expect a special gesture of goodwill from our team',c:'#00c896,#00e0aa'},
-          ].map(p=>`
-          <td width="33%" style="padding:0 5px;vertical-align:top">
-            <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,120,0,.09);border-radius:14px;padding:16px 12px;text-align:center">
-              <div style="height:2px;background:linear-gradient(90deg,${p.c});margin-bottom:12px;border-radius:2px"></div>
-              <div style="font-size:1.4rem;margin-bottom:8px">${p.e}</div>
-              <div style="font-family:'Playfair Display',serif;font-size:.77rem;font-weight:700;color:rgba(255,210,160,.75);margin-bottom:4px">${p.t}</div>
-              <div style="font-size:.64rem;color:rgba(255,180,120,.35);line-height:1.45">${p.s}</div>
-            </div>
-          </td>`).join('')}
-        </tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:24px 28px 0">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.02);border:1px solid rgba(255,120,0,.1);border-radius:14px;overflow:hidden">
+        <tr><td colspan="2" style="padding:11px 16px;background:linear-gradient(90deg,rgba(255,69,0,.12),rgba(240,140,0,.06));border-bottom:1px solid rgba(255,120,0,.09)">
+          <span style="font-family:Arial,sans-serif;font-size:13px;font-weight:700;color:rgba(255,200,140,.85)">&#x1F4CB; Message Reference &mdash; <span style="font-family:monospace;font-size:12px;color:rgba(255,120,0,.55)">#${refId}</span></span>
+        </td></tr>
+        ${rows}
       </table>
     </td></tr>
-
-    <!-- Resolution Timeline -->
-    <tr><td style="padding:24px 30px 0">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:3px;height:22px;background:linear-gradient(180deg,#ff4500,#f0a500);border-radius:2px;display:inline-block"></div>
-        <span style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:rgba(255,165,0,.55);font-weight:700;margin-left:8px">Resolution Journey</span>
-      </div>
-      ${[
-        {dot:'✅',c:'rgba(255,69,0,.2)',t:'Message Received',s:`Your complaint landed safely in our team's inbox · ${timestamp}`},
-        {dot:'🔍',c:'rgba(255,69,0,.3)',t:'Under Investigation',s:'Our kitchen manager & delivery team are reviewing your order history',glow:true},
-        {dot:'💬',c:'rgba(255,255,255,.04)',t:'Team Response',s:'A dedicated agent will personally reach out — within 24 hours',dim:true},
-        {dot:'🎉',c:'rgba(255,255,255,.04)',t:'Issue Resolved',s:"We'll ensure this never happens again & you'll always get a warm meal",dim:true},
-      ].map(tl=>`
-      <table cellpadding="0" cellspacing="0" style="width:100%;margin-bottom:16px">
-        <tr>
-          <td width="46" style="vertical-align:top;padding-right:14px">
-            <div style="width:40px;height:40px;border-radius:50%;background:${tl.c};border:1.5px solid rgba(255,120,0,.2);display:inline-flex;align-items:center;justify-content:center;font-size:1rem;${tl.glow?'box-shadow:0 0 20px rgba(255,69,0,.25)':''}${tl.dim?'opacity:.45':''}">
-              ${tl.dot}
-            </div>
-          </td>
-          <td style="vertical-align:middle">
-            <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:rgba(255,220,180,.8);${tl.dim?'opacity:.5':''}">${tl.t}</div>
-            <div style="font-size:.7rem;color:rgba(255,180,100,.4);line-height:1.5;${tl.dim?'opacity:.5':''}">${tl.s}</div>
-          </td>
-        </tr>
-      </table>`).join('')}
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:22px 28px 0">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,255,255,.025);border:1px solid rgba(255,120,0,.1);border-left:3px solid #ff4500;border-radius:12px;overflow:hidden">
+        <tr><td style="padding:20px 22px">
+          <div style="font-family:Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:3px;color:rgba(255,140,0,.4);font-weight:700;margin-bottom:10px">Your Message</div>
+          <div style="font-family:Georgia,serif;font-size:16px;font-style:italic;color:rgba(255,215,175,.75);line-height:1.85">&ldquo;${message}&rdquo;</div>
+        </td></tr>
+      </table>
     </td></tr>
-
-    <!-- Handwritten closing note -->
-    <tr><td style="padding:20px 30px 0">
-      <div style="background:linear-gradient(135deg,rgba(240,140,0,.07),rgba(255,69,0,.04));border:1px dashed rgba(255,165,0,.2);border-radius:16px;padding:22px 24px">
-        <div style="font-family:'Dancing Script',cursive;font-size:1.05rem;color:#f0a500;margin-bottom:10px;display:block">A little note from our heart —</div>
-        <p style="font-family:'Playfair Display',serif;font-size:.98rem;font-style:italic;color:rgba(255,210,160,.65);line-height:1.85;margin:0">
-          "Food is not just nutrition at InfoCity Courts — it is a warm hug, a memory, a promise.
-          When that warmth is missing from your plate, it breaks our hearts too.
-          We will do everything in our power to restore your faith in us.
-          Thank you for giving us that chance, ${name.split(' ')[0]}."
-        </p>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:28px 28px;text-align:center">
+      <a href="https://infocitycourts.com" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#ff4500,#bb2800);color:#fff;font-family:Arial,sans-serif;font-weight:800;font-size:14px;border-radius:50px;text-decoration:none;box-shadow:0 10px 30px rgba(255,69,0,.3);letter-spacing:.5px;margin-right:10px">&#x1F374;&nbsp; Visit InfoCity Courts</a>
+      <a href="mailto:infotech.officials2067@gmail.com" style="display:inline-block;padding:13px 24px;border:1px solid rgba(255,120,0,.3);color:rgba(255,165,0,.7);font-family:Arial,sans-serif;font-weight:600;font-size:13px;border-radius:50px;text-decoration:none">&#x1F4E9; Reply to us</a>
+    </td></tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0">
+    <tr><td style="padding:22px 28px 28px;text-align:center;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25));border-radius:0 0 18px 18px">
+      <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#ff7235;margin-bottom:7px">InfoCity Courts</div>
+      <div style="font-family:Arial,sans-serif;font-size:11px;color:rgba(255,150,80,.35);letter-spacing:.5px;line-height:1.9;margin-bottom:12px">
+        Infocity, Gandhinagar, Gujarat &mdash; 382007, India<br/>
+        infotech.officials2067@gmail.com &nbsp;&middot;&nbsp; Mon&ndash;Sun &middot; 8:00 AM &ndash; 11:00 PM
+      </div>
+      <div style="font-family:Arial,sans-serif;font-size:10px;color:rgba(255,100,50,.22);line-height:1.8">
+        This email was sent to ${email} because you submitted a message through the InfoCity Courts contact form.<br/>
+        &copy; 2026 InfoCity Courts. All rights reserved.
       </div>
     </td></tr>
-
-    <!-- CTA -->
-    <tr><td style="padding:28px 30px;text-align:center">
-      <a href="mailto:infotech.officials2067@gmail.com" style="display:inline-block;padding:15px 38px;background:linear-gradient(135deg,#ff4500,#bb2800);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.88rem;border-radius:50px;text-decoration:none;box-shadow:0 12px 36px rgba(255,69,0,.35);letter-spacing:.3px">🍽️ &nbsp;Visit InfoCity Courts</a>
-      &nbsp;&nbsp;
-      <a href="mailto:infotech.officials2067@gmail.com" style="display:inline-block;padding:13px 26px;border:1px solid rgba(255,120,0,.25);color:rgba(255,165,0,.7);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.82rem;border-radius:50px;text-decoration:none">📩 Reply to this</a>
-    </td></tr>
-
-    <!-- Divider -->
-    <tr><td style="padding:0 30px">
-      <table width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,120,0,.25),transparent)"></td>
-      </tr></table>
-    </td></tr>
-
-    <!-- Footer -->
-    <tr><td style="padding:24px 30px 28px;text-align:center;background:linear-gradient(180deg,transparent,rgba(0,0,0,.3))">
-      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#ff7235;margin-bottom:8px">InfoCity Courts</div>
-      <div style="font-size:.66rem;color:rgba(255,150,80,.35);letter-spacing:.5px;line-height:1.8;margin-bottom:12px">
-        Infocity, Gandhinagar, Gujarat – 382007, India<br/>
-        infotech.officials2067@gmail.com &nbsp;·&nbsp; Mon–Sun · 8:00 AM – 11:00 PM
-      </div>
-      <div style="font-size:.6rem;color:rgba(255,100,50,.25);line-height:1.7">
-        This email was sent to <span style="color:rgba(255,69,0,.35)">${email}</span> because you submitted a message through the InfoCity Courts contact form.<br/>© 2026 InfoCity Courts. All rights reserved.
-      </div>
-    </td></tr>
-
+    </table>
   </td></tr>
-
 </table>
 </td></tr>
 </table>
@@ -1272,11 +1170,14 @@ function buildHtmlMailer(name, email, phone, subject, ratingVal, ratingLabel, me
 </html>`;
 }
 
+// ════════════════════════════════════════════
+// ✅ FIX 3: submitForm — correct params, dual delivery
+// ════════════════════════════════════════════
 async function submitForm(){
-  const name=document.getElementById('cfName').value.trim();
-  const email=document.getElementById('cfEmail').value.trim();
-  const phone=document.getElementById('cfPhone').value.trim();
-  const msg=document.getElementById('cfMsg').value.trim();
+  const name  = document.getElementById('cfName').value.trim();
+  const email = document.getElementById('cfEmail').value.trim();
+  const phone = document.getElementById('cfPhone').value.trim();
+  const msg   = document.getElementById('cfMsg').value.trim();
 
   document.querySelectorAll('.cf-field input,.cf-field textarea').forEach(el=>el.classList.remove('err'));
 
@@ -1284,62 +1185,94 @@ async function submitForm(){
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('cfEmail').classList.add('err');toast('Please enter a valid email','error');return}
   if(!msg||msg.length<20){document.getElementById('cfMsg').classList.add('err');toast('Message must be at least 20 characters','error');return}
 
-  const btn=document.getElementById('cfSubmitBtn');
+  const btn = document.getElementById('cfSubmitBtn');
   btn.classList.add('loading');
-  btn.innerHTML='<span class="material-icons" style="animation:spin .7s linear infinite">autorenew</span> Sending…';
+  btn.innerHTML = '<span class="material-icons" style="animation:spin .7s linear infinite">autorenew</span> Sending…';
 
-  const ratingText=selectedRating>0?`${selectedRating}/5 — ${ratingLabels[selectedRating]}`:'Not rated';
-  const ts=new Date().toLocaleString('en-IN',{dateStyle:'long',timeStyle:'short'});
-  const refId='MSG-'+Date.now().toString().slice(-8).toUpperCase();
+  const ratingLabel = ratingLabels[selectedRating] || 'Not rated';
+  const ratingText  = selectedRating > 0 ? `${selectedRating}/5 — ${ratingLabel}` : 'Not rated';
+  const ts    = new Date().toLocaleString('en-IN',{dateStyle:'long',timeStyle:'short'});
+  const refId = 'MSG-' + Date.now().toString().slice(-8).toUpperCase();
 
-  // Build beautiful HTML mailer
-  const htmlBody=buildHtmlMailer(
-    name, email,
-    phone||'Not provided',
-    selectedSubject,
-    selectedRating,
-    ratingLabels[selectedRating]||'Not rated',
-    msg,
-    USER?.id||'Guest',
-    ts,
-    refId
-  );
+  const adminPlain = `NEW CONTACT FORM SUBMISSION\n${'─'.repeat(40)}\nRef ID   : #${refId}\nFrom     : ${name}\nEmail    : ${email}\nPhone    : ${phone||'Not provided'}\nSubject  : ${selectedSubject}\nRating   : ${ratingText}\nSent     : ${ts}\nUser ID  : ${USER?.id||'Guest'}\n${'─'.repeat(40)}\nMESSAGE:\n${msg}\n${'─'.repeat(40)}`;
 
-  try{
-    const fd=new FormData();
-    fd.append('name',name);
-    fd.append('email',email);
-    fd.append('_subject',`[InfoCity Courts] ${selectedSubject} — from ${name}`);
-    fd.append('message',htmlBody);
-    fd.append('_cc',email);
-    fd.append('_captcha','false');
-    fd.append('_template','box');
-    fd.append('_autoresponse',`Hi ${name}! We've received your message and will get back within 24 hours. — InfoCity Courts Team`);
+  const htmlBody = buildHtmlMailer(name, email, phone||'Not provided', selectedSubject, selectedRating, ratingLabel, msg, USER?.id||'Guest', ts, refId);
 
-    const res=await fetch('https://formsubmit.co/ajax/infotech.officials2067@gmail.com',{
-      method:'POST',body:fd,headers:{'Accept':'application/json'}
+  let adminSent = false, userSent = false;
+
+  // ── STEP 1: FormSubmit → Admin gets plain-text notification ──
+  try {
+    const fd = new FormData();
+    fd.append('name',     name);
+    fd.append('email',    email);
+    fd.append('_subject', `[InfoCity Courts] ${selectedSubject} — from ${name} | ${refId}`);
+    fd.append('message',  adminPlain);
+    fd.append('_captcha', 'false');
+    fd.append('_template','table');
+    const res = await fetch('https://formsubmit.co/ajax/infotech.officials2067@gmail.com',{
+      method:'POST', body:fd, headers:{'Accept':'application/json'}
     });
-    const result=await res.json();
+    const r = await res.json();
+    adminSent = r.success === 'true' || r.success === true;
+  } catch(e){ console.warn('FormSubmit error:', e); }
 
-    if(result.success==='true'||result.success===true){
-      document.getElementById('cfBody').style.display='none';
-      document.getElementById('cfSuccess').style.display='block';
-      toast('Message sent! Check your email for a beautiful confirmation ✉️','success');
-    }else throw new Error(result.message||'failed');
+  // ── STEP 2: EmailJS → User gets beautiful HTML confirmation ──
+  // ✅ FIX 3a: param names match your EmailJS template variables exactly
+  //    Template "To Email" = {{email}}  →  we send { email: userEmail }
+  try {
+    await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+      to_name   : name,
+      email     : email,          // ← must match {{email}} in your template's "To Email"
+      phone     : phone || 'Not provided',
+      subject   : selectedSubject,
+      rating    : ratingText,
+      message   : msg,
+      ref_id    : refId,
+      timestamp : ts,
+      user_id   : String(USER?.id || 'Guest'),
+      html_body : htmlBody,
+    });
+    userSent = true;
+  } catch(e){
+    console.warn('EmailJS error:', e);
+  }
 
-  }catch(err){
-    // Fallback: open email client with HTML content as mailto
-    const plainFallback=`Subject: ${selectedSubject}\nRating: ${ratingText}\n\n${msg}\n\n---\nFrom: ${name} | ${email} | ${phone||'N/A'}\nUser ID: ${USER?.id||'Guest'}\nSent: ${ts}`;
-    const sub=encodeURIComponent(`[InfoCity Courts] ${selectedSubject} — from ${name}`);
-    const body=encodeURIComponent(plainFallback);
-    window.open(`mailto:infotech.officials2067@gmail.com?cc=${encodeURIComponent(email)}&subject=${sub}&body=${body}`,'_blank');
-    document.getElementById('cfBody').style.display='none';
-    document.getElementById('cfSuccess').style.display='block';
-    toast('Opening your email client…','info');
+  // ── STEP 3: EmailJS → Also send admin copy (separate call, same template) ──
+  // This sends a copy to infotech.officials2067@gmail.com as well
+  if(userSent){
+    try {
+      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+        to_name   : 'Admin',
+        email     : 'infotech.officials2067@gmail.com',   // ← admin receives copy
+        phone     : phone || 'Not provided',
+        subject   : `[ADMIN COPY] ${selectedSubject} from ${name}`,
+        rating    : ratingText,
+        message   : `From: ${name} (${email})\n\n${msg}`,
+        ref_id    : refId,
+        timestamp : ts,
+        user_id   : String(USER?.id || 'Guest'),
+        html_body : htmlBody,
+      });
+    } catch(e){ console.warn('Admin EmailJS copy error:', e); }
   }
 
   btn.classList.remove('loading');
-  btn.innerHTML='<span class="material-icons">send</span>Send Message';
+  btn.innerHTML = '<span class="material-icons">send</span>Send Message';
+
+  // ── Show result ──
+  if(adminSent || userSent){
+    document.getElementById('cfBody').style.display   = 'none';
+    document.getElementById('cfSuccess').style.display = 'block';
+    toast(userSent ? '✉️ Confirmation email sent to you!' : '✅ Message received!', 'success');
+  } else {
+    // Ultimate fallback
+    const sub  = encodeURIComponent(`[InfoCity Courts] ${selectedSubject} — from ${name}`);
+    const body = encodeURIComponent(adminPlain);
+    window.open(`mailto:infotech.officials2067@gmail.com?subject=${sub}&body=${body}`, '_blank');
+    document.getElementById('cfBody').style.display   = 'none';
+    document.getElementById('cfSuccess').style.display = 'block';
+    toast('Opening email client…', 'info');
+  }
 }
 
 function resetForm(){
